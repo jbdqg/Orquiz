@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/start_quiz"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="480dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:hint="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt velit ac dapibus pulvinar. Mauris pharetra, ipsum nec faucibus hendrerit, nisi nulla molestie odio, et porta velit enim efficitur arcu. Vestibulum at leo ac turpis dictum pellentesque. Maecenas eu urna ac diam vehicula faucibus. Aliquam vestibulum at justo id scelerisque. Phasellus a sodales mi. Pellentesque dapibus eu diam et euismod"
+            android:gravity="center"
+
+        />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center_horizontal" />
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
