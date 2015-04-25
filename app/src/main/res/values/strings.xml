@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Orquiz</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="drawer_optitle_start_quiz">Start Quiz</string>
+    <string name="drawer_optitle_my_results">Results</string>
+    <string name="drawer_optitle_my_data">My Data</string>
+    <string name="drawer_optitle_import">Import</string>
+    <string name="drawer_optitle_share">Share</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
