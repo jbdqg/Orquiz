@@ -12,27 +12,31 @@
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp"
             android:hint="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt velit ac dapibus pulvinar. Mauris pharetra, ipsum nec faucibus hendrerit, nisi nulla molestie odio, et porta velit enim efficitur arcu. Vestibulum at leo ac turpis dictum pellentesque. Maecenas eu urna ac diam vehicula faucibus. Aliquam vestibulum at justo id scelerisque. Phasellus a sodales mi. Pellentesque dapibus eu diam et euismod"
             android:gravity="center"
 
         />
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
+       <ImageView
+           android:layout_width="match_parent"
+           android:layout_height="200dp"
+           android:layout_marginTop="20dp"
+           android:src="@drawable/orange_small"
+           android:id="@+id/image" />
+
+        <Button
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:text="Start Quiz"/>
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Go Back"/>
+
 
 
 </LinearLayout>

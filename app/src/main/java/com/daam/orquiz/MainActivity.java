@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -63,18 +65,21 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.drawer_optitle_start_quiz);
+                mTitle = getString(R.string.drawer_optitle_splashpage);
                 break;
             case 2:
-                mTitle = getString(R.string.drawer_optitle_my_results);
+                mTitle = getString(R.string.drawer_optitle_start_quiz);
                 break;
             case 3:
-                mTitle = getString(R.string.drawer_optitle_my_data);
+                mTitle = getString(R.string.drawer_optitle_my_results);
                 break;
             case 4:
-                mTitle = getString(R.string.drawer_optitle_import);
+                mTitle = getString(R.string.drawer_optitle_my_data);
                 break;
             case 5:
+                mTitle = getString(R.string.drawer_optitle_import);
+                break;
+            case 6:
                 mTitle = getString(R.string.drawer_optitle_share);
                 break;
         }
@@ -144,19 +149,33 @@ public class MainActivity extends ActionBarActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.view_startquiz, container, false);
+            //View rootView = inflater.inflate(R.layout.view_startquiz, container, false);
 
-            //final ListView listView = (ListView) inflater.inflate(
-             //       R.layout.fragment_main, container, false);
+            final Integer selected_option = getArguments().getInt(ARG_SECTION_NUMBER);
 
-            //ViewGroup header = (ViewGroup) inflater.inflate(
-            //       R.layout.view_startquiz, listView, false);
+            ViewGroup header = null;
 
-            //final EditText text = (EditText) header.
+            if (selected_option == 1){
+                header = (ViewGroup) inflater.inflate(R.layout.view_splashpage, container, false);
+            }else if (selected_option == 2){
+                header = (ViewGroup) inflater.inflate(R.layout.view_startquiz, container, false);
+
+                final ProgressBar progressBarWidget = (ProgressBar) header.findViewById(R.id.progressBar);
+
+                final Button but = (Button) header.findViewById(R.id.button);
+                //but.setOnClickListener();
+                progressBarWidget.getProgress();
+            }else{
+                header = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
+            }
+
+
+
+
 
             //TODO here to create view
 
-            return rootView;
+            return header;
         }
 
         @Override

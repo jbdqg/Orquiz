@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Orquiz</string>
 
+    <string name="drawer_optitle_splashpage">Splash Page</string>
     <string name="drawer_optitle_start_quiz">Start Quiz</string>
     <string name="drawer_optitle_my_results">Results</string>
     <string name="drawer_optitle_my_data">My Data</string>
