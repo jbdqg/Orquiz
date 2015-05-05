@@ -1,6 +1,7 @@
 package com.daam.orquiz;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +23,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.List;
+
+import data.Question;
 
 
 public class MainActivity extends ActionBarActivity
@@ -124,6 +130,7 @@ public class MainActivity extends ActionBarActivity
     /**
      * A placeholder fragment containing a simple view.
      */
+    //public static class PlaceholderFragment extends Fragment {
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -155,9 +162,9 @@ public class MainActivity extends ActionBarActivity
 
             ViewGroup header = null;
 
-            if (selected_option == 1){
+            if (selected_option == 1) {
                 header = (ViewGroup) inflater.inflate(R.layout.view_splashpage, container, false);
-            }else if (selected_option == 2){
+            } else if (selected_option == 2) {
                 header = (ViewGroup) inflater.inflate(R.layout.view_startquiz, container, false);
 
                 final ProgressBar progressBarWidget = (ProgressBar) header.findViewById(R.id.progressBar);
@@ -165,8 +172,41 @@ public class MainActivity extends ActionBarActivity
                 final Button but = (Button) header.findViewById(R.id.button);
                 //but.setOnClickListener();
                 progressBarWidget.getProgress();
-            }else{
-                header = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
+            } else {
+                if (selected_option == 3) {
+
+                    header = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
+
+                    final ListView questionsLv = (ListView) header.findViewById(R.id.questionslv);
+
+                    DatabaseHandler db = new DatabaseHandler(container.getContext());
+
+                    int count = db.getAllQuestionsCount();
+                    String[] values = new String[count];
+                    List<Question> questions = db.getAllQuestions();
+                    int i = 0;
+                    for (Question qt : questions) {
+                        String log = "Id: " + qt.getQuestion_id() + " ,Text: " +
+                                qt.getQuestion_text() + " ,Url: " + qt.getQuestion_url();
+                        Log.d("Question: ", log);
+                        values[i] = qt.getQuestion_id().toString();
+                        i++;
+                    }
+
+                    //TODO: AQUI PARA CONTINUAR
+                    //You can get the context by invoking getApplicationContext(), getContext(), getBaseContext() or this (when in the activity class).
+                    ArrayAdapter<String> adapter = new
+                            ArrayAdapter<String>(getActivity().getBaseContext(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1,
+                            values);
+                    questionsLv.setAdapter(adapter);
+
+                    final Button but = (Button) header.findViewById(R.id.button);
+                    //but.setOnClickListener();
+
+                } else {
+                    header = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
+                }
             }
 
 
