@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import data.Answer;
 import data.Question;
 
 
@@ -177,32 +178,37 @@ public class MainActivity extends ActionBarActivity
 
                     header = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
 
-                    final ListView questionsLv = (ListView) header.findViewById(R.id.questionslv);
+                    final ListView answersLv = (ListView) header.findViewById(R.id.answerslv);
+
+                    int question_id = 1;
 
                     DatabaseHandler db = new DatabaseHandler(container.getContext());
 
-                    int count = db.getAllQuestionsCount();
+                    int count = db.getAllQuestionAnswersCount(question_id);
                     String[] values = new String[count];
-                    List<Question> questions = db.getAllQuestions();
+                    List<Answer> answers = db.getAllQuestionAnswers(question_id);
                     int i = 0;
-                    for (Question qt : questions) {
-                        String log = "Id: " + qt.getQuestion_id() + " ,Text: " +
-                                qt.getQuestion_text() + " ,Url: " + qt.getQuestion_url();
-                        Log.d("Question: ", log);
-                        values[i] = qt.getQuestion_id().toString();
+                    for (Answer qt : answers) {
+                        String log = "Id: " + qt.getAnswer_id() + " ,Text: " +
+                                qt.getAnswer_text() + " ,Url: " + qt.getAnswer_url();
+                        Log.d("Answer: ", log);
+                        //values[i] = qt.getQuestion_id().toString();
+                        values[i] = qt.getAnswer_text();
                         i++;
                     }
 
-                    //TODO: AQUI PARA CONTINUAR
                     //You can get the context by invoking getApplicationContext(), getContext(), getBaseContext() or this (when in the activity class).
+                    /*ArrayAdapter<String> adapter = new
+                            ArrayAdapter<String>(getActivity().getBaseContext(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1,
+                            values);*/
+
                     ArrayAdapter<String> adapter = new
                             ArrayAdapter<String>(getActivity().getBaseContext(),
                             android.R.layout.simple_list_item_1, android.R.id.text1,
                             values);
-                    questionsLv.setAdapter(adapter);
 
-                    final Button but = (Button) header.findViewById(R.id.button);
-                    //but.setOnClickListener();
+                    answersLv.setAdapter(adapter);
 
                 } else {
                     header = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);

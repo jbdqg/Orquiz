@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.Answer;
 import data.Question;
 
 /**
@@ -114,7 +115,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public int getAllQuestionsCount() {
         String selectQuery = "SELECT count(*) FROM " + TABLE_QUESTION;
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         int questionsCount = 0;
@@ -127,25 +127,60 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return questionsCount;
     }
 
-    //Listar todos contactos
     public List<Question> getAllQuestions() {
         List<Question> questionList = new ArrayList<Question>();
-// query
+
         String selectQuery = "SELECT * FROM " + TABLE_QUESTION;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-// Percorer o resultado da query
+
         if (cursor.moveToFirst()) {
             do {
                 Question question = new Question();
                 question.setQuestion_id(Integer.parseInt(cursor.getString(0)));
                 question.setQuestion_text(cursor.getString(1));
                 question.setQuestion_url(cursor.getString(2));
-// Adicionado o contacto
+
                 questionList.add(question);
             } while (cursor.moveToNext());
         }
         return questionList;
+    }
+
+    public int getAllQuestionAnswersCount(int question_id) {
+        String selectQuery = "SELECT count(*) FROM " + TABLE_ANSWER + " WHERE " + KEY_QUESTION_ID + " = " + question_id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        int questionsCount = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                questionsCount = cursor.getInt(0);
+
+            } while (cursor.moveToNext());
+        }
+        return questionsCount;
+    }
+
+    public List<Answer> getAllQuestionAnswers(int question_id) {
+        List<Answer> questionAnswersList = new ArrayList<Answer>();
+
+        //TODO: colocar nomes das tabelas de que se obtêm dados
+        String selectQuery = "SELECT * FROM " + TABLE_ANSWER + " WHERE " + KEY_QUESTION_ID + " = " + question_id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Answer answer = new Answer();
+                answer.setAnswer_id(Integer.parseInt(cursor.getString(0)));
+                answer.setAnswerQuestion_id(Integer.parseInt(cursor.getString(0)));
+                answer.setAnswer_text(cursor.getString(1));
+                answer.setAnswer_url(cursor.getString(2));
+
+                questionAnswersList.add(answer);
+            } while (cursor.moveToNext());
+        }
+        return questionAnswersList;
     }
 
 
