@@ -19,11 +19,14 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import data.Answer;
@@ -191,9 +194,9 @@ public class MainActivity extends ActionBarActivity
 
                     int count = db.getAllQuestionAnswersCount(question_id);
                     String[] values = new String[count];
-                    List<Answer> answers = db.getAllQuestionAnswers(question_id);
+                    List<Answer> answers_list = db.getAllQuestionAnswers(question_id);
                     int i = 0;
-                    for (Answer qt : answers) {
+                    for (Answer qt : answers_list) {
                         String log = "Id: " + qt.getAnswer_id() + " ,Text: " +
                                 qt.getAnswer_text() + " ,Url: " + qt.getAnswer_url();
                         Log.d("Answer: ", log);
@@ -203,31 +206,25 @@ public class MainActivity extends ActionBarActivity
                     }
 
                     //You can get the context by invoking getApplicationContext(), getContext(), getBaseContext() or this (when in the activity class).
-                    /*ArrayAdapter<String> adapter = new
-                            ArrayAdapter<String>(getActivity().getBaseContext(),
-                            android.R.layout.simple_list_item_1, android.R.id.text1,
-                            values);*/
+
+                    MyListCheckboxAdapter listcheckboxadapter = new MyListCheckboxAdapter(getActivity().getBaseContext(), R.layout.custom_checkboxlist_layout, answers_list);
 
                     ArrayAdapter<String> adapter = new
                             ArrayAdapter<String>(getActivity().getBaseContext(),
                             android.R.layout.simple_list_item_1, android.R.id.text1,
                             values);
 
-                    answersLv.setAdapter(adapter);
+                    answersLv.setAdapter(listcheckboxadapter);
 
                 } else {
                     header = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
                 }
             }
 
-
-
-
-
-            //TODO here to create view
-
             return header;
         }
+
+
 
         @Override
         public void onAttach(Activity activity) {
@@ -235,6 +232,72 @@ public class MainActivity extends ActionBarActivity
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
+    }
+
+    public static class MyListCheckboxAdapter extends ArrayAdapter<Answer> {
+
+        private ArrayList<Answer> answerList;
+
+        public MyListCheckboxAdapter(Context context, int textViewResourceId,
+                               List<Answer> answerList) {
+            super(context, textViewResourceId, answerList);
+            this.answerList = new ArrayList<Answer>();
+            this.answerList.addAll(answerList);
+        }
+
+        private class ViewHolder {
+            TextView code;
+            CheckBox name;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder holder = null;
+            Log.v("ConvertView", String.valueOf(position));
+
+            if (convertView == null) {
+                /*LayoutInflater vi = (LayoutInflater)getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE);*/
+                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE);
+                convertView = vi.inflate(R.layout.custom_checkboxlist_layout, null);
+
+                holder = new ViewHolder();
+                holder.code = (TextView) convertView.findViewById(R.id.code);
+                holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
+                convertView.setTag(holder);
+
+                holder.name.setOnClickListener( new View.OnClickListener() {
+                    public void onClick(View v) {
+                        CheckBox cb = (CheckBox) v ;
+                        Answer answer = (Answer) cb.getTag();
+                        /*Toast.makeText(getApplicationContext(),
+                                "Clicked on Checkbox: " + cb.getText() +
+                                        " is " + cb.isChecked(),
+                                Toast.LENGTH_LONG).show();*/
+                        Toast.makeText(getContext(),
+                                "Clicked on Checkbox: " + cb.getText() +
+                                        " is " + cb.isChecked(),
+                                Toast.LENGTH_LONG).show();
+                        answer.setSelected(cb.isChecked());
+                    }
+                });
+            }
+            else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            Answer answer = answerList.get(position);
+            holder.code.setText(" (" +  answer.getAnswer_text() + ")");
+            holder.name.setText(answer.getAnswer_text());
+            holder.name.setChecked(answer.isSelected());
+            holder.name.setTag(answer);
+
+            return convertView;
+
+        }
+
     }
 
 }

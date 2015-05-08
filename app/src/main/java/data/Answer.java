@@ -10,6 +10,8 @@ public class Answer {
     private String answer_text = null;
     private String answer_url = null;
 
+    boolean selected = false;
+
     public Answer(){
         /*this.setAnswer_id(this.answer_id);
         this.setAnswerQuestion_id(this.answerquestion_id);
@@ -44,4 +46,13 @@ public class Answer {
     public String getAnswer_url() {
         return answer_url;
     }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
 }
