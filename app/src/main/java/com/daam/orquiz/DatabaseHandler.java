@@ -127,6 +127,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return questionsCount;
     }
 
+    public Question getQuestion(int question_id) {
+        Question question = new Question();
+
+        String selectQuery = "SELECT * FROM " + TABLE_QUESTION + " WHERE " + KEY_QUESTION_ID + " = " + question_id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                question.setQuestion_id(Integer.parseInt(cursor.getString(0)));
+                question.setQuestion_text(cursor.getString(1));
+                question.setQuestion_url(cursor.getString(2));
+            } while (cursor.moveToNext());
+        }
+        return question;
+    }
+
     public List<Question> getAllQuestions() {
         List<Question> questionList = new ArrayList<Question>();
 
@@ -173,9 +190,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 Answer answer = new Answer();
                 answer.setAnswer_id(Integer.parseInt(cursor.getString(0)));
-                answer.setAnswerQuestion_id(Integer.parseInt(cursor.getString(0)));
-                answer.setAnswer_text(cursor.getString(1));
-                answer.setAnswer_url(cursor.getString(2));
+                answer.setAnswerQuestion_id(Integer.parseInt(cursor.getString(1)));
+                answer.setAnswer_text(cursor.getString(2));
+                answer.setAnswer_url(cursor.getString(3));
 
                 questionAnswersList.add(answer);
             } while (cursor.moveToNext());

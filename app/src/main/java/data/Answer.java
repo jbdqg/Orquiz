@@ -25,11 +25,11 @@ public class Answer {
         this.answerquestion_id = answerquestion_id;
     }
 
-    public void setAnswer_text(String question_text) {
+    public void setAnswer_text(String answer_text) {
         this.answer_text = answer_text;
     }
 
-    public void setAnswer_url(String question_url) {
+    public void setAnswer_url(String answer_url) {
         this.answer_url = answer_url;
     }
 

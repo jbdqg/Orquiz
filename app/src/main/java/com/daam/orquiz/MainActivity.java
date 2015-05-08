@@ -178,11 +178,16 @@ public class MainActivity extends ActionBarActivity
 
                     header = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
 
+                    final TextView question_text = (TextView) header.findViewById(R.id.text);
                     final ListView answersLv = (ListView) header.findViewById(R.id.answerslv);
 
                     int question_id = 1;
 
                     DatabaseHandler db = new DatabaseHandler(container.getContext());
+
+                    Question question = db.getQuestion(question_id);
+
+                    question_text.setText(question.getQuestion_text());
 
                     int count = db.getAllQuestionAnswersCount(question_id);
                     String[] values = new String[count];
