@@ -6,7 +6,7 @@ package data;
 public class Answer {
 
     private Integer answer_id = null;
-    private Integer answerquestion_id = null;
+    private Integer answerquestion_id = 1;
     private String answer_text = null;
     private String answer_url = null;
 
