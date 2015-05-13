@@ -3,19 +3,16 @@ package data;
 /**
  * Created by johnny on 02-05-2015.
  */
-public class Answer {
+public class Participant {
 
-    private Integer answer_id = null;
-    private Integer answerquestion_id = null;
-    private String answer_text = null;
-    private String answer_url = null;
-    private Integer answer_points = null;
-    private Integer answer_order = null;
-    private Integer answer_correct = null;
+    private Integer participant_id = null;
+    private String participant_name = null;
+    private String participant_url = null;
+    private String participant_facebookid = null;
 
     boolean selected = false;
 
-    public Answer(){
+    public Participant(){
         /*this.setAnswer_id(this.answer_id);
         this.setAnswerQuestion_id(this.answerquestion_id);
         this.setAnswer_text(this.answer_text);
@@ -38,24 +35,8 @@ public class Answer {
         this.answer_url = answer_url;
     }
 
-    public void setAnswer_points(Integer answer_points{
-        this.answer_points = answer_points;
-    }
-
-    public void setAnswer_order(Integer answer_order) {
-        this.answer_order = answer_order;
-    }
-
-    public void setAnswer_correct(Integer answer_correct) {
-        this.answer_correct = answer_correct;
-    }
-
     public Integer getAnswer_id() {
         return answer_id;
-    }
-
-    public Integer getAnswerQuestion_id() {
-        return answerquestion_id;
     }
 
     public String getAnswer_text() {
@@ -64,18 +45,6 @@ public class Answer {
 
     public String getAnswer_url() {
         return answer_url;
-    }
-
-    public Integer getAnswer_points() {
-        return answer_points;
-    }
-
-    public Integer getAnswer_order() {
-        return answer_order;
-    }
-
-    public Integer getAnswer_correct() {
-        return answer_correct;
     }
 
     public void setSelected(boolean selected) {
