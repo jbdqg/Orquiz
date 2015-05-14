@@ -18,43 +18,43 @@ public class Participation {
     public Participation(){
     }
 
-    public void setParticipation_id(Integer participation_id) {
+    public void setParticipationid(Integer participation_id) {
         this.participant_id = participation_id;
     }
 
-    public void setParticipant_id(Integer participant_id) {
+    public void setParticipantid(Integer participant_id) {
         this.participant_id = participant_id;
     }
 
-    public void setParticipation_start(Integer participation_start) {
+    public void setParticipationstart(Integer participation_start) {
         this.participation_start = participation_start;
     }
 
-    public void setParticipation_end(Integer participation_end) {
+    public void setParticipationend(Integer participation_end) {
         this.participation_end = participation_end;
     }
 
-    public void setParticipation_totaltime(Integer participation_totaltime) {
+    public void setParticipationtotaltime(Integer participation_totaltime) {
         this.participation_totaltime = participation_totaltime;
     }
 
-    public void setParticipation_points(Integer participation_points) {
+    public void setParticipationpoints(Integer participation_points) {
         this.participation_points = participation_points;
     }
 
-    public void setParticipation_ranking(String participation_ranking) {
+    public void setParticipationranking(String participation_ranking) {
         this.participation_ranking = participation_ranking;
     }
 
-    public Integer getAnswer_id() {
+    public Integer getAnswerid() {
         return answer_id;
     }
 
-    public String getAnswer_text() {
+    public String getAnswertext() {
         return answer_text;
     }
 
-    public String getAnswer_url() {
+    public String getAnswerurl() {
         return answer_url;
     }
 

@@ -13,7 +13,10 @@ public class Participant {
     boolean selected = false;
 
     public Participant(){
-        /*this.setAnswer_id(this.answer_id);
+    }
+
+    public Participant(){
+        this.setParticipant_id(this.answer_id);
         this.setAnswerQuestion_id(this.answerquestion_id);
         this.setAnswer_text(this.answer_text);
         this.setAnswer_url(this.answer_url);*/
