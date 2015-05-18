@@ -68,39 +68,39 @@ public class ParticipationQuestion {
         this.participationquestion_answertime = question_answertime;
     }
 
-    public Integer getParticipationid() {
+    public Integer getFieldParticipationid() {
         return participation_id;
     }
 
-    public Integer getQuestionid() {
+    public Integer getFieldQuestionid() {
         return question_id;
     }
 
-    public Integer getPoints() {
+    public Integer getFieldPoints() {
         return participationquestion_points;
     }
 
-    public String getAnswersjson() {
+    public String getFieldAnswersjson() {
         return participationquestion_answersjson;
     }
 
-    public Integer getServerstart() {
+    public Integer getFieldServerstart() {
         return participationquestion_serverstart;
     }
 
-    public Integer getServerend() {
+    public Integer getFieldServerend() {
         return participationquestion_serverend;
     }
 
-    public Integer getClientstart() {
+    public Integer getFieldClientstart() {
         return participationquestion_clientstart;
     }
 
-    public Integer getClientend() {
+    public Integer getFieldClientend() {
         return participationquestion_clientend;
     }
 
-    public Integer getAnswertime() {
+    public Integer getFieldAnswertime() {
         return participationquestion_answertime;
     }
 

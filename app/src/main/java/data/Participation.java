@@ -15,50 +15,73 @@ public class Participation {
 
     boolean selected = false;
 
-    public Participation(){
+    public Participation(Integer participation_id, Integer participant_id, Integer participation_start, Integer participation_end, Integer participation_totaltime, Integer participation_points, String participation_ranking){
+        this.setFieldId(participation_id);
+        this.setFieldParticipantid(participant_id);
+        this.setFieldStart(participation_start);
+        this.setFieldEnd(participation_end);
+        this.setFieldTotaltime(participation_totaltime);
+        this.setFieldPoints(participation_points);
+        this.setFieldRanking(participation_ranking);
     }
 
-    public void setParticipationid(Integer participation_id) {
+    public void setFieldId(Integer participation_id) {
         this.participant_id = participation_id;
     }
 
-    public void setParticipantid(Integer participant_id) {
+    public void setFieldParticipantid(Integer participant_id) {
         this.participant_id = participant_id;
     }
 
-    public void setParticipationstart(Integer participation_start) {
+    public void setFieldStart(Integer participation_start) {
         this.participation_start = participation_start;
     }
 
-    public void setParticipationend(Integer participation_end) {
+    public void setFieldEnd(Integer participation_end) {
         this.participation_end = participation_end;
     }
 
-    public void setParticipationtotaltime(Integer participation_totaltime) {
+    public void setFieldTotaltime(Integer participation_totaltime) {
         this.participation_totaltime = participation_totaltime;
     }
 
-    public void setParticipationpoints(Integer participation_points) {
+    public void setFieldPoints(Integer participation_points) {
         this.participation_points = participation_points;
     }
 
-    public void setParticipationranking(String participation_ranking) {
+    public void setFieldRanking(String participation_ranking) {
         this.participation_ranking = participation_ranking;
     }
 
-    public Integer getAnswerid() {
-        return answer_id;
+    public Integer getFieldId() {
+        return participation_id;
     }
 
-    public String getAnswertext() {
-        return answer_text;
+    public Integer getFieldParticipantid() {
+        return participant_id;
     }
 
-    public String getAnswerurl() {
-        return answer_url;
+    public Integer getFieldStart() {
+        return participation_start;
     }
 
-    public void setSelected(boolean selected) {
+    public Integer getFieldEnd() {
+        return participation_end;
+    }
+
+    public Integer getFieldTotaltime() {
+        return participation_totaltime;
+    }
+
+    public Integer getFieldPoints() {
+        return participation_points;
+    }
+
+    public String getFieldRanking() {
+        return participation_ranking;
+    }
+
+    public void setFieldSelected(boolean selected) {
         this.selected = selected;
     }
 

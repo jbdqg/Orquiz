@@ -190,18 +190,18 @@ public class MainActivity extends ActionBarActivity
 
                     Question question = db.getQuestion(question_id);
 
-                    question_text.setText(question.getQuestion_text());
+                    question_text.setText(question.getFieldText());
 
                     int count = db.getAllQuestionAnswersCount(question_id);
                     String[] values = new String[count];
                     List<Answer> answers_list = db.getAllQuestionAnswers(question_id);
                     int i = 0;
                     for (Answer qt : answers_list) {
-                        String log = "Id: " + qt.getAnswer_id() + " ,Text: " +
-                                qt.getAnswer_text() + " ,Url: " + qt.getAnswer_url();
+                        String log = "Id: " + qt.getFieldId() + " ,Text: " +
+                                qt.getFieldText() + " ,Url: " + qt.getFieldUrl();
                         Log.d("Answer: ", log);
-                        //values[i] = qt.getQuestion_id().toString();
-                        values[i] = qt.getAnswer_text();
+                        //values[i] = qt.getFieldId().toString();
+                        values[i] = qt.getFieldText();
                         i++;
                     }
 
@@ -289,8 +289,8 @@ public class MainActivity extends ActionBarActivity
             }
 
             Answer answer = answerList.get(position);
-            holder.code.setText(" (" +  answer.getAnswer_text() + ")");
-            holder.name.setText(answer.getAnswer_text());
+            holder.code.setText(" (" +  answer.getFieldText() + ")");
+            holder.name.setText(answer.getFieldText());
             holder.name.setChecked(answer.isSelected());
             holder.name.setTag(answer);
 

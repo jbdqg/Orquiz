@@ -136,9 +136,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                question.setQuestion_id(Integer.parseInt(cursor.getString(0)));
-                question.setQuestion_text(cursor.getString(1));
-                question.setQuestion_url(cursor.getString(2));
+                question.setFieldId(Integer.parseInt(cursor.getString(0)));
+                question.setFieldText(cursor.getString(1));
+                question.setFieldUrl(cursor.getString(2));
             } while (cursor.moveToNext());
         }
         return question;
@@ -154,9 +154,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Question question = new Question();
-                question.setQuestion_id(Integer.parseInt(cursor.getString(0)));
-                question.setQuestion_text(cursor.getString(1));
-                question.setQuestion_url(cursor.getString(2));
+                question.setFieldId(Integer.parseInt(cursor.getString(0)));
+                question.setFieldText(cursor.getString(1));
+                question.setFieldUrl(cursor.getString(2));
 
                 questionList.add(question);
             } while (cursor.moveToNext());
@@ -189,10 +189,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Answer answer = new Answer();
-                answer.setAnswer_id(Integer.parseInt(cursor.getString(0)));
-                answer.setAnswerQuestion_id(Integer.parseInt(cursor.getString(1)));
-                answer.setAnswer_text(cursor.getString(2));
-                answer.setAnswer_url(cursor.getString(3));
+                answer.setFieldId(Integer.parseInt(cursor.getString(0)));
+                answer.setFieldQuestionid(Integer.parseInt(cursor.getString(1)));
+                answer.setFieldText(cursor.getString(2));
+                answer.setFieldUrl(cursor.getString(3));
 
                 questionAnswersList.add(answer);
             } while (cursor.moveToNext());

@@ -15,39 +15,43 @@ public class Participant {
     public Participant(){
     }
 
-    public Participant(){
-        this.setParticipant_id(this.answer_id);
-        this.setAnswerQuestion_id(this.answerquestion_id);
-        this.setAnswer_text(this.answer_text);
-        this.setAnswer_url(this.answer_url);*/
+    public Participant(Integer participant_id, String participant_name, String participant_url, String participant_facebookid){
+        this.setFieldId(participant_id);
+        this.setFieldName(participant_name);
+        this.setFieldUrl(participant_url);
+        this.setFieldFacebookid(participant_facebookid);
     }
 
-    public void setAnswer_id(Integer answer_id) {
-        this.answer_id = answer_id;
+    public void setFieldId(Integer participant_id) {
+        this.participant_id = participant_id;
     }
 
-    public void setAnswerQuestion_id(Integer answerquestion_id) {
-        this.answerquestion_id = answerquestion_id;
+    public void setFieldName(String participant_name) {
+        this.participant_name = participant_name;
     }
 
-    public void setAnswer_text(String answer_text) {
-        this.answer_text = answer_text;
+    public void setFieldUrl(String participant_url) {
+        this.participant_url= participant_url;
     }
 
-    public void setAnswer_url(String answer_url) {
-        this.answer_url = answer_url;
+    public void setFieldFacebookid(String participant_facebookid) {
+        this.participant_facebookid = participant_facebookid;
     }
 
-    public Integer getAnswer_id() {
-        return answer_id;
+    public Integer getFieldId() {
+        return participant_id;
     }
 
-    public String getAnswer_text() {
-        return answer_text;
+    public String getFieldName() {
+        return participant_name;
     }
 
-    public String getAnswer_url() {
-        return answer_url;
+    public String getFieldUrl() {
+        return participant_url;
+    }
+
+    public String getFieldFacebookid() {
+        return participant_facebookid;
     }
 
     public void setSelected(boolean selected) {
