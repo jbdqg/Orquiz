@@ -2,7 +2,9 @@ package com.daam.orquiz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.app.ProgressDialog;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -193,6 +195,26 @@ public class MainActivity extends ActionBarActivity
             } else if (selected_option == 3) {
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
+
+                    /*
+                    //progress bar for resource em drawable (progress_bar.xml -> http://www.learn-android-easily.com/2013/05/custom-progress-bar-in-android.html)
+                    ProgressDialog progressBar;
+                    progressBar = new ProgressDialog(container.getContext());
+                    progressBar.setCancelable(true);
+                    progressBar.setMessage("Downloading File...");
+                    progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    progressBar.setProgress(0);
+                    progressBar.setMax(100);
+                    // Get the Drawable custom_progressbar
+                    Drawable customDrawable= getResources().getDrawable(R.drawable.progress_bar);
+                    // set the drawable as progress drawavle
+                    progressBar.setProgressDrawable(customDrawable);
+                    */
+
+                    //progressbar enquanto elemento do layout
+                    final ProgressBar progressBar = (ProgressBar) header.findViewById(R.id.progressBar);
+                    int number_of_questions = 10;
+                    progressBar.setProgress((5*100)/number_of_questions);
 
                     final TextView question_text = (TextView) header.findViewById(R.id.text);
                     final ListView answersLv = (ListView) header.findViewById(R.id.answerslv);
