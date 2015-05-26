@@ -1,6 +1,7 @@
 package com.daam.orquiz;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -31,6 +32,8 @@ import java.util.List;
 
 import data.Answer;
 import data.Question;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 
 public class MainActivity extends ActionBarActivity
@@ -158,7 +161,7 @@ public class MainActivity extends ActionBarActivity
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+        public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                                  Bundle savedInstanceState) {
             //View rootView = inflater.inflate(R.layout.view_startquiz, container, false);
 
@@ -168,6 +171,17 @@ public class MainActivity extends ActionBarActivity
 
             if (selected_option == 1) {
                 header = (ViewGroup) inflater.inflate(R.layout.view_splashpage, container, false);
+
+                final Button start_quiz_bt = (Button) header.findViewById(R.id.button);
+                start_quiz_bt.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(container.getContext(), QuizActivity.class);
+                        startActivity(intent);
+
+                    }
+                });
+
             } else if (selected_option == 2) {
                 header = (ViewGroup) inflater.inflate(R.layout.view_startquiz, container, false);
 
@@ -176,10 +190,9 @@ public class MainActivity extends ActionBarActivity
                 final Button but = (Button) header.findViewById(R.id.button);
                 //but.setOnClickListener();
                 progressBarWidget.getProgress();
-            } else {
-                if (selected_option == 3) {
+            } else if (selected_option == 3) {
 
-                    header = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
+                header = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
 
                     final TextView question_text = (TextView) header.findViewById(R.id.text);
                     final ListView answersLv = (ListView) header.findViewById(R.id.answerslv);
@@ -215,10 +228,8 @@ public class MainActivity extends ActionBarActivity
                             values);
 
                     answersLv.setAdapter(listcheckboxadapter);
-
-                } else {
-                    header = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
-                }
+            }else {
+                header = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
             }
 
             return header;
@@ -229,8 +240,10 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+            if (this.getClass().getSimpleName() == "MainActivity"){
+                ((MainActivity) activity).onSectionAttached(
+                        getArguments().getInt(ARG_SECTION_NUMBER));
+            }
         }
     }
 
