@@ -1,4 +1,6 @@
-package data;
+package com.daam.orquiz.data;
+
+import android.content.ContentValues;
 
 /**
  * Created by johnny on 02-05-2015.
@@ -9,6 +11,7 @@ public class Participant {
     private String participant_name = null;
     private String participant_url = null;
     private String participant_facebookid = null;
+    private ContentValues participationContentValues = new ContentValues();
 
     boolean selected = false;
 
@@ -28,14 +31,17 @@ public class Participant {
 
     public void setFieldName(String participant_name) {
         this.participant_name = participant_name;
+        this.participationContentValues.put("participant_name", participant_name);
     }
 
     public void setFieldUrl(String participant_url) {
         this.participant_url= participant_url;
+        this.participationContentValues.put("participant_url", participant_url);
     }
 
     public void setFieldFacebookid(String participant_facebookid) {
         this.participant_facebookid = participant_facebookid;
+        this.participationContentValues.put("participant_facebookid", participant_facebookid);
     }
 
     public Integer getFieldId() {

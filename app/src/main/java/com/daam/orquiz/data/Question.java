@@ -1,6 +1,6 @@
-package data;
+package com.daam.orquiz.data;
 
-import android.content.Context;
+import android.content.ContentValues;
 
 /**
  * Created by johnny on 02-05-2015.
@@ -17,6 +17,7 @@ public class Question {
     private Integer question_answercorrect = null;
     private Integer question_minpoints = null;
     private Integer question_timelimit = null;
+    private ContentValues participationContentValues = new ContentValues();
 
     public Question(){
     }
@@ -41,38 +42,55 @@ public class Question {
 
     public void setFieldQuizid(Integer question_quizid) {
         this.question_quizid = question_quizid;
+        this.participationContentValues.put("question_quizid", question_quizid);
+
     }
 
     public void setFieldText(String question_text) {
         this.question_text = question_text;
+        this.participationContentValues.put("question_text", question_text);
     }
 
     public void setFieldUrl(String question_url) {
         this.question_url = question_url;
+        this.participationContentValues.put("question_url", question_url);
+
     }
 
     public void setFieldType(String question_type) {
         this.question_type = question_type;
+        this.participationContentValues.put("question_type", question_type);
+
     }
 
     public void setFieldOrder(Integer question_order) {
         this.question_order = question_order;
+        this.participationContentValues.put("question_order", question_order);
+
     }
 
     public void setFieldAnswerrandom(Integer question_answerrandom) {
         this.question_answerrandom = question_answerrandom;
+        this.participationContentValues.put("question_answerrandom", question_answerrandom);
+
     }
 
     public void setFieldAnswercorrect(Integer question_answercorrect) {
         this.question_answercorrect = question_answercorrect;
+        this.participationContentValues.put("this.question_answercorrect = question_answercorrect;", question_answercorrect);
+
     }
 
     public void setFieldMinpoints(Integer question_minpoints) {
         this.question_minpoints = question_minpoints;
+        this.participationContentValues.put("question_minpoints", question_minpoints);
+
     }
 
     public void setFieldTimelimit(Integer question_timelimit) {
-        this.question_id = question_id;
+        this.question_timelimit = question_timelimit;
+        this.participationContentValues.put("question_timelimit", question_timelimit);
+
     }
 
     public Integer getFieldId() {

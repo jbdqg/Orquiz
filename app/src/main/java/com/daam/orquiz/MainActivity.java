@@ -2,18 +2,13 @@ package com.daam.orquiz;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.app.ProgressDialog;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,11 +26,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import data.Answer;
-import data.Question;
-
-import static android.widget.Toast.LENGTH_SHORT;
-
+import com.daam.orquiz.data.Answer;
+import com.daam.orquiz.data.Question;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -179,6 +170,8 @@ public class MainActivity extends ActionBarActivity
                     public void onClick(View v) {
 
                         Intent intent = new Intent(container.getContext(), QuizActivity.class);
+                        //para passar o identificador do quiz que está ativo
+                        intent.putExtra("QUIZ_ID", 1);
                         startActivity(intent);
 
                     }

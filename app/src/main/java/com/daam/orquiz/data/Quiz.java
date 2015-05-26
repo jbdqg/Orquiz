@@ -1,4 +1,6 @@
-package data;
+package com.daam.orquiz.data;
+
+import android.content.ContentValues;
 
 /**
  * Created by johnny on 02-05-2015.
@@ -12,6 +14,7 @@ public class Quiz {
     private String quiz_url = null;
     private Integer quiz_questionsnumber= null;
     private Integer quiz_considertime= null;
+    private ContentValues participationContentValues = new ContentValues();
 
     boolean selected = false;
 
@@ -34,26 +37,32 @@ public class Quiz {
 
     public void setFieldReference(String quiz_reference) {
         this.quiz_reference = quiz_reference;
+        this.participationContentValues.put("quiz_reference", quiz_reference);
     }
 
     public void setFieldName(String quiz_name) {
         this.quiz_name = quiz_name;
+        this.participationContentValues.put("quiz_name", quiz_name);
     }
 
     public void setFieldDescription(String quiz_description) {
         this.quiz_description = quiz_description;
+        this.participationContentValues.put("quiz_description", quiz_description);
     }
 
     public void setFieldUrl(String quiz_url) {
         this.quiz_url = quiz_url;
+        this.participationContentValues.put("quiz_url", quiz_url);
     }
 
     public void setFieldQuestionsnumber(Integer quiz_questionsnumber) {
         this.quiz_questionsnumber = quiz_questionsnumber;
+        this.participationContentValues.put("quiz_questionsnumber", quiz_questionsnumber);
     }
 
     public void setFieldConsidertime(Integer quiz_considertime) {
         this.quiz_considertime = quiz_considertime;
+        this.participationContentValues.put("quiz_considertime", quiz_considertime);
     }
 
     public Integer getFieldId() {
