@@ -222,7 +222,7 @@ public class MainActivity extends ActionBarActivity
 
                     int count = db.getAllQuestionAnswersCount(question_id);
                     String[] values = new String[count];
-                    List<Answer> answers_list = db.getAllQuestionAnswers(question_id);
+                    List<Answer> answers_list = db.getAllQuestionAnswers(question_id, 0);
                     int i = 0;
                     for (Answer qt : answers_list) {
                         String log = "Id: " + qt.getFieldId() + " ,Text: " +

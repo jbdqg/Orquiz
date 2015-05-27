@@ -5,13 +5,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
+import com.daam.orquiz.data.ParticipationQuestion;
 import com.daam.orquiz.data.Question;
+import com.daam.orquiz.data.Quiz;
 
 /**
  * Created by johnny on 02-05-2015.
@@ -43,6 +49,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String FIELD_PARTICIPATIONQUESTION_CLIENTSTART = "participationquestion_clientstart";
     private static final String FIELD_PARTICIPATIONQUESTION_CLIENTEND = "participationquestion_clientend";
     private static final String FIELD_PARTICIPATIONQUESTION_ANSWERTIME = "participationquestion_answertime";
+    private static final String FIELD_PARTICIPATIONQUESTION_ORDER = "participationquestion_order";
+
 
     private static final String TABLE_QUIZ = "Quiz";
     private static final String KEY_QUIZ_ID = "quiz_id";
@@ -50,6 +58,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String FIELD_QUIZ_NAME = "quiz_name";
     private static final String FIELD_QUIZ_DESCRIPTION = "quiz_description";
     private static final String FIELD_QUIZ_URL = "quiz_url";
+    private static final String FIELD_QUIZ_QUESTIONSRANDOM = "quiz_questionsrandom";
     private static final String FIELD_QUIZ_QUESTIONSNUMBER = "quiz_questionsnumber";
     private static final String FIELD_QUIZ_CONSIDERTIME = "quiz_considertime";
 
@@ -116,7 +125,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + FIELD_PARTICIPATIONQUESTION_SERVEREND + " INTEGER,"
                 + FIELD_PARTICIPATIONQUESTION_CLIENTSTART + " INTEGER,"
                 + FIELD_PARTICIPATIONQUESTION_CLIENTEND + " INTEGER,"
-                + FIELD_PARTICIPATIONQUESTION_ANSWERTIME+ " INTEGER"
+                + FIELD_PARTICIPATIONQUESTION_ANSWERTIME + " INTEGER,"
+                + FIELD_PARTICIPATIONQUESTION_ORDER + " INTEGER"
                 + ")";
         db.execSQL(CREATE_PARTICIPATIONQUESTION_TABLE);
 
@@ -126,6 +136,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + FIELD_QUIZ_NAME + " TEXT,"
                 + FIELD_QUIZ_DESCRIPTION + " TEXT,"
                 + FIELD_QUIZ_URL + " TEXT,"
+                + FIELD_QUIZ_QUESTIONSRANDOM + " INTEGER,"
                 + FIELD_QUIZ_QUESTIONSNUMBER + " INTEGER,"
                 + FIELD_QUIZ_CONSIDERTIME + " INTEGER"
                 + ")";
@@ -163,9 +174,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(sqlInsertP);
 
         String sqlInsertQU1 = "INSERT INTO " + TABLE_QUIZ + "(" + KEY_QUIZ_ID + ", " + FIELD_QUIZ_REFERENCE + ", " + FIELD_QUIZ_NAME + ", "
-                + FIELD_QUIZ_DESCRIPTION + ", " + FIELD_QUIZ_URL + ", "
+                + FIELD_QUIZ_DESCRIPTION + ", " + FIELD_QUIZ_URL + ", " + FIELD_QUIZ_QUESTIONSRANDOM + ", "
                 + FIELD_QUIZ_QUESTIONSNUMBER + ", " + FIELD_QUIZ_CONSIDERTIME
-                + ") VALUES( 1, 'QCO', 'Clockwork Orange', 'A Quiz About Clockwork Orange', null, 2, 0"
+                + ") VALUES( 1, 'QCO', 'Clockwork Orange', 'A Quiz About Clockwork Orange', null, 1, 2, 0"
                 + ")";
         db.execSQL(sqlInsertQU1);
 
@@ -185,28 +196,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String sqlInsertQ1A2 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
                 + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
-                + ") VALUES( 2, 1, 'Ken Kesey', null, 0, 2, 1"
+                + ") VALUES( 2, 1, 'Ken Kesey', null, 0, 2, 0"
                 + ")";
         db.execSQL(sqlInsertQ1A2);
 
         String sqlInsertQ1A3 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
                 + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
-                + ") VALUES( 3, 1, 'Anthony Burgess', null, 0, 2, 0"
+                + ") VALUES( 3, 1, 'Anthony Burgess', null, 0, 3, 1"
                 + ")";
         db.execSQL(sqlInsertQ1A3);
 
         String sqlInsertQ1A4 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
                 + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
-                + ") VALUES( 4, 1, 'Malcolm McDowell', null, 0, 2, 0"
+                + ") VALUES( 4, 1, 'Malcolm McDowell', null, 0, 4, 0"
                 + ")";
         db.execSQL(sqlInsertQ1A4);
-
 
         String sqlInsertQ2 = "INSERT INTO " + TABLE_QUESTION + "(" + KEY_QUESTION_ID + ", "  + KEY_QUIZ_ID +  ", " + FIELD_QUESTION_TEXT + ", " + FIELD_QUESTION_URL + ", "
                                                      + FIELD_QUESTION_TYPE + ", " + FIELD_QUESTION_ORDER + ", "
                                                      + FIELD_QUESTION_ANSWERRANDOM + ", " + FIELD_QUESTION_MINPOINTS + ", "
                                                      + FIELD_QUESTION_TIMELIMIT + ", " + FIELD_QUESTION_ANSWERCORRECT
-                                       + ") VALUES( 2, 1, 'What is the name of the leading character?', '/home/johnny/develop/Orquiz/app/src/main/res/drawable-hdpi/30405805_.jpg', 'multiplechoice', 1, 1, 0, 10, 1"
+                                       + ") VALUES( 2, 1, 'What is the name of the leading character?', '/home/johnny/develop/Orquiz/app/src/main/res/drawable-hdpi/30405805_.jpg', 'multiplechoice', 2, 1, 0, 10, 1"
                                        + ")";
         db.execSQL(sqlInsertQ2);
 
@@ -224,13 +234,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String sqlInsertQ2A7 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
                                                      + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
-                                       + ") VALUES( 7, 2, 'Pete', null, 0, 2, 0"
+                                       + ") VALUES( 7, 2, 'Pete', null, 0, 3, 0"
                                        + ")";
         db.execSQL(sqlInsertQ2A7);
 
         String sqlInsertQ2A8 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
                                                      + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
-                                       + ") VALUES( 8, 2, 'Dim', null, 0, 2, 0"
+                                       + ") VALUES( 8, 2, 'Dim', null, 0, 4, 0"
                                        + ")";
         db.execSQL(sqlInsertQ2A8);
 
@@ -242,8 +252,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUESTION);
         onCreate(db);
     }
-
-
 
     public int getAllQuestionsCount() {
         String selectQuery = "SELECT count(*) FROM " + TABLE_QUESTION;
@@ -262,18 +270,54 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public Question getQuestion(int question_id) {
         Question question = new Question();
 
-        String selectQuery = "SELECT * FROM " + TABLE_QUESTION + " WHERE " + KEY_QUESTION_ID + " = " + question_id;
+        String selectQuery = "SELECT " + KEY_QUESTION_ID + ", "
+                                       + KEY_QUIZ_ID + ", "
+                                       + FIELD_QUESTION_TEXT + ", "
+                                       + FIELD_QUESTION_URL + ", "
+                                       + FIELD_QUESTION_TYPE + ", "
+                                       + FIELD_QUESTION_ORDER + ", "
+                                       + FIELD_QUESTION_ANSWERRANDOM + ", "
+                                       + FIELD_QUESTION_TIMELIMIT
+                           + " FROM " + TABLE_QUESTION
+                           + " WHERE " + KEY_QUESTION_ID + " = " + question_id;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
                 question.setFieldId(Integer.parseInt(cursor.getString(0)));
-                question.setFieldText(cursor.getString(1));
-                question.setFieldUrl(cursor.getString(2));
+                question.setFieldQuizid(Integer.parseInt(cursor.getString(1)));
+                question.setFieldText(cursor.getString(2));
+                question.setFieldUrl(cursor.getString(3));
+                question.setFieldType(cursor.getString(4));
+                question.setFieldOrder(Integer.parseInt(cursor.getString(5)));
+                question.setFieldAnswerrandom(Integer.parseInt(cursor.getString(6)));
+                question.setFieldTimelimit(Integer.parseInt(cursor.getString(7)));
             } while (cursor.moveToNext());
         }
         return question;
+    }
+
+    public Quiz getQuiz(int quiz_id) {
+        Quiz quiz = new Quiz();
+
+        String selectQuery = "SELECT * FROM " + TABLE_QUIZ + " WHERE " + KEY_QUIZ_ID + " = " + quiz_id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                quiz.setFieldId(Integer.parseInt(cursor.getString(0)));
+                quiz.setFieldReference(cursor.getString(1));
+                quiz.setFieldName(cursor.getString(2));
+                quiz.setFieldDescription(cursor.getString(3));
+                quiz.setFieldUrl(cursor.getString(4));
+                quiz.setFieldQuestionsrandom(Integer.parseInt(cursor.getString(5)));
+                quiz.setFieldQuestionsnumber(Integer.parseInt(cursor.getString(6)));
+                quiz.setFieldConsidertime(Integer.parseInt(cursor.getString(7)));
+            } while (cursor.moveToNext());
+        }
+        return quiz;
     }
 
     public List<Question> getAllQuestions() {
@@ -310,11 +354,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return questionsCount;
     }
 
-    public List<Answer> getAllQuestionAnswers(int question_id) {
+    public List<Answer> getAllQuestionAnswers(int question_id, int randomAnswers) {
         List<Answer> questionAnswersList = new ArrayList<Answer>();
 
         //TODO: colocar nomes das tabelas de que se obtêm dados
-        String selectQuery = "SELECT * FROM " + TABLE_ANSWER + " WHERE " + KEY_QUESTION_ID + " = " + question_id;
+        String selectQuery = "SELECT " + KEY_ANSWER_ID + ","
+                                       + KEY_QUESTION_ID  + ","
+                                       + FIELD_ANSWER_TEXT  + ","
+                                       + FIELD_ANSWER_URL  + ","
+                                       + FIELD_ANSWER_POINTS  + ","
+                                       + FIELD_ANSWER_ORDER
+                                       + " FROM " + TABLE_ANSWER + " WHERE " + KEY_QUESTION_ID + " = " + question_id;
+
+        if(randomAnswers == 1){
+            selectQuery += " ORDER BY RANDOM()";
+        }else{
+            selectQuery += " ORDER BY " + FIELD_ANSWER_ORDER + " ASC";
+        }
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -325,6 +381,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 answer.setFieldQuestionid(Integer.parseInt(cursor.getString(1)));
                 answer.setFieldText(cursor.getString(2));
                 answer.setFieldUrl(cursor.getString(3));
+                answer.setFieldPoints(Integer.parseInt(cursor.getString(4)));
+                answer.setFieldOrder(Integer.parseInt(cursor.getString(5)));
 
                 questionAnswersList.add(answer);
             } while (cursor.moveToNext());
@@ -365,7 +423,92 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
+        if (participation.getFieldId() == null){
+
+            participation.setFieldParticipantid(participant_id);
+            participation.setFieldStart(System.currentTimeMillis());
+            this.insertTableRecord("Participation", participation.getContentValues());
+
+        }
+
         return participation;
+    }
+
+    public List<ParticipationQuestion> getActiveParticipationQuestions(Participation activeParticipation){
+
+        List<ParticipationQuestion> activeParticipationQuestions = new ArrayList<ParticipationQuestion>();
+
+        String selectQuery = "SELECT * FROM " + TABLE_PARTICIPATIONQUESTION + " WHERE " + KEY_PARTICIPATION_ID + " = " + activeParticipation.getFieldId() + " ORDER BY " + FIELD_PARTICIPATIONQUESTION_ORDER + " ASC ";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ParticipationQuestion participationquestion = new ParticipationQuestion();
+                participationquestion.setFieldParticipationid(Integer.parseInt(cursor.getString(0)));
+                participationquestion.setFieldQuestionid(Integer.parseInt(cursor.getString(1)));
+                participationquestion.setFieldServerstart(Long.parseLong(cursor.getString(4)));
+                participationquestion.setFieldServerend(Long.parseLong(cursor.getString(5)));
+                participationquestion.setFieldClientstart(Long.parseLong(cursor.getString(6)));
+                participationquestion.setFieldClientend(Long.parseLong(cursor.getString(7)));
+                participationquestion.setFieldAnswertime(Integer.parseInt(cursor.getString(8)));
+                participationquestion.setFieldOrder(Integer.parseInt(cursor.getString(9)));
+                activeParticipationQuestions.add(participationquestion);
+            } while (cursor.moveToNext());
+        }
+
+        return activeParticipationQuestions;
+
+    }
+
+    public Map getNextQuestion(int quiz_id, InputStreamReader questionsAnswered_is, int lastQuestionAnsweredId){
+
+        Map<String, Object> questionData = new HashMap<>();
+
+        //obter o quiz para ver se é random, senão é a seguinte
+        Quiz quiz = this.getQuiz(quiz_id);
+
+        if(quiz.getFieldId() != null){
+
+            String selectQuery = "SELECT " + KEY_QUESTION_ID + " FROM " + TABLE_QUESTION + " WHERE " + KEY_QUIZ_ID + " = " + quiz_id;
+
+            if (questionsAnswered_is != null){
+                selectQuery += " AND " + KEY_QUESTION_ID + "NOT IN (" + questionsAnswered_is.toString() + ")";
+            }
+
+            if(quiz.getFieldQuestionsrandom() == 1){
+                selectQuery += " ORDER BY RANDOM() LIMIT 1";
+            }else if (quiz.getFieldQuestionsrandom() == 0 || quiz.getFieldQuestionsrandom() == null){
+                if (lastQuestionAnsweredId != 0){
+                    selectQuery += " AND " + KEY_QUESTION_ID + " = (SELECT " + KEY_QUESTION_ID + " FROM " + TABLE_QUESTION + "WHERE " + FIELD_QUESTION_ORDER + " > (SELECT " + FIELD_QUESTION_ORDER + " FROM " + TABLE_QUESTION + " WHERE " + KEY_QUESTION_ID + " = " + lastQuestionAnsweredId + "))";
+                }else{
+                    selectQuery += " AND " + KEY_QUESTION_ID + " = (SELECT " + KEY_QUESTION_ID + " FROM " + TABLE_QUESTION + "WHERE " + FIELD_QUESTION_ORDER + " = (SELECT MIN(" + FIELD_QUESTION_ORDER + ") FROM " + TABLE_QUESTION + " WHERE " + KEY_QUIZ_ID + " = " + quiz_id + "))";
+                }
+            }
+
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            Integer question_id = null;
+            Question nextQuestion = null;
+
+            if (cursor.moveToFirst()) {
+                do {
+                    //obtêm-se os dados da próxima pergunta e instanciam-se pela invoação da função getQuestion
+                    nextQuestion = getQuestion(Integer.parseInt(cursor.getString(0)));
+                    questionData.put("question", nextQuestion);
+                } while (cursor.moveToNext());
+            }
+
+            //agora obtêm-se as respostas possíveis para a pergunta
+            List<Answer> possibleAnswers = getAllQuestionAnswers(nextQuestion.getFieldId(), nextQuestion.getFieldAnswerrandom());
+
+            questionData.put("answers", possibleAnswers);
+        }
+
+        //se questionsAnswered_is for null é a primeira pergunta, senão são as not in questionAnswered_is
+        return questionData;
+
     }
 
     public Long insertTableRecord(String tableName, ContentValues contentValues){

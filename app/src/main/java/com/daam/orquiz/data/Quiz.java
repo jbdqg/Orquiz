@@ -12,7 +12,8 @@ public class Quiz {
     private String quiz_name = null;
     private String quiz_description = null;
     private String quiz_url = null;
-    private Integer quiz_questionsnumber= null;
+    private Integer quiz_questionsrandom = null;
+    private Integer quiz_questionsnumber = null;
     private Integer quiz_considertime= null;
     private ContentValues participationContentValues = new ContentValues();
 
@@ -21,12 +22,13 @@ public class Quiz {
     public Quiz(){
     }
 
-    public Quiz(Integer quiz_id, String quiz_reference, String quiz_name, String quiz_description, String quiz_url, Integer quiz_questionsnumber, Integer quiz_considertime){
+    public Quiz(Integer quiz_id, String quiz_reference, String quiz_name, String quiz_description, String quiz_url, Integer quiz_questionsrandom, Integer quiz_questionsnumber, Integer quiz_considertime){
         this.setFieldId(quiz_id);
         this.setFieldReference(quiz_reference);
         this.setFieldName(quiz_name);
         this.setFieldDescription(quiz_description);
         this.setFieldUrl(quiz_url);
+        this.setFieldQuestionsrandom(quiz_questionsrandom);
         this.setFieldQuestionsnumber(quiz_questionsnumber);
         this.setFieldConsidertime(quiz_considertime);
     }
@@ -53,6 +55,11 @@ public class Quiz {
     public void setFieldUrl(String quiz_url) {
         this.quiz_url = quiz_url;
         this.participationContentValues.put("quiz_url", quiz_url);
+    }
+
+    public void setFieldQuestionsrandom(Integer quiz_questionsrandom) {
+        this.quiz_questionsrandom = quiz_questionsrandom;
+        this.participationContentValues.put("quiz_questionsrandom", quiz_questionsrandom);
     }
 
     public void setFieldQuestionsnumber(Integer quiz_questionsnumber) {
@@ -83,6 +90,10 @@ public class Quiz {
 
     public String getFieldUrl() {
         return quiz_url;
+    }
+
+    public Integer getFieldQuestionsrandom() {
+        return quiz_questionsrandom;
     }
 
     public Integer getFieldQuestionsnumber() {

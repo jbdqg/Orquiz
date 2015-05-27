@@ -12,6 +12,7 @@ import com.daam.orquiz.business.Utils;
 import com.daam.orquiz.data.Question;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by johnny on 25-05-2015.
@@ -50,8 +51,10 @@ public class QuizActivity extends FragmentActivity {
             vpPager.setAdapter(adapterViewPager);
 
             //insere-se a participação ou vai-se buscar a que existe. a invocação do obtainquestion resolve essa questão
-            List nextQuestion = oq.getNextQuestion(db, quizIdentificator);
+            Map nextQuestion = oq.retrieveNextQuestion(db, quizIdentificator);
 
+            //indica em que posição é que vai iniciar
+            vpPager.setCurrentItem(Integer.parseInt(nextQuestion.get("questionsAnswered").toString()) + 1);
 
         }else{
             //noquiz
