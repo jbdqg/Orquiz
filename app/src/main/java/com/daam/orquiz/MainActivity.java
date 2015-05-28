@@ -235,7 +235,7 @@ public class MainActivity extends ActionBarActivity
 
                     //You can get the context by invoking getApplicationContext(), getContext(), getBaseContext() or this (when in the activity class).
 
-                    MyListCheckboxAdapter listcheckboxadapter = new MyListCheckboxAdapter(getActivity().getBaseContext(), R.layout.custom_checkboxlist_layout, answers_list);
+                old_MyListCheckboxAdapter listcheckboxadapter = new old_MyListCheckboxAdapter(getActivity().getBaseContext(), R.layout.custom_checkboxlist_layout, answers_list);
 
                     ArrayAdapter<String> adapter = new
                             ArrayAdapter<String>(getActivity().getBaseContext(),
@@ -262,11 +262,11 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    public static class MyListCheckboxAdapter extends ArrayAdapter<Answer> {
+    public static class old_MyListCheckboxAdapter extends ArrayAdapter<Answer> {
 
         private ArrayList<Answer> answerList;
 
-        public MyListCheckboxAdapter(Context context, int textViewResourceId,
+        public old_MyListCheckboxAdapter(Context context, int textViewResourceId,
                                List<Answer> answerList) {
             super(context, textViewResourceId, answerList);
             this.answerList = new ArrayList<Answer>();

@@ -1,11 +1,13 @@
 package com.daam.orquiz;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.daam.orquiz.business.ObtainQuestion;
 import com.daam.orquiz.business.Utils;
@@ -47,14 +49,14 @@ public class QuizActivity extends FragmentActivity {
             quizQuestionsNumber = utils.retrieveQuizQuestions(db, quizIdentificator);
 
             ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
-            adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), quizQuestionsNumber);
+            adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), db, quizQuestionsNumber, quizIdentificator);
             vpPager.setAdapter(adapterViewPager);
 
             //insere-se a participação ou vai-se buscar a que existe. a invocação do obtainquestion resolve essa questão
-            Map nextQuestion = oq.retrieveNextQuestion(db, quizIdentificator);
+            //Map nextQuestion = oq.retrieveNextQuestion(db, quizIdentificator);
 
             //indica em que posição é que vai iniciar
-            vpPager.setCurrentItem(Integer.parseInt(nextQuestion.get("questionsAnswered").toString()) + 1);
+            //vpPager.setCurrentItem(Integer.parseInt(nextQuestion.get("questionsAnswered").toString()) + 1);
 
         }else{
             //noquiz
@@ -62,13 +64,38 @@ public class QuizActivity extends FragmentActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        int i = 0;
+
+        //registar as respostas dadas e fechar participação
+        while (i != this.quizQuestionsNumber){
+
+            QuizQuestionFragment oneFragment = (QuizQuestionFragment) adapterViewPager.getRegisteredFragment(i);
+
+            Utils.MyListCheckboxAdapter fragmentCheckboxAnswers = oneFragment.getCheckBoxAdapter();
+
+            Question fragmentQuestion = oneFragment.getQuestion();
+
+            i++;
+        }
+
+    }
+
     // Extend from SmartFragmentStatePagerAdapter now instead for more dynamic ViewPager items
     public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
         private static int NUM_ITEMS = 0;
+        private static int QUIZ_IDENTIFICATOR = 0;
+        private ObtainQuestion oq = new ObtainQuestion();
+        private DatabaseHandler DB = null;
 
-        public MyPagerAdapter(FragmentManager fragmentManager, int questionsNumber) {
+        public MyPagerAdapter(FragmentManager fragmentManager, DatabaseHandler db, int questionsNumber, int quizIdentificator) {
             super(fragmentManager);
             this.NUM_ITEMS = questionsNumber;
+            this.QUIZ_IDENTIFICATOR = quizIdentificator;
+            this.DB = db;
         }
 
         //public void setQuestionsNumber(int questionsNumber){
@@ -85,13 +112,10 @@ public class QuizActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
 
-            //ObtainQuestion
-
-            //é necessário passar a question a instanciar pelo fragment. é o fragment que decide qual o tipo de interface que vai mostrar em função da pergunta
-
-            //valida-se a position e se a position for a última tem que se mostrar o resulado do quiz
-
-            return QuizQuestionFragment.newInstance(position, "Page # 1", 1);
+            //insere-se a participação ou vai-se buscar a que existe. a invocação do obtainquestion resolve essa questão
+            Map nextQuestion = oq.retrieveNextQuestion(this.DB, this.QUIZ_IDENTIFICATOR);
+            Log.d("Answer: ", ((Question) nextQuestion.get("question")).getFieldText());
+            return QuizQuestionFragment.newInstance(position, nextQuestion);
 
             /*switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
@@ -112,7 +136,7 @@ public class QuizActivity extends FragmentActivity {
         // Returns the page title for the top indicator
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Page " + position;
+            return "Question " + position;
         }
 
     }

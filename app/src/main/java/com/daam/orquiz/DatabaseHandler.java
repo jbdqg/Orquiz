@@ -216,7 +216,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                                      + FIELD_QUESTION_TYPE + ", " + FIELD_QUESTION_ORDER + ", "
                                                      + FIELD_QUESTION_ANSWERRANDOM + ", " + FIELD_QUESTION_MINPOINTS + ", "
                                                      + FIELD_QUESTION_TIMELIMIT + ", " + FIELD_QUESTION_ANSWERCORRECT
-                                       + ") VALUES( 2, 1, 'What is the name of the leading character?', '/home/johnny/develop/Orquiz/app/src/main/res/drawable-hdpi/30405805_.jpg', 'multiplechoice', 2, 1, 0, 10, 1"
+                                       + ") VALUES( 2, 1, 'What is the name of the leading character?', '/home/johnny/develop/Orquiz/app/src/main/res/drawable-hdpi/30405805_.jpg', 'uniquechoice', 2, 1, 0, 10, 1"
                                        + ")";
         db.execSQL(sqlInsertQ2);
 
