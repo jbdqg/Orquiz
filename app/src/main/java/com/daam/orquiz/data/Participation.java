@@ -75,10 +75,6 @@ public class Participation {
         return participation_id;
     }
 
-    public ContentValues getContentValues() {
-        return participationContentValues;
-    }
-
     public Integer getFieldParticipantid() {
         return participant_id;
     }
@@ -101,6 +97,10 @@ public class Participation {
 
     public String getFieldRanking() {
         return participation_ranking;
+    }
+
+    public ContentValues getContentValues() {
+        return participationContentValues;
     }
 
     public void setFieldSelected(boolean selected) {

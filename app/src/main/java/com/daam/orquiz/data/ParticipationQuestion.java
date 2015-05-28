@@ -7,6 +7,7 @@ import android.content.ContentValues;
  */
 public class ParticipationQuestion {
 
+    private Integer participationquestion_id = null;
     private Integer participation_id = null;
     private Integer question_id = null;
     private Integer participationquestion_points = null;
@@ -17,7 +18,7 @@ public class ParticipationQuestion {
     private Long participationquestion_clientend = null;
     private Integer participationquestion_answertime = null;
     private Integer participationquestion_order = null;
-    private ContentValues participationContentValues = new ContentValues();
+    private ContentValues participationquestionContentValues = new ContentValues();
 
     boolean selected = false;
 
@@ -37,52 +38,62 @@ public class ParticipationQuestion {
         this.setFieldOrder(this.participationquestion_order);
     }
 
+    public void setFieldId(Integer participationquestion_id) {
+        this.participationquestion_id = participationquestion_id;
+    }
+
     public void setFieldParticipationid(Integer participation_id) {
         this.participation_id = participation_id;
+        this.participationquestionContentValues.put("participation_id", participation_id);
     }
 
     public void setFieldQuestionid(Integer question_id) {
         this.question_id = question_id;
+        this.participationquestionContentValues.put("question_id", question_id);
     }
 
     public void setFieldPoints(Integer participationquestion_points) {
         this.participationquestion_points = participationquestion_points;
-        this.participationContentValues.put("participationquestion_points", participationquestion_points);
+        this.participationquestionContentValues.put("participationquestion_points", participationquestion_points);
     }
 
     public void setFieldAnswersjson(String participationquestion_answersjson) {
         this.participationquestion_answersjson = participationquestion_answersjson;
-        this.participationContentValues.put("participationquestion_answersjson", participationquestion_answersjson);
+        this.participationquestionContentValues.put("participationquestion_answersjson", participationquestion_answersjson);
     }
 
     public void setFieldServerstart(Long participationquestion_serverstart) {
         this.participationquestion_serverstart = participationquestion_serverstart;
-        this.participationContentValues.put("participationquestion_serverstart", participationquestion_serverstart);
+        this.participationquestionContentValues.put("participationquestion_serverstart", participationquestion_serverstart);
     }
 
     public void setFieldServerend(Long participationquestion_serverend) {
         this.participationquestion_serverend = participationquestion_serverend;
-        this.participationContentValues.put("participationquestion_serverend", participationquestion_serverend);
+        this.participationquestionContentValues.put("participationquestion_serverend", participationquestion_serverend);
     }
 
     public void setFieldClientstart(Long participationquestion_clientstart) {
         this.participationquestion_clientstart = participationquestion_clientstart;
-        this.participationContentValues.put("participationquestion_clientstart", participationquestion_clientstart);
+        this.participationquestionContentValues.put("participationquestion_clientstart", participationquestion_clientstart);
     }
 
     public void setFieldClientend(Long participationquestion_clientend) {
         this.participationquestion_clientend = participationquestion_clientend;
-        this.participationContentValues.put("participationquestion_clientend", participationquestion_clientend);
+        this.participationquestionContentValues.put("participationquestion_clientend", participationquestion_clientend);
     }
 
     public void setFieldAnswertime(Integer participationquestion_answertime) {
         this.participationquestion_answertime = participationquestion_answertime;
-        this.participationContentValues.put("participationquestion_answertime", participationquestion_answertime);
+        this.participationquestionContentValues.put("participationquestion_answertime", participationquestion_answertime);
     }
 
     public void setFieldOrder(Integer participationquestion_order) {
-        this.participationquestion_answertime = participationquestion_order;
-        this.participationContentValues.put("participationquestion_order", participationquestion_order);
+        this.participationquestion_order = participationquestion_order;
+        this.participationquestionContentValues.put("participationquestion_order", participationquestion_order);
+    }
+
+    public Integer getFieldId() {
+        return participationquestion_id;
     }
 
     public Integer getFieldParticipationid() {
@@ -123,6 +134,10 @@ public class ParticipationQuestion {
 
     public Integer getFieldOrder() {
         return participationquestion_order;
+    }
+
+    public ContentValues getContentValues() {
+        return participationquestionContentValues;
     }
 
     public void setFieldSelected(boolean selected) {

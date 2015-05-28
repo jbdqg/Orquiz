@@ -1,18 +1,19 @@
 package com.daam.orquiz;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import com.daam.orquiz.business.ObtainQuestion;
+import com.daam.orquiz.business.ParticipationServices;
 import com.daam.orquiz.business.Utils;
+import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.Question;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class QuizActivity extends FragmentActivity {
     private int quizQuestionsNumber = 0;
 
     private Utils utils = new Utils();
-    private ObtainQuestion oq = new ObtainQuestion();
+    private ParticipationServices oq = new ParticipationServices();
     private DatabaseHandler db = new DatabaseHandler(this);
     //private String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
     private String android_id = "id do user";
@@ -70,17 +71,35 @@ public class QuizActivity extends FragmentActivity {
 
         int i = 0;
 
-        //registar as respostas dadas e fechar participação
+        //TODO: obter dinamicamente o participant_id
+        int participant_id = 1;
+
+        //obtem-se a participação que está ativa
+        Participation activeParticipation = db.getLastActiveParticipation(participant_id);
+
+        //registam-se as respostas dadas e fechar participação
         while (i != this.quizQuestionsNumber){
 
             QuizQuestionFragment oneFragment = (QuizQuestionFragment) adapterViewPager.getRegisteredFragment(i);
 
-            Utils.MyListCheckboxAdapter fragmentCheckboxAnswers = oneFragment.getCheckBoxAdapter();
+            Map<String, Object> questionAnswersData = new HashMap<>();
+            questionAnswersData.put("participation", activeParticipation);
+            questionAnswersData.put("question", oneFragment.getQuestion());
+            questionAnswersData.put("answers", oneFragment.getAnswers());
 
-            Question fragmentQuestion = oneFragment.getQuestion();
+            oq.registerQuestionAnswers(db, questionAnswersData);
+
 
             i++;
         }
+        //fecha-se a participação
+        String whereClause = " participation_id = " + activeParticipation.getFieldId();
+        Long participationEnd = System.currentTimeMillis();
+        Long participationTime = ((participationEnd - activeParticipation.getFieldStart()) / 1000);
+        activeParticipation.setFieldEnd(participationEnd);
+        activeParticipation.setFieldTotaltime(participationTime.intValue());
+        db.updateTableRecord("Participation", activeParticipation.getContentValues(), whereClause, null);
+
 
     }
 
@@ -88,8 +107,9 @@ public class QuizActivity extends FragmentActivity {
     public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
         private static int NUM_ITEMS = 0;
         private static int QUIZ_IDENTIFICATOR = 0;
-        private ObtainQuestion oq = new ObtainQuestion();
+        private ParticipationServices oq = new ParticipationServices();
         private DatabaseHandler DB = null;
+        private List<Integer> retrievedQuestions = new ArrayList<Integer>();
 
         public MyPagerAdapter(FragmentManager fragmentManager, DatabaseHandler db, int questionsNumber, int quizIdentificator) {
             super(fragmentManager);
@@ -114,8 +134,14 @@ public class QuizActivity extends FragmentActivity {
 
             //insere-se a participação ou vai-se buscar a que existe. a invocação do obtainquestion resolve essa questão
             Map nextQuestion = oq.retrieveNextQuestion(this.DB, this.QUIZ_IDENTIFICATOR);
-            Log.d("Answer: ", ((Question) nextQuestion.get("question")).getFieldText());
+
+            if(nextQuestion.size() != 0) {
+                retrievedQuestions.add(((Question) nextQuestion.get("question")).getFieldId());
+                Log.d("Answer: ", ((Question) nextQuestion.get("question")).getFieldText());
+            }
+            //validar porque na 2a iteração dá erro quando já não se pode responder mais (testar comentando o onStop())
             return QuizQuestionFragment.newInstance(position, nextQuestion);
+
 
             /*switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
