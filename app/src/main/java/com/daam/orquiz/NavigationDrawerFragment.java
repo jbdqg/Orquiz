@@ -102,6 +102,7 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
+                        getString(R.string.drawer_optitle_splashpage),
                         getString(R.string.drawer_optitle_start_quiz),
                         getString(R.string.drawer_optitle_my_results),
                         getString(R.string.drawer_optitle_my_data),
