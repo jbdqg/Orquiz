@@ -1,6 +1,8 @@
 package com.daam.orquiz.business;
 
 import android.content.Context;
+
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daam.orquiz.DatabaseHandler;
+import com.daam.orquiz.MainActivity;
 import com.daam.orquiz.R;
 import com.daam.orquiz.data.Answer;
 
@@ -163,7 +166,5 @@ public class Utils {
         }
 
     }
-
-
 
 }

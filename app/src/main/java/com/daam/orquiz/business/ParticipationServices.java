@@ -28,11 +28,9 @@ public class ParticipationServices {
     // antes de a pergunta ser devolvida é colocado um registo em ParticipationQuestion a indicar que a pergunta saiu
    public Map retrieveNextQuestion(DatabaseHandler db, int quiz_id){
 
-       //TODO: obter dinamicamente o participant_id
-       int participant_id = 1;
        Map nextQuestion;
 
-       Participation activeParticipation = db.getLastActiveParticipation(participant_id);
+       Participation activeParticipation = db.getLastActiveParticipation();
 
        //obter as perguntas que já foram respondidas para a participação
        List<ParticipationQuestion> answeredQuestions = db.getActiveParticipationQuestions(activeParticipation);
@@ -133,7 +131,7 @@ public class ParticipationServices {
                         }else if((int)answerInfo.get(0) == 0){
                             answersJsonData += "\"correct\" : false,";
                         }
-                        answersJsonData += "\"points\" : \"" + answerInfo.get(1) +  "\",";
+                        answersJsonData += "\"points\" : " + answerInfo.get(1) +  ",";
                         int questionAnswerTime = 0; //deveria ser participationquestion_serverend - participationquestion_serverstart tempo que se demorou a responder, mas ainda não está a ser considerado
                         answersJsonData += "\"time\" : \"not being calculated yet\",";
                         //pontuação recebida por uma pergunta = answer_points * ( 1 / ( tempo resposta + 1 ) ) * 10

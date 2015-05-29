@@ -2,6 +2,7 @@ package com.daam.orquiz;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
@@ -538,7 +539,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public Participation getLastActiveParticipation(int participant_id) {
+    public Participation getLastActiveParticipation() {
+
+        int participant_id = MainActivity.PARTICIPANT_ID;
 
         Participation participation = new Participation();
 
@@ -573,6 +576,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return participation;
     }
 
+    public Participation getLastParticipation() {
+
+        int participant_id = MainActivity.PARTICIPANT_ID;
+
+        Participation participation = new Participation();
+
+        //obter a última participação sem data de fim para o participante recebido
+        String selectQuery = "SELECT " + KEY_PARTICIPATION_ID + ", " + KEY_PARTICIPANT_ID + ", " + FIELD_PARTICIPATION_TOTALTIME + ", " + FIELD_PARTICIPATION_POINTS + ", " + FIELD_PARTICIPATION_RANKING + " FROM " + TABLE_PARTICIPATION + " WHERE " + KEY_PARTICIPANT_ID + " = " + participant_id + " ORDER BY " + KEY_PARTICIPATION_ID + " DESC LIMIT 1";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                participation.setFieldId(Integer.parseInt(cursor.getString(0)));
+                if(!cursor.isNull(1)){
+                    participation.setFieldParticipantid(Integer.parseInt(cursor.getString(1)));
+                }
+                if(!cursor.isNull(2)){
+                    participation.setFieldTotaltime(Integer.parseInt(cursor.getString(2)));
+                }
+                if(!cursor.isNull(3)){
+                    participation.setFieldPoints(Integer.parseInt(cursor.getString(3)));
+                }
+                if(!cursor.isNull(4)){
+                    participation.setFieldRanking(cursor.getString(4));
+                }
+            } while (cursor.moveToNext());
+        }
+
+        return participation;
+    }
+
     public List<ParticipationQuestion> getActiveParticipationQuestions(Participation activeParticipation){
 
         List<ParticipationQuestion> activeParticipationQuestions = new ArrayList<ParticipationQuestion>();
@@ -592,6 +627,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 participationquestion.setFieldId(Integer.parseInt(cursor.getString(0)));
                 participationquestion.setFieldParticipationid(Integer.parseInt(cursor.getString(1)));
                 participationquestion.setFieldQuestionid(Integer.parseInt(cursor.getString(2)));
+                if(!cursor.isNull(3)){
+                    participationquestion.setFieldPoints(Integer.parseInt(cursor.getString(3)));
+                }
+                if(!cursor.isNull(4)){
+                    participationquestion.setFieldAnswersjson(cursor.getString(4));
+                }
                 if(!cursor.isNull(5)){
                     participationquestion.setFieldServerstart(Long.parseLong(cursor.getString(5)));
                 }

@@ -79,28 +79,26 @@ public class QuizActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
 
         int i = 0;
 
-        //TODO: obter dinamicamente o participant_id
-        int participant_id = 1;
-
         //obtem-se a participação que está ativa
-        Participation activeParticipation = db.getLastActiveParticipation(participant_id);
+        Participation activeParticipation = db.getLastActiveParticipation();
 
         //registam-se as respostas dadas e fechar participação
         while (i != this.quizQuestionsNumber){
 
-            QuizQuestionFragment oneFragment = (QuizQuestionFragment) adapterViewPager.getRegisteredFragment(i);
+            QuizQuestionFragment oneFragment = (QuizQuestionFragment) adapterViewPager.getItem(i);
+            //QuizQuestionFragment oneFragment = (QuizQuestionFragment) adapterViewPager.getRegisteredFragment(i);
 
-            //Map<String, Object> questionAnswersData = new HashMap<>();
-            //questionAnswersData.put("participation", activeParticipation);
-            //questionAnswersData.put("question", oneFragment.getQuestion());
-            //questionAnswersData.put("answers", oneFragment.getAnswers());
+            Map<String, Object> questionAnswersData = new HashMap<>();
+            questionAnswersData.put("participation", activeParticipation);
+            questionAnswersData.put("question", oneFragment.getQuestion());
+            questionAnswersData.put("answers", oneFragment.getAnswers());
 
-            //oq.registerQuestionAnswers(db, questionAnswersData);
+            oq.registerQuestionAnswers(db, questionAnswersData);
 
 
             i++;

@@ -2,6 +2,7 @@ package com.daam.orquiz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -27,10 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.daam.orquiz.data.Answer;
+import com.daam.orquiz.data.Participation;
+import com.daam.orquiz.data.ParticipationQuestion;
 import com.daam.orquiz.data.Question;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+    public static final String PREFS_NAME = "UserData";
+    public static final int PARTICIPANT_ID = 1;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -55,6 +61,15 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        //armazenar os dados do utilizador
+        //SharedPreferences userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        //SharedPreferences.Editor editor = userData.edit();
+        //editor.putInt("participant_id", 1);
+        //editor.putString("password", password_txt.getText().toString());
+        //editor.putString("email", email_txt.getText().toString());
+        //editor.commit();
+
     }
 
     @Override
@@ -127,7 +142,7 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
+     /**
      * A placeholder fragment containing a simple view.
      */
     //public static class PlaceholderFragment extends Fragment {
@@ -144,6 +159,7 @@ public class MainActivity extends ActionBarActivity
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
+
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -161,6 +177,8 @@ public class MainActivity extends ActionBarActivity
             final Integer selected_option = getArguments().getInt(ARG_SECTION_NUMBER);
 
             ViewGroup header = null;
+
+            DatabaseHandler db = new DatabaseHandler(container.getContext());
 
             if (selected_option == 1) {
                 header = (ViewGroup) inflater.inflate(R.layout.view_splashpage, container, false);
@@ -185,7 +203,30 @@ public class MainActivity extends ActionBarActivity
                 final Button but = (Button) header.findViewById(R.id.button);
                 //but.setOnClickListener();
                 progressBarWidget.getProgress();
-            } else if (selected_option == 3) {
+
+            } else if (selected_option == 4) {
+
+                header = (ViewGroup) inflater.inflate(R.layout.view_myresults, container, false);
+
+                Bundle extras = getActivity().getIntent().getExtras();
+                if (extras != null) {
+                    if (extras.getBoolean("LAST_PARTICIPATION") == true){
+
+                        Participation participation = db.getLastParticipation();
+
+                        List<ParticipationQuestion> participationquestions = db.getActiveParticipationQuestions(participation);
+
+                        if (participation.getFieldId() != null){
+                            Log.d("a", "b");
+                        }else{
+                            Log.d("c", "e");
+                        }
+                    }
+                }
+
+
+
+            } else if (selected_option == 10) {
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
 
@@ -214,7 +255,7 @@ public class MainActivity extends ActionBarActivity
 
                     int question_id = 1;
 
-                    DatabaseHandler db = new DatabaseHandler(container.getContext());
+
 
                     Question question = db.getQuestion(question_id);
 
