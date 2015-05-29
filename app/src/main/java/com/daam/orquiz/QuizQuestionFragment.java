@@ -1,6 +1,7 @@
 package com.daam.orquiz;
 
 //import android.app.Fragment;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,20 +38,25 @@ public class QuizQuestionFragment extends Fragment {
 
     // newInstance constructor for creating fragment with arguments
     //public static QuizQuestionFragment newInstance(int page, String title, Map questionData) {
-    public static QuizQuestionFragment newInstance(int page, Map questionData) {
+    public static QuizQuestionFragment newInstance(int page, Map fragmentData) {
         QuizQuestionFragment fragmentFirst = new QuizQuestionFragment();
 
-        if(questionData.size() != 0){
-            fragmentFirst.question = (Question) questionData.get("question");
-            fragmentFirst.answers = (List<Answer>) questionData.get("answers");
+        if(fragmentData.size() != 0 && fragmentData.get("question") instanceof Question){
+            fragmentFirst.question = (Question) fragmentData.get("question");
+            fragmentFirst.answers = (List<Answer>) fragmentData.get("answers");
 
             Bundle args = new Bundle();
-            args.putInt("someInt", fragmentFirst.question.getFieldId());
+            //args.putInt("someInt", fragmentFirst.question.getFieldId());
+            args.putInt("someInt", page);
             args.putString("someTitle", fragmentFirst.question.getFieldText());
             fragmentFirst.setArguments(args);
         }else{
             //não há mais perguntas
             fragmentFirst.hasQuestion = false;
+            Bundle args = new Bundle();
+            args.putInt("someInt", page);
+            args.putString("someTitle", fragmentData.get("title").toString());
+            fragmentFirst.setArguments(args);
         }
 
         return fragmentFirst;
@@ -60,12 +67,13 @@ public class QuizQuestionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("someInt", 0);
+        //page = getArguments().getInt("someInt");
         title = getArguments().getString("someTitle");
     }
 
     // Inflate the view for the fragment based on layout XML
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         //View view = inflater.inflate(R.layout.fragment_first, container, false);
 
         View view = null;
@@ -125,7 +133,21 @@ public class QuizQuestionFragment extends Fragment {
                 tvLabel.setText(page + " -- " + title);
             }
         }else{
-            view = inflater.inflate(R.layout.view_multiplechoice, container, false);
+            view = inflater.inflate(R.layout.view_submitquiz, container, false);
+
+            final Button submit_quiz_bt = (Button) view.findViewById(R.id.button);
+            submit_quiz_bt.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+
+                Intent intent = new Intent(container.getContext(), MainActivity.class);
+                //ir para a view de resultados. obter depois os resultados do último quiz submetido para mostrar no interface
+                intent.putExtra("NEXT_DRAWER_POSITION", 3);
+                intent.putExtra("LAST_PARTICIPATION", true);
+                startActivity(intent);
+
+                }
+            });
+
         }
 
 
