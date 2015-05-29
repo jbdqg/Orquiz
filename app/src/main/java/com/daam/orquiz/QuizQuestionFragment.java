@@ -36,20 +36,25 @@ public class QuizQuestionFragment extends Fragment {
 
     // newInstance constructor for creating fragment with arguments
     //public static QuizQuestionFragment newInstance(int page, String title, Map questionData) {
-    public static QuizQuestionFragment newInstance(int page, Map questionData) {
+    public static QuizQuestionFragment newInstance(int page, Map fragmentData) {
         QuizQuestionFragment fragmentFirst = new QuizQuestionFragment();
 
-        if(questionData.size() != 0){
-            fragmentFirst.question = (Question) questionData.get("question");
-            fragmentFirst.answers = (List<Answer>) questionData.get("answers");
+        if(fragmentData.size() != 0 && fragmentData.get("question") instanceof Question){
+            fragmentFirst.question = (Question) fragmentData.get("question");
+            fragmentFirst.answers = (List<Answer>) fragmentData.get("answers");
 
             Bundle args = new Bundle();
-            args.putInt("someInt", fragmentFirst.question.getFieldId());
+            //args.putInt("someInt", fragmentFirst.question.getFieldId());
+            args.putInt("someInt", page);
             args.putString("someTitle", fragmentFirst.question.getFieldText());
             fragmentFirst.setArguments(args);
         }else{
             //não há mais perguntas
             fragmentFirst.hasQuestion = false;
+            Bundle args = new Bundle();
+            args.putInt("someInt", page);
+            args.putString("someTitle", fragmentData.get("title").toString());
+            fragmentFirst.setArguments(args);
         }
 
         return fragmentFirst;
@@ -60,6 +65,7 @@ public class QuizQuestionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("someInt", 0);
+        //page = getArguments().getInt("someInt");
         title = getArguments().getString("someTitle");
     }
 

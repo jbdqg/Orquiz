@@ -179,7 +179,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String sqlInsertQU1 = "INSERT INTO " + TABLE_QUIZ + "(" + KEY_QUIZ_ID + ", " + FIELD_QUIZ_REFERENCE + ", " + FIELD_QUIZ_NAME + ", "
                 + FIELD_QUIZ_DESCRIPTION + ", " + FIELD_QUIZ_URL + ", " + FIELD_QUIZ_QUESTIONSRANDOM + ", "
                 + FIELD_QUIZ_QUESTIONSNUMBER + ", " + FIELD_QUIZ_CONSIDERTIME
-                + ") VALUES( 1, 'QCO', 'Clockwork Orange', 'A Quiz About Clockwork Orange', null, 1, 2, 0"
+                + ") VALUES( 1, 'QCO', 'Clockwork Orange', 'A Quiz About Clockwork Orange', null, 1, 3, 0"
                 + ")";
         db.execSQL(sqlInsertQU1);
 
@@ -205,7 +205,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String sqlInsertQ1A3 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
                 + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
-                + ") VALUES( 3, 1, 'Anthony Burgess', null, 0, 3, 1"
+                + ") VALUES( 3, 1, 'Anthony Burgess', null, 1, 3, 1"
                 + ")";
         db.execSQL(sqlInsertQ1A3);
 
@@ -231,7 +231,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String sqlInsertQ2A6 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
                                                      + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
-                                       + ") VALUES( 6, 2, 'Alex', null, 0, 2, 1"
+                                       + ") VALUES( 6, 2, 'Alex', null, 1, 2, 1"
                                        + ")";
         db.execSQL(sqlInsertQ2A6);
 
@@ -246,6 +246,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                        + ") VALUES( 8, 2, 'Dim', null, 0, 4, 0"
                                        + ")";
         db.execSQL(sqlInsertQ2A8);
+
+        String sqlInsertQ3 = "INSERT INTO " + TABLE_QUESTION + "(" + KEY_QUESTION_ID + ", "  + KEY_QUIZ_ID +  ", " + FIELD_QUESTION_TEXT + ", " + FIELD_QUESTION_URL + ", "
+                + FIELD_QUESTION_TYPE + ", " + FIELD_QUESTION_ORDER + ", "
+                + FIELD_QUESTION_ANSWERRANDOM + ", " + FIELD_QUESTION_MINPOINTS + ", "
+                + FIELD_QUESTION_TIMELIMIT + ", " + FIELD_QUESTION_ANSWERCORRECT
+                + ") VALUES( 3, 1, 'What drink do Alex and his gang consume on the night the film opens?', null, 'multiplechoice', 3, 1, 0, 10, 1"
+                + ")";
+        db.execSQL(sqlInsertQ3);
+
+        String sqlInsertQ3A9 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
+                + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
+                + ") VALUES( 9, 3, 'Vodka', null, 0, 1, 0"
+                + ")";
+        db.execSQL(sqlInsertQ3A9);
+
+        String sqlInsertQ3A10 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
+                + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
+                + ") VALUES( 10, 3, 'Whiskey', null, 0, 2, 0"
+                + ")";
+        db.execSQL(sqlInsertQ3A10);
+
+        String sqlInsertQ3A11 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
+                + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
+                + ") VALUES( 11, 3, 'Milk', null, 1, 3, 1"
+                + ")";
+        db.execSQL(sqlInsertQ3A11);
+
+        String sqlInsertQ3A12 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
+                + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
+                + ") VALUES( 12, 3, 'Water', null, 0, 4, 0"
+                + ")";
+        db.execSQL(sqlInsertQ3A12);
 
     }
 
@@ -482,7 +514,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 answerInfo.add(0, Integer.parseInt(cursor.getString(0)));
-                answerInfo.add(1, Integer.parseInt(cursor.getString(0)));
+                answerInfo.add(1, Integer.parseInt(cursor.getString(1)));
             } while (cursor.moveToNext());
         }
 
