@@ -1,8 +1,14 @@
 package com.daam.orquiz.business;
 
+import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Path;
+import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +24,15 @@ import com.daam.orquiz.MainActivity;
 import com.daam.orquiz.R;
 import com.daam.orquiz.data.Answer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,6 +179,76 @@ public class Utils {
             return convertView;
 
         }
+
+    }
+
+    public static String[] getQuizUploadList (File mPath) {
+
+        String[] mFileList;
+
+        try {
+            mPath.mkdirs();
+        } catch (SecurityException e) {
+            Log.e("TAG", "unable to write on the sd card " + e.toString());
+        }
+        if (mPath.exists()) {
+            FilenameFilter filter = new FilenameFilter() {
+
+                @Override
+                public boolean accept(File dir, String filename) {
+                    File sel = new File(dir, filename);
+                    return filename.contains(".json") || sel.isDirectory();
+                }
+
+            };
+            mFileList = mPath.list(filter);
+        } else {
+            mFileList = new String[0];
+        }
+
+        return mFileList;
+
+    }
+
+    public static JSONObject getFileJsonContent (File quizJsonFile){
+
+        JSONObject quizJsonObject = null;
+
+        InputStream in = null;
+        String quizJsonContent = null;
+        try {
+            in = new BufferedInputStream(new FileInputStream(quizJsonFile));
+
+            int size = in.available();
+
+            byte[] buffer = new byte[size];
+
+            if (in != null) {
+                in.read(buffer);
+                in.close();
+            }
+
+            quizJsonContent = new String(buffer, "UTF-8");
+
+            quizJsonObject = new JSONObject(quizJsonContent);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return quizJsonObject;
+
+    }
+
+    public static boolean uploadJsonQuiz (DatabaseHandler db, JSONObject quizJsonObject) throws JSONException {
+
+        Boolean quizUploaded = false;
+
+            db.uploadJsonQuizIntoTables(quizJsonObject);
+
+        return quizUploaded;
 
     }
 

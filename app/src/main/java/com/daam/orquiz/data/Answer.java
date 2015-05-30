@@ -14,7 +14,7 @@ public class Answer {
     private Integer answer_points = null;
     private Integer answer_order = null;
     private Integer answer_correct = null;
-    private ContentValues participationContentValues = new ContentValues();
+    private ContentValues answerContentValues = new ContentValues();
 
     boolean selected = false;
 
@@ -37,33 +37,33 @@ public class Answer {
 
     public void setFieldQuestionid(Integer answerquestion_id) {
         this.answerquestion_id = answerquestion_id;
-        this.participationContentValues.put("answerquestion_id", answerquestion_id);
+        this.answerContentValues.put("question_id", answerquestion_id);
     }
 
     public void setFieldText(String answer_text) {
         this.answer_text = answer_text;
-        this.participationContentValues.put("answer_text", answer_text);
+        this.answerContentValues.put("answer_text", answer_text);
     }
 
 
     public void setFieldUrl(String answer_url) {
         this.answer_url = answer_url;
-        this.participationContentValues.put("answer_url", answer_url);
+        this.answerContentValues.put("answer_url", answer_url);
     }
 
     public void setFieldPoints(Integer answer_points){
         this.answer_points = answer_points;
-        this.participationContentValues.put("answer_points", answer_points);
+        this.answerContentValues.put("answer_points", answer_points);
     }
 
     public void setFieldOrder(Integer answer_order) {
         this.answer_order = answer_order;
-        this.participationContentValues.put("answer_order", answer_order);
+        this.answerContentValues.put("answer_order", answer_order);
     }
 
     public void setFieldAnswercorrect(Integer answer_correct) {
         this.answer_correct = answer_correct;
-        this.participationContentValues.put("answer_correct", answer_correct);
+        this.answerContentValues.put("answer_correct", answer_correct);
     }
 
     public Integer getFieldId() {
@@ -92,6 +92,10 @@ public class Answer {
 
     public Integer getFieldAnswercorrect() {
         return answer_correct;
+    }
+
+    public ContentValues getContentValues() {
+        return answerContentValues;
     }
 
     public void setSelected(boolean selected) {

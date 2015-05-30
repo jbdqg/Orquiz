@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -81,7 +82,17 @@ public class QuizQuestionFragment extends Fragment {
             if(this.question.getFieldType().equalsIgnoreCase("multiplechoice")){
                 view = inflater.inflate(R.layout.view_multiplechoice, container, false);
 
-                TextView question_text = (TextView) view.findViewById(R.id.text);
+                /*public static Drawable LoadImageFromWebOperations(String url) {
+                    try {
+                        InputStream is = (InputStream) new URL(url).getContent();
+                        Drawable d = Drawable.createFromStream(is, "src name");
+                        return d;
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }
+                */
+
                 ListView answersLv = (ListView) view.findViewById(R.id.answerslv);
 
                 //Utils.MyListCheckboxAdapter listCheckboxAdapter = new Utils.MyListCheckboxAdapter(this.getActivity().getBaseContext(), R.layout.custom_checkboxlist_layout, this.answers);
@@ -105,10 +116,13 @@ public class QuizQuestionFragment extends Fragment {
                 //tvLabel.setText(page + " -- " + title);
                 TextView tvLabel = (TextView) view.findViewById(R.id.text);
                 tvLabel.setText(page + " -- " + title);
+
+                ImageView image = (ImageView) view.findViewById(R.id.image);
+                image.setImageResource(R.drawable.orange_small);
+
             }else if(this.question.getFieldType().equalsIgnoreCase("uniquechoice")){
                 view = inflater.inflate(R.layout.view_uniquechoice, container, false);
 
-                TextView question_text = (TextView) view.findViewById(R.id.text);
                 ListView answersLv = (ListView) view.findViewById(R.id.answerslv);
 
                 oneRadiobuttonAdapter = new Utils.MyListRadiobuttonAdapter(this.getActivity().getBaseContext(), R.layout.custom_checkboxlist_layout, this.answers);
@@ -139,10 +153,14 @@ public class QuizQuestionFragment extends Fragment {
             submit_quiz_bt.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
+                //para que quando se guarda a participação se saiba que o user premiu o botão para submeter;
+                ((QuizActivity)getActivity()).sumbmit_button_pressed = true;
+
                 Intent intent = new Intent(container.getContext(), MainActivity.class);
                 //ir para a view de resultados. obter depois os resultados do último quiz submetido para mostrar no interface
-                intent.putExtra("NEXT_DRAWER_POSITION", 3);
+                intent.putExtra("NEXT_DRAWER_POSITION", 2);
                 intent.putExtra("LAST_PARTICIPATION", true);
+
                 startActivity(intent);
 
                 }

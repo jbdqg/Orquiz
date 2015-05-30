@@ -28,6 +28,7 @@ public class QuizActivity extends FragmentActivity {
 
     private int quizIdentificator = 0;
     private int quizQuestionsNumber = 0;
+    public boolean sumbmit_button_pressed = false;
 
     private Utils utils = new Utils();
     private ParticipationServices oq = new ParticipationServices();
@@ -109,6 +110,9 @@ public class QuizActivity extends FragmentActivity {
         Long participationTime = ((participationEnd - activeParticipation.getFieldStart()) / 1000);
         activeParticipation.setFieldEnd(participationEnd);
         activeParticipation.setFieldTotaltime(participationTime.intValue());
+        if (sumbmit_button_pressed == true) {
+                activeParticipation.setFieldStatus("completed");
+        }
         db.updateTableRecord("Participation", activeParticipation.getContentValues(), whereClause, null);
 
     }

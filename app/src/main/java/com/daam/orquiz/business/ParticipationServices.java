@@ -106,9 +106,13 @@ public class ParticipationServices {
             questionJsonData += " \"url\" : \"" + question.getFieldUrl() + "\", ";
             answersJsonData += " \"answers\" : [ ";
             int questionPoints = 0;
+            boolean question_answered = false;
+            boolean question_correct = false;
             for (Answer oneAnswer : answers) {
 
                 if (oneAnswer.isSelected() == true){
+
+                    question_answered = true;
 
                     ArrayList answerInfo = db.validateGivenAnswer(oneAnswer.getFieldId());
 
@@ -128,6 +132,7 @@ public class ParticipationServices {
 
                         if ((int)answerInfo.get(0) == 1){
                             answersJsonData += "\"correct\" : true,";
+                            question_correct = true;
                         }else if((int)answerInfo.get(0) == 0){
                             answersJsonData += "\"correct\" : false,";
                         }
@@ -148,6 +153,16 @@ public class ParticipationServices {
             }
             answersJsonData += "]";
             questionJsonData += " \"points\" : " + questionPoints + ", ";
+            if (question_answered == true){
+                questionJsonData += " \"answered\" : " + true + ", ";
+            }else if (question_answered == false){
+                questionJsonData += " \"answered\" : " + false + ", ";
+            }
+            if (question_correct == true){
+                questionJsonData += " \"correct\" : " + true + ", ";
+            }else if (question_correct == false){
+                questionJsonData += " \"correct\" : " + false + ", ";
+            }
             questionJsonData += answersJsonData;
             questionJsonData += "}";
 

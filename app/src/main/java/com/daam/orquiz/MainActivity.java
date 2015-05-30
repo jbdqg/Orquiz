@@ -1,8 +1,12 @@
 package com.daam.orquiz;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -24,13 +28,22 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.daam.orquiz.business.Utils;
 import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.ParticipationQuestion;
 import com.daam.orquiz.data.Question;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -157,6 +170,12 @@ public class MainActivity extends ActionBarActivity
          * Returns a new instance of this fragment for the given section
          * number.
          */
+
+        private File mPath = new File(Environment.getExternalStorageDirectory() + "/orquiz/quizes/");
+
+        //QUIZ QUE FOI SELECIONADO
+        private static int QUIZ_ID = 1;
+
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
 
@@ -178,7 +197,7 @@ public class MainActivity extends ActionBarActivity
 
             ViewGroup header = null;
 
-            DatabaseHandler db = new DatabaseHandler(container.getContext());
+            final DatabaseHandler db = new DatabaseHandler(container.getContext());
 
             if (selected_option == 1) {
                 header = (ViewGroup) inflater.inflate(R.layout.view_splashpage, container, false);
@@ -189,7 +208,7 @@ public class MainActivity extends ActionBarActivity
 
                         Intent intent = new Intent(container.getContext(), QuizActivity.class);
                         //para passar o identificador do quiz que está ativo
-                        intent.putExtra("QUIZ_ID", 1);
+                        intent.putExtra("QUIZ_ID", QUIZ_ID);
                         startActivity(intent);
 
                     }
@@ -204,27 +223,131 @@ public class MainActivity extends ActionBarActivity
                 //but.setOnClickListener();
                 progressBarWidget.getProgress();
 
-            } else if (selected_option == 4) {
+            } else if (selected_option == 3) {
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_myresults, container, false);
 
                 Bundle extras = getActivity().getIntent().getExtras();
                 if (extras != null) {
-                    if (extras.getBoolean("LAST_PARTICIPATION") == true){
+                    if (extras.getBoolean("LAST_PARTICIPATION") == true) {
 
                         Participation participation = db.getLastParticipation();
 
-                        List<ParticipationQuestion> participationquestions = db.getActiveParticipationQuestions(participation);
+                        List<ParticipationQuestion> participationquestions_list = db.getActiveParticipationQuestions(participation);
 
-                        if (participation.getFieldId() != null){
-                            Log.d("a", "b");
-                        }else{
-                            Log.d("c", "e");
+                        final TextView totalquestions_text = (TextView) header.findViewById(R.id.textViewNTotal);
+                        totalquestions_text.setText(((Integer) participationquestions_list.size()).toString());
+
+                        final TextView totaltime_text = (TextView) header.findViewById(R.id.textViewNTotalTime);
+                        totaltime_text.setText(participation.getFieldTotaltime().toString());
+
+                        int questions_right = 0;
+                        int questions_wrong = 0;
+                        int questions_unanswered = 0;
+                        int total_time = 0;
+                        int quiz_points = 0;
+
+                        for (ParticipationQuestion pq : participationquestions_list) {
+
+                            try {
+                                JSONObject answersJson = new JSONObject(pq.getFieldAnswersjson());
+
+                                if (answersJson.getBoolean("answered") == false) {
+                                    questions_unanswered++;
+                                } else if (answersJson.getBoolean("answered") == true) {
+                                    if (answersJson.getBoolean("correct") == true) {
+                                        questions_right++;
+                                    } else if (answersJson.getBoolean("correct") == false) {
+                                        questions_wrong++;
+                                    }
+                                }
+
+                                quiz_points += answersJson.getInt("points");
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
+
+                        final TextView rightquestions_text = (TextView) header.findViewById(R.id.textViewNRight);
+                        rightquestions_text.setText(((Integer) questions_right).toString());
+
+                        final TextView wrongquestions_text = (TextView) header.findViewById(R.id.textViewNWrong);
+                        wrongquestions_text.setText(((Integer) questions_wrong).toString());
+
+                        final TextView unansweredquestions_text = (TextView) header.findViewById(R.id.textViewNUnanswered);
+                        unansweredquestions_text.setText(((Integer) questions_unanswered).toString());
+
+                        final Button try_again_bt = (Button) header.findViewById(R.id.button);
+                        try_again_bt.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(container.getContext(), QuizActivity.class);
+                                //para passar o identificador do quiz que está ativo
+                                intent.putExtra("QUIZ_ID", QUIZ_ID);
+                                startActivity(intent);
+
+                            }
+                        });
+
+
                     }
                 }
 
+            } else if (selected_option == 5){
 
+                header = (ViewGroup) inflater.inflate(R.layout.view_import, container, false);
+
+                final Button start_quiz_bt = (Button) header.findViewById(R.id.button);
+                start_quiz_bt.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+
+                        String[] jsonFilesInPath = Utils.getQuizUploadList(mPath);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(container.getContext())
+                                .setTitle("Choose your file")
+                                .setSingleChoiceItems(jsonFilesInPath, -1, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .setPositiveButton("Upload", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        ListView lw = ((AlertDialog) dialog).getListView();
+                                        Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+
+                                        File quizContent = new File(mPath + "/" + checkedItem.toString());
+
+                                        JSONObject quizJsonObject = Utils.getFileJsonContent(quizContent);
+
+                                        if (quizJsonObject != null) {
+
+                                            try {
+                                                Utils.uploadJsonQuiz(db, quizJsonObject);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        //ir para a main page
+
+                                    }
+                                });
+
+                AlertDialog a = builder.show();
+
+                    }
+                });
 
             } else if (selected_option == 10) {
 
