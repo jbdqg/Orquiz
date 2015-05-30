@@ -2,6 +2,7 @@ package com.daam.orquiz;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,6 +20,10 @@ import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.ParticipationQuestion;
 import com.daam.orquiz.data.Question;
 import com.daam.orquiz.data.Quiz;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by johnny on 02-05-2015.
@@ -41,6 +46,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String FIELD_PARTICIPATION_TOTALTIME = "participation_totaltime";
     private static final String FIELD_PARTICIPATION_POINTS = "participation_points";
     private static final String FIELD_PARTICIPATION_RANKING = "participation_ranking";
+    private static final String FIELD_PARTICIPATION_STATUS = "participation_status";
 
     private static final String TABLE_PARTICIPATIONQUESTION = "ParticipationQuestion";
     private static final String KEY_PARTICIPATIONQUESTION_ID = "participationquestion_id";
@@ -113,7 +119,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + FIELD_PARTICIPATION_END + " INTEGER,"
                 + FIELD_PARTICIPATION_TOTALTIME + " INTEGER,"
                 + FIELD_PARTICIPATION_POINTS + " INTEGER,"
-                + FIELD_PARTICIPATION_RANKING + " TEXT"
+                + FIELD_PARTICIPATION_RANKING + " TEXT,"
+                + FIELD_PARTICIPATION_STATUS + " TEXT"
                 + ")";
         db.execSQL(CREATE_PARTICIPATION_TABLE);
 
@@ -179,7 +186,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String sqlInsertQU1 = "INSERT INTO " + TABLE_QUIZ + "(" + KEY_QUIZ_ID + ", " + FIELD_QUIZ_REFERENCE + ", " + FIELD_QUIZ_NAME + ", "
                 + FIELD_QUIZ_DESCRIPTION + ", " + FIELD_QUIZ_URL + ", " + FIELD_QUIZ_QUESTIONSRANDOM + ", "
                 + FIELD_QUIZ_QUESTIONSNUMBER + ", " + FIELD_QUIZ_CONSIDERTIME
-                + ") VALUES( 1, 'QCO', 'Clockwork Orange', 'A Quiz About Clockwork Orange', null, 1, 2, 0"
+                + ") VALUES( 1, 'QCO', 'Clockwork Orange', 'A Quiz About Clockwork Orange', null, 1, 3, 0"
                 + ")";
         db.execSQL(sqlInsertQU1);
 
@@ -205,7 +212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String sqlInsertQ1A3 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
                 + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
-                + ") VALUES( 3, 1, 'Anthony Burgess', null, 0, 3, 1"
+                + ") VALUES( 3, 1, 'Anthony Burgess', null, 1, 3, 1"
                 + ")";
         db.execSQL(sqlInsertQ1A3);
 
@@ -231,7 +238,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String sqlInsertQ2A6 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
                                                      + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
-                                       + ") VALUES( 6, 2, 'Alex', null, 0, 2, 1"
+                                       + ") VALUES( 6, 2, 'Alex', null, 1, 2, 1"
                                        + ")";
         db.execSQL(sqlInsertQ2A6);
 
@@ -246,6 +253,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                        + ") VALUES( 8, 2, 'Dim', null, 0, 4, 0"
                                        + ")";
         db.execSQL(sqlInsertQ2A8);
+
+        String sqlInsertQ3 = "INSERT INTO " + TABLE_QUESTION + "(" + KEY_QUESTION_ID + ", "  + KEY_QUIZ_ID +  ", " + FIELD_QUESTION_TEXT + ", " + FIELD_QUESTION_URL + ", "
+                + FIELD_QUESTION_TYPE + ", " + FIELD_QUESTION_ORDER + ", "
+                + FIELD_QUESTION_ANSWERRANDOM + ", " + FIELD_QUESTION_MINPOINTS + ", "
+                + FIELD_QUESTION_TIMELIMIT + ", " + FIELD_QUESTION_ANSWERCORRECT
+                + ") VALUES( 3, 1, 'What drink do Alex and his gang consume on the night the film opens?', null, 'multiplechoice', 3, 1, 0, 10, 1"
+                + ")";
+        db.execSQL(sqlInsertQ3);
+
+        String sqlInsertQ3A9 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
+                + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
+                + ") VALUES( 9, 3, 'Vodka', null, 0, 1, 0"
+                + ")";
+        db.execSQL(sqlInsertQ3A9);
+
+        String sqlInsertQ3A10 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
+                + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
+                + ") VALUES( 10, 3, 'Whiskey', null, 0, 2, 0"
+                + ")";
+        db.execSQL(sqlInsertQ3A10);
+
+        String sqlInsertQ3A11 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
+                + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
+                + ") VALUES( 11, 3, 'Milk', null, 1, 3, 1"
+                + ")";
+        db.execSQL(sqlInsertQ3A11);
+
+        String sqlInsertQ3A12 = "INSERT INTO " + TABLE_ANSWER + "(" + KEY_ANSWER_ID + ", " + KEY_QUESTION_ID + ", " + FIELD_ANSWER_TEXT + ", " + FIELD_ANSWER_URL + ", "
+                + FIELD_ANSWER_POINTS + ", " + FIELD_ANSWER_ORDER + ", " + FIELD_ANSWER_CORRECT
+                + ") VALUES( 12, 3, 'Water', null, 0, 4, 0"
+                + ")";
+        db.execSQL(sqlInsertQ3A12);
 
     }
 
@@ -482,7 +521,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 answerInfo.add(0, Integer.parseInt(cursor.getString(0)));
-                answerInfo.add(1, Integer.parseInt(cursor.getString(0)));
+                answerInfo.add(1, Integer.parseInt(cursor.getString(1)));
             } while (cursor.moveToNext());
         }
 
@@ -506,12 +545,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public Participation getLastActiveParticipation(int participant_id) {
+    public Participation getLastActiveParticipation() {
+
+        int participant_id = MainActivity.PARTICIPANT_ID;
 
         Participation participation = new Participation();
 
         //obter a última participação sem data de fim para o participante recebido
-        String selectQuery = "SELECT * FROM " + TABLE_PARTICIPATION + " WHERE " + KEY_PARTICIPANT_ID + " = " + participant_id + " AND " + FIELD_PARTICIPATION_END + " IS NULL ORDER BY " + KEY_PARTICIPATION_ID + " DESC LIMIT 1";
+        String selectQuery = "SELECT " + KEY_PARTICIPATION_ID + ", " + KEY_PARTICIPANT_ID + ", " + FIELD_PARTICIPATION_START + ", " + FIELD_PARTICIPATION_STATUS + " FROM " + TABLE_PARTICIPATION + " WHERE " + KEY_PARTICIPANT_ID + " = " + participant_id + " AND " + FIELD_PARTICIPATION_END + " IS NULL AND " + FIELD_PARTICIPATION_STATUS + " = \"started\" ORDER BY " + KEY_PARTICIPATION_ID + " DESC LIMIT 1";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -524,6 +565,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 if(!cursor.isNull(2)){
                     participation.setFieldStart(Long.parseLong(cursor.getString(2)));
                 }
+                if(!cursor.isNull(3)){
+                    participation.setFieldStatus(cursor.getString(3));
+                }
             } while (cursor.moveToNext());
         }
 
@@ -531,11 +575,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             participation.setFieldParticipantid(participant_id);
             participation.setFieldStart(System.currentTimeMillis());
+            participation.setFieldStatus("started");
             Long insertedParticipationID = this.insertTableRecord("Participation", participation.getContentValues());
             //TODO: todas as keys deviam ser Long por causa da inserção. Alterar se houver tempo
             Integer i = (int) (long) insertedParticipationID;
             participation.setFieldId(i);
 
+        }
+
+        return participation;
+    }
+
+    public Participation getLastParticipation() {
+
+        int participant_id = MainActivity.PARTICIPANT_ID;
+
+        Participation participation = new Participation();
+
+        String selectQuery = "SELECT " + KEY_PARTICIPATION_ID + ", " + KEY_PARTICIPANT_ID + ", " + FIELD_PARTICIPATION_TOTALTIME + ", " + FIELD_PARTICIPATION_POINTS + ", " + FIELD_PARTICIPATION_RANKING + " FROM " + TABLE_PARTICIPATION + " WHERE " + KEY_PARTICIPANT_ID + " = " + participant_id + " AND " + FIELD_PARTICIPATION_STATUS + " = \"completed\" ORDER BY " + KEY_PARTICIPATION_ID + " DESC LIMIT 1";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                participation.setFieldId(Integer.parseInt(cursor.getString(0)));
+                if(!cursor.isNull(1)){
+                    participation.setFieldParticipantid(Integer.parseInt(cursor.getString(1)));
+                }
+                if(!cursor.isNull(2)){
+                    participation.setFieldTotaltime(Integer.parseInt(cursor.getString(2)));
+                }
+                if(!cursor.isNull(3)){
+                    participation.setFieldPoints(Integer.parseInt(cursor.getString(3)));
+                }
+                if(!cursor.isNull(4)){
+                    participation.setFieldRanking(cursor.getString(4));
+                }
+            } while (cursor.moveToNext());
         }
 
         return participation;
@@ -560,6 +636,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 participationquestion.setFieldId(Integer.parseInt(cursor.getString(0)));
                 participationquestion.setFieldParticipationid(Integer.parseInt(cursor.getString(1)));
                 participationquestion.setFieldQuestionid(Integer.parseInt(cursor.getString(2)));
+                if(!cursor.isNull(3)){
+                    participationquestion.setFieldPoints(Integer.parseInt(cursor.getString(3)));
+                }
+                if(!cursor.isNull(4)){
+                    participationquestion.setFieldAnswersjson(cursor.getString(4));
+                }
                 if(!cursor.isNull(5)){
                     participationquestion.setFieldServerstart(Long.parseLong(cursor.getString(5)));
                 }
@@ -668,5 +750,135 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return updatedId;
 
     }
+
+    public boolean uploadJsonQuizIntoTables (JSONObject jsonQuiz) throws JSONException {
+
+        Boolean uploaded = false;
+
+        //fazer validações ao Json e se for invalido enviar msg para o interface a indicar
+
+        Quiz quizRecord = new Quiz();
+        if (jsonQuiz.get("quiz_name") instanceof String){
+            quizRecord.setFieldName(jsonQuiz.getString("quiz_name"));
+        }
+        if (jsonQuiz.get("quiz_reference") instanceof String){
+            quizRecord.setFieldReference(jsonQuiz.getString("quiz_reference"));
+        }
+        if (jsonQuiz.get("quiz_description") instanceof String){
+            quizRecord.setFieldDescription(jsonQuiz.getString("quiz_description"));
+        }
+        if (jsonQuiz.getString("quiz_url") instanceof String){
+            quizRecord.setFieldUrl(jsonQuiz.getString("quiz_url"));
+        }
+        if (jsonQuiz.getBoolean("quiz_questionsrandom")){
+            quizRecord.setFieldQuestionsrandom(1);
+        }else{
+            quizRecord.setFieldQuestionsrandom(0);
+        }
+        if (jsonQuiz.get("quiz_questionsnumber") instanceof  Integer){
+            quizRecord.setFieldQuestionsnumber(jsonQuiz.getInt("quiz_questionsnumber"));
+        }
+        if (jsonQuiz.getBoolean("quiz_considertime")){
+            quizRecord.setFieldConsidertime(1);
+        }else{
+            quizRecord.setFieldConsidertime(0);
+        }
+
+        Long insertedQuizId = this.insertTableRecord("Quiz", quizRecord.getContentValues());
+
+        if(insertedQuizId != -1){
+
+            if (jsonQuiz.get("questions") instanceof JSONArray){
+                JSONArray questions = jsonQuiz.getJSONArray("questions");
+
+                for (int i = 0; i < questions.length(); i++){
+
+                    JSONObject oneJsonQuestion = questions.getJSONObject(i);
+                    Question oneQuestionRecord = new Question();
+
+                    oneQuestionRecord.setFieldQuizid(insertedQuizId.intValue());
+                    if (oneJsonQuestion.get("question_text") instanceof String){
+                        oneQuestionRecord.setFieldText(oneJsonQuestion.getString("question_text"));
+                    }
+                    if (oneJsonQuestion.get("question_url") instanceof String){
+                        oneQuestionRecord.setFieldUrl(oneJsonQuestion.getString("question_url"));
+                    }
+                    if (oneJsonQuestion.get("question_type") instanceof String){
+                        oneQuestionRecord.setFieldType(oneJsonQuestion.getString("question_type"));
+                    }
+                    if (oneJsonQuestion.get("question_order") instanceof  Integer){
+                        oneQuestionRecord.setFieldOrder(oneJsonQuestion.getInt("question_order"));
+                    }
+                    if (oneJsonQuestion.getBoolean("question_answerrandom")){
+                        oneQuestionRecord.setFieldAnswerrandom(1);
+                    }else{
+                        oneQuestionRecord.setFieldAnswerrandom(0);
+                    }
+                    if (oneJsonQuestion.getBoolean("question_answercorrect")){
+                        oneQuestionRecord.setFieldAnswercorrect(1);
+                    }else{
+                        oneQuestionRecord.setFieldAnswercorrect(0);
+                    }
+                    if (oneJsonQuestion.get("question_minpoints") instanceof  Integer){
+                        oneQuestionRecord.setFieldMinpoints(oneJsonQuestion.getInt("question_minpoints"));
+                    }
+                    if (oneJsonQuestion.get("question_timelimit") instanceof  Integer){
+                        oneQuestionRecord.setFieldTimelimit(oneJsonQuestion.getInt("question_timelimit"));
+                    }
+
+                    Long insertedQuestionId = this.insertTableRecord("Question", oneQuestionRecord.getContentValues());
+
+                    if(insertedQuestionId != -1){
+
+                        if (oneJsonQuestion.get("answers") instanceof JSONArray) {
+
+                            JSONArray answers = oneJsonQuestion.getJSONArray("answers");
+
+                            for (int j = 0; j < questions.length(); j++) {
+
+                                JSONObject oneJsonAnswer = answers.getJSONObject(j);
+                                Answer oneAnswerRecord = new Answer();
+
+                                oneAnswerRecord.setFieldQuestionid(insertedQuestionId.intValue());
+                                if (oneJsonAnswer.get("answer_text") instanceof String){
+                                    oneAnswerRecord.setFieldText(oneJsonAnswer.getString("answer_text"));
+                                }
+                                if (oneJsonAnswer.get("answer_url") instanceof String){
+                                    oneAnswerRecord.setFieldText(oneJsonAnswer.getString("answer_url"));
+                                }
+                                if (oneJsonAnswer.get("answer_points") instanceof  Integer){
+                                    oneAnswerRecord.setFieldPoints(oneJsonAnswer.getInt("answer_points"));
+                                }
+                                if (oneJsonAnswer.get("answer_order") instanceof  Integer){
+                                    oneAnswerRecord.setFieldOrder(oneJsonAnswer.getInt("answer_order"));
+                                }
+                                if (oneJsonAnswer.getBoolean("answer_correct")){
+                                    oneAnswerRecord.setFieldAnswercorrect(1);
+                                }else{
+                                    oneAnswerRecord.setFieldAnswercorrect(0);
+                                }
+
+                                Long insertedAnswerId = this.insertTableRecord("Answer", oneAnswerRecord.getContentValues());
+
+                                if (insertedAnswerId != -1 ){
+                                    continue;
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+            uploaded = true;
+        }
+
+        return uploaded;
+
+    }
+
 
 }

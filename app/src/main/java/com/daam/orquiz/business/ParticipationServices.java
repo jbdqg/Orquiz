@@ -28,11 +28,9 @@ public class ParticipationServices {
     // antes de a pergunta ser devolvida é colocado um registo em ParticipationQuestion a indicar que a pergunta saiu
    public Map retrieveNextQuestion(DatabaseHandler db, int quiz_id){
 
-       //TODO: obter dinamicamente o participant_id
-       int participant_id = 1;
        Map nextQuestion;
 
-       Participation activeParticipation = db.getLastActiveParticipation(participant_id);
+       Participation activeParticipation = db.getLastActiveParticipation();
 
        //obter as perguntas que já foram respondidas para a participação
        List<ParticipationQuestion> answeredQuestions = db.getActiveParticipationQuestions(activeParticipation);
@@ -108,9 +106,13 @@ public class ParticipationServices {
             questionJsonData += " \"url\" : \"" + question.getFieldUrl() + "\", ";
             answersJsonData += " \"answers\" : [ ";
             int questionPoints = 0;
+            boolean question_answered = false;
+            boolean question_correct = false;
             for (Answer oneAnswer : answers) {
 
                 if (oneAnswer.isSelected() == true){
+
+                    question_answered = true;
 
                     ArrayList answerInfo = db.validateGivenAnswer(oneAnswer.getFieldId());
 
@@ -130,10 +132,11 @@ public class ParticipationServices {
 
                         if ((int)answerInfo.get(0) == 1){
                             answersJsonData += "\"correct\" : true,";
+                            question_correct = true;
                         }else if((int)answerInfo.get(0) == 0){
                             answersJsonData += "\"correct\" : false,";
                         }
-                        answersJsonData += "\"points\" : \"" + answerInfo.get(1) +  "\",";
+                        answersJsonData += "\"points\" : " + answerInfo.get(1) +  ",";
                         int questionAnswerTime = 0; //deveria ser participationquestion_serverend - participationquestion_serverstart tempo que se demorou a responder, mas ainda não está a ser considerado
                         answersJsonData += "\"time\" : \"not being calculated yet\",";
                         //pontuação recebida por uma pergunta = answer_points * ( 1 / ( tempo resposta + 1 ) ) * 10
@@ -150,6 +153,16 @@ public class ParticipationServices {
             }
             answersJsonData += "]";
             questionJsonData += " \"points\" : " + questionPoints + ", ";
+            if (question_answered == true){
+                questionJsonData += " \"answered\" : " + true + ", ";
+            }else if (question_answered == false){
+                questionJsonData += " \"answered\" : " + false + ", ";
+            }
+            if (question_correct == true){
+                questionJsonData += " \"correct\" : " + true + ", ";
+            }else if (question_correct == false){
+                questionJsonData += " \"correct\" : " + false + ", ";
+            }
             questionJsonData += answersJsonData;
             questionJsonData += "}";
 

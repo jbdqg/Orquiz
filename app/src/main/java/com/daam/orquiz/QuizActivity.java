@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.daam.orquiz.business.ParticipationServices;
 import com.daam.orquiz.business.Utils;
+import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.Question;
 
@@ -27,6 +28,7 @@ public class QuizActivity extends FragmentActivity {
 
     private int quizIdentificator = 0;
     private int quizQuestionsNumber = 0;
+    public boolean sumbmit_button_pressed = false;
 
     private Utils utils = new Utils();
     private ParticipationServices oq = new ParticipationServices();
@@ -49,8 +51,17 @@ public class QuizActivity extends FragmentActivity {
         if (quizIdentificator != 0){
             quizQuestionsNumber = utils.retrieveQuizQuestions(db, quizIdentificator);
 
+            int i = 0;
+            List<Map> questionsToAnswer = new ArrayList<Map>();
+            do {
+
+                questionsToAnswer.add(i, oq.retrieveNextQuestion(db, quizIdentificator));
+
+                i++;
+            }while (i != quizQuestionsNumber);
+
             ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
-            adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), db, quizQuestionsNumber, quizIdentificator);
+            adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), db, quizQuestionsNumber, quizIdentificator, questionsToAnswer);
             vpPager.setAdapter(adapterViewPager);
 
             //insere-se a participação ou vai-se buscar a que existe. a invocação do obtainquestion resolve essa questão
@@ -59,6 +70,9 @@ public class QuizActivity extends FragmentActivity {
             //indica em que posição é que vai iniciar
             //vpPager.setCurrentItem(Integer.parseInt(nextQuestion.get("questionsAnswered").toString()) + 1);
 
+            //obtem-se as perguntas para cada posição e instancia-se um HashMap com todas as que vão ser repondidas
+
+
         }else{
             //noquiz
         }
@@ -66,21 +80,19 @@ public class QuizActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
 
         int i = 0;
 
-        //TODO: obter dinamicamente o participant_id
-        int participant_id = 1;
-
         //obtem-se a participação que está ativa
-        Participation activeParticipation = db.getLastActiveParticipation(participant_id);
+        Participation activeParticipation = db.getLastActiveParticipation();
 
         //registam-se as respostas dadas e fechar participação
         while (i != this.quizQuestionsNumber){
 
-            QuizQuestionFragment oneFragment = (QuizQuestionFragment) adapterViewPager.getRegisteredFragment(i);
+            QuizQuestionFragment oneFragment = (QuizQuestionFragment) adapterViewPager.getItem(i);
+            //QuizQuestionFragment oneFragment = (QuizQuestionFragment) adapterViewPager.getRegisteredFragment(i);
 
             Map<String, Object> questionAnswersData = new HashMap<>();
             questionAnswersData.put("participation", activeParticipation);
@@ -98,8 +110,10 @@ public class QuizActivity extends FragmentActivity {
         Long participationTime = ((participationEnd - activeParticipation.getFieldStart()) / 1000);
         activeParticipation.setFieldEnd(participationEnd);
         activeParticipation.setFieldTotaltime(participationTime.intValue());
+        if (sumbmit_button_pressed == true) {
+                activeParticipation.setFieldStatus("completed");
+        }
         db.updateTableRecord("Participation", activeParticipation.getContentValues(), whereClause, null);
-
 
     }
 
@@ -107,14 +121,17 @@ public class QuizActivity extends FragmentActivity {
     public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
         private static int NUM_ITEMS = 0;
         private static int QUIZ_IDENTIFICATOR = 0;
+        private static List<Map> QUIZ_QUESTIONS;
         private ParticipationServices oq = new ParticipationServices();
         private DatabaseHandler DB = null;
         private List<Integer> retrievedQuestions = new ArrayList<Integer>();
 
-        public MyPagerAdapter(FragmentManager fragmentManager, DatabaseHandler db, int questionsNumber, int quizIdentificator) {
+        public MyPagerAdapter(FragmentManager fragmentManager, DatabaseHandler db, int questionsNumber, int quizIdentificator, List<Map> questionsToAnswer) {
             super(fragmentManager);
-            this.NUM_ITEMS = questionsNumber;
+            this.NUM_ITEMS = questionsNumber + 1;
+            //this.NUM_ITEMS = questionsNumber;
             this.QUIZ_IDENTIFICATOR = quizIdentificator;
+            this.QUIZ_QUESTIONS = questionsToAnswer;
             this.DB = db;
         }
 
@@ -132,16 +149,29 @@ public class QuizActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
 
-            //insere-se a participação ou vai-se buscar a que existe. a invocação do obtainquestion resolve essa questão
-            Map nextQuestion = oq.retrieveNextQuestion(this.DB, this.QUIZ_IDENTIFICATOR);
+            Map fragmentContent;
 
-            if(nextQuestion.size() != 0) {
-                retrievedQuestions.add(((Question) nextQuestion.get("question")).getFieldId());
-                Log.d("Answer: ", ((Question) nextQuestion.get("question")).getFieldText());
+            //if(fragmentContent.size() != 0) {
+            //    retrievedQuestions.add(((Question) fragmentContent.get("question")).getFieldId());
+            //    Log.d("Answer: ", ((Question) fragmentContent.get("question")).getFieldText());
+
+            if (position != this.NUM_ITEMS - 1){
+                fragmentContent = this.QUIZ_QUESTIONS.get(position);
+                //insere-se a participação ou vai-se buscar a que existe. a invocação do obtainquestion resolve essa questão
+                //fragmentContent = oq.retrieveNextQuestion(this.DB, this.QUIZ_IDENTIFICATOR);
+
+                //if(fragmentContent.size() != 0) {
+                //    retrievedQuestions.add(((Question) fragmentContent.get("question")).getFieldId());
+                //    Log.d("Answer: ", ((Question) fragmentContent.get("question")).getFieldText());
+                //}
+                //validar porque na 2a iteração dá erro quando já não se pode responder mais (testar comentando o onStop())
+            }else{
+                fragmentContent = new HashMap<String, String>();
+                fragmentContent.put("title", "Submit Fragment");
+                fragmentContent.put("content", "Confirm Content");
             }
-            //validar porque na 2a iteração dá erro quando já não se pode responder mais (testar comentando o onStop())
-            return QuizQuestionFragment.newInstance(position, nextQuestion);
 
+            return QuizQuestionFragment.newInstance(position, fragmentContent);
 
             /*switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment

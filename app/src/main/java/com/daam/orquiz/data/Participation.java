@@ -20,6 +20,7 @@ public class Participation {
     private Integer participation_totaltime = null;
     private Integer participation_points = null;
     private String participation_ranking = null;
+    private String participation_status = null;
     private ContentValues participationContentValues = new ContentValues();
     boolean selected = false;
     boolean empty = false;
@@ -27,7 +28,7 @@ public class Participation {
     public Participation(){
     }
 
-    public Participation(Integer participant_id, Long participation_start, Long participation_end, Integer participation_totaltime, Integer participation_points, String participation_ranking){
+    public Participation(Integer participant_id, Long participation_start, Long participation_end, Integer participation_totaltime, Integer participation_points, String participation_ranking, String participation_status){
         this.setFieldId(participation_id);
         this.setFieldParticipantid(participant_id);
         this.setFieldStart(participation_start);
@@ -35,6 +36,7 @@ public class Participation {
         this.setFieldTotaltime(participation_totaltime);
         this.setFieldPoints(participation_points);
         this.setFieldRanking(participation_ranking);
+        this.setFieldStatus(participation_status);
     }
 
     public void setFieldId(Integer participation_id) {
@@ -71,6 +73,11 @@ public class Participation {
         this.participationContentValues.put("participation_ranking", participation_ranking);
     }
 
+    public void setFieldStatus(String participation_status) {
+        this.participation_status = participation_status;
+        this.participationContentValues.put("participation_status", participation_status);
+    }
+
     public Integer getFieldId() {
         return participation_id;
     }
@@ -97,6 +104,10 @@ public class Participation {
 
     public String getFieldRanking() {
         return participation_ranking;
+    }
+
+    public String getFieldStatus() {
+        return participation_status;
     }
 
     public ContentValues getContentValues() {

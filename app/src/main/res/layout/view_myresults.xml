@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_results"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/linearLayoutUserData"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:gravity="left"
+                android:src="@drawable/user_default"
+                android:id="@+id/image" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Participant Name"
+                android:gravity="right"
+                android:layout_gravity="center"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/linearLayoutTotalQuestions"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textViewNTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Number of questions"/>
+
+            <TextView
+                android:id="@+id/textViewTotal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Questions"
+                android:gravity="right" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutRightAnswers"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:id="@+id/textViewNRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Number of right answers"/>
+
+            <TextView
+                android:id="@+id/textViewRight"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Right Answers"
+                android:gravity="right" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutWrongAnswers"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:id="@+id/textViewNWrong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Number of wrong answers"/>
+
+            <TextView
+                android:id="@+id/textViewWrong"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Wrong Answers"
+                android:gravity="right" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutUnanswered"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:id="@+id/textViewNUnanswered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Number of not unanswered questions"/>
+
+            <TextView
+                android:id="@+id/textViewUnanswered"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Unanswered"
+                android:gravity="right" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutTotalTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:id="@+id/textViewNTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Quiz time (seconds)"/>
+
+            <TextView
+                android:id="@+id/textViewTotalTime"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="seconds"
+                android:gravity="right" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        >
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Try Again"/>
+
+    </LinearLayout>
+
+</LinearLayout>
