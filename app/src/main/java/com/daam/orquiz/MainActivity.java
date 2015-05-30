@@ -1,8 +1,16 @@
 package com.daam.orquiz;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -24,13 +32,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.ParticipationQuestion;
 import com.daam.orquiz.data.Question;
+import com.daam.orquiz.data.Quiz;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -57,7 +68,6 @@ public class MainActivity extends ActionBarActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
-        // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -210,21 +220,124 @@ public class MainActivity extends ActionBarActivity
 
                 Bundle extras = getActivity().getIntent().getExtras();
                 if (extras != null) {
-                    if (extras.getBoolean("LAST_PARTICIPATION") == true){
+                    if (extras.getBoolean("LAST_PARTICIPATION") == true) {
 
                         Participation participation = db.getLastParticipation();
 
                         List<ParticipationQuestion> participationquestions = db.getActiveParticipationQuestions(participation);
 
-                        if (participation.getFieldId() != null){
+                        if (participation.getFieldId() != null) {
                             Log.d("a", "b");
-                        }else{
+                        } else {
                             Log.d("c", "e");
                         }
                     }
                 }
 
+            } else if ( selected_option == 6) { // Share Option
 
+                // Bluetooth Local
+                BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+                if ( btAdapter == null ) { // Device without bluetooth?
+                    new AlertDialog.Builder(container.getContext())
+                        .setTitle(R.string.title_error)
+                        .setMessage(R.string.no_bluetooth)
+                        .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).show();
+
+                    return null;
+                }
+
+                if ( !btAdapter.isEnabled() ) { // Isn't bluetooth on?
+                    new AlertDialog.Builder(container.getContext())
+                            .setTitle(R.string.title_warning)
+                            .setMessage(R.string.no_bluetooth_active)
+                            .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).show();
+
+                    return null;
+                }
+
+                // Obter os Quiz
+                final List<Quiz> listOfQuiz = db.getAllQuiz();
+                if ( listOfQuiz == null || listOfQuiz.isEmpty() ) {
+                    new AlertDialog.Builder(container.getContext())
+                            .setTitle(R.string.title_error)
+                            .setMessage(R.string.no_quiz_found)
+                            .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).show();
+
+                    return null;
+                }
+
+                String[] arrayOfNames = new String[listOfQuiz.size()];
+                for (int i = 0; i < listOfQuiz.size(); i++) {
+                    arrayOfNames[i] = listOfQuiz.get(i).getFieldName();
+                }
+
+                AlertDialog.Builder chooseQuizDialog = new AlertDialog.Builder(container.getContext())
+                        .setTitle(R.string.title_choose_quiz)
+                        .setSingleChoiceItems(arrayOfNames, -1 /*no selection*/, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Don't do nothing
+                            }
+                        })
+                        .setPositiveButton(R.string.button_share, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                int selectedOption = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                                if ( selectedOption == -1 ) {
+                                    Toast.makeText(container.getContext(), R.string.no_quiz_selected, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Quiz quiz = listOfQuiz.get(((AlertDialog) dialog).getListView().getCheckedItemPosition()); // Quiz to share
+
+                                    Intent intent = new Intent();
+                                    intent.setAction(Intent.ACTION_SEND);
+                                    intent.setType("text/plain"); // File type
+                                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(quiz.getFieldReference()))); // The file
+
+                                    // List of apps that can handle our intent
+                                    PackageManager pm = container.getContext().getPackageManager();
+                                    List<ResolveInfo> appsList = pm.queryIntentActivities(intent, 0);
+
+                                    if (appsList.size() > 0) {
+                                        // Select bluetooth
+                                        String packageName = null;
+                                        String className = null;
+                                        boolean found = false;
+
+                                        for (ResolveInfo info : appsList) {
+                                            packageName = info.activityInfo.packageName;
+
+                                            if (packageName.equals("com.android.bluetooth")) {
+                                                className = info.activityInfo.name;
+                                                found = true;
+
+                                                break; // found
+                                            }
+                                        }
+
+                                        if (!found) {
+                                            Toast.makeText(container.getContext(), R.string.no_bluetooth, Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        // Launch Bluetooth
+                                        intent.setClassName(packageName, className);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                        });
+
+                AlertDialog alertDialog = chooseQuizDialog.show();
 
             } else if (selected_option == 10) {
 
@@ -290,8 +403,6 @@ public class MainActivity extends ActionBarActivity
 
             return header;
         }
-
-
 
         @Override
         public void onAttach(Activity activity) {

@@ -14,4 +14,16 @@
     <string name="action_example">Example action</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="button_ok">OK</string>
+    <string name="button_share">Share It</string>
+
+    <string name="title_choose_quiz">Choose Quiz</string>
+    <string name="title_error">Error</string>
+    <string name="title_warning">Warning</string>
+
+    <string name="no_quiz_found">No quiz found.</string>
+    <string name="no_quiz_selected">No quiz selected. Please select a quiz.</string>
+    <string name="no_bluetooth">Device without support for bluetooth.</string>
+    <string name="no_bluetooth_active">Bluetooth is not active. Please activate it and came back again.</string>
 </resources>

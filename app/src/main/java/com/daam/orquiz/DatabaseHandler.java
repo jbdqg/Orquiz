@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.InputStreamReader;
@@ -180,7 +181,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String sqlInsertQU1 = "INSERT INTO " + TABLE_QUIZ + "(" + KEY_QUIZ_ID + ", " + FIELD_QUIZ_REFERENCE + ", " + FIELD_QUIZ_NAME + ", "
                 + FIELD_QUIZ_DESCRIPTION + ", " + FIELD_QUIZ_URL + ", " + FIELD_QUIZ_QUESTIONSRANDOM + ", "
                 + FIELD_QUIZ_QUESTIONSNUMBER + ", " + FIELD_QUIZ_CONSIDERTIME
-                + ") VALUES( 1, 'QCO', 'Clockwork Orange', 'A Quiz About Clockwork Orange', null, 1, 3, 0"
+                + ") VALUES( 1, '" + Environment.getExternalStorageDirectory() + "/orquiz/quizes/quiz1984.json', 'Clockwork Orange', 'A Quiz About Clockwork Orange', null, 1, 3, 0"
                 + ")";
         db.execSQL(sqlInsertQU1);
 
@@ -344,6 +345,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return question;
+    }
+
+    public List<Quiz> getAllQuiz() {
+        List<Quiz> listOfQuiz = new ArrayList<>();
+
+        Cursor cursor = this.getWritableDatabase().rawQuery("SELECT * FROM " + TABLE_QUIZ, null);
+        if ( cursor.moveToFirst() ) {
+            do {
+                Quiz quiz = new Quiz();
+                quiz.setFieldId(Integer.parseInt(cursor.getString(0)));
+                if(!cursor.isNull(1)){
+                    quiz.setFieldReference(cursor.getString(1));
+                }
+                if(!cursor.isNull(2)){
+                    quiz.setFieldName(cursor.getString(2));
+                }
+                if(!cursor.isNull(3)){
+                    quiz.setFieldDescription(cursor.getString(3));
+                }
+                if(!cursor.isNull(4)){
+                    quiz.setFieldUrl(cursor.getString(4));
+                }
+                if(!cursor.isNull(5)){
+                    quiz.setFieldQuestionsrandom(Integer.parseInt(cursor.getString(5)));
+                }
+                if(!cursor.isNull(6)){
+                    quiz.setFieldQuestionsnumber(Integer.parseInt(cursor.getString(6)));
+                }
+                if(!cursor.isNull(7)){
+                    quiz.setFieldConsidertime(Integer.parseInt(cursor.getString(7)));
+                }
+
+                listOfQuiz.add(quiz);
+            } while (cursor.moveToNext());
+        }
+
+        return listOfQuiz;
     }
 
     public Quiz getQuiz(int quiz_id) {
