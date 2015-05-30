@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/start_quiz"
+    android:id="@+id/submit_quiz"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     
@@ -12,27 +12,20 @@
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="300dp"
             android:layout_marginTop="20dp"
-            android:hint="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt velit ac dapibus pulvinar. Mauris pharetra, ipsum nec faucibus hendrerit, nisi nulla molestie odio, et porta velit enim efficitur arcu. Vestibulum at leo ac turpis dictum pellentesque. Maecenas eu urna ac diam vehicula faucibus. Aliquam vestibulum at justo id scelerisque. Phasellus a sodales mi. Pellentesque dapibus eu diam et euismod"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nibh faucibus, placerat lacus at, tempor mi. Morbi imperdiet ultricies purus at rhoncus. Aenean vel nisl bibendum, semper dolor ac, mollis ipsum. Etiam pharetra bibendum libero vel suscipit. Ut facilisis nulla eu urna finibus maximus. Cras id ligula eros. Praesent quis elementum neque. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam tempor, lectus sed lobortis consectetur, libero arcu ornare enim, quis pulvinar quam mauris ut nisi. Morbi blandit vitae nulla id ultricies. Maecenas tristique magna sit amet venenatis pulvinar. Nulla ultrices eleifend quam at bibendum."
             android:gravity="center"
 
         />
 
-       <ImageView
-           android:layout_width="match_parent"
-           android:layout_height="150dp"
-           android:layout_marginTop="20dp"
-           android:src="@drawable/orange_small"
-           android:id="@+id/image" />
-
-        <Button
+       <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            android:text="Start Quiz"
+            android:text="Submit Quiz"
             />
 
     </LinearLayout>

@@ -65,6 +65,14 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //depois de submeter o quiz apanha-se a posição em que se quer iniciar
+        Bundle extras = getActivity().getIntent().getExtras();
+        if (extras != null) {
+            if (extras.getInt("NEXT_DRAWER_POSITION") != 0){
+                mCurrentSelectedPosition = extras.getInt("NEXT_DRAWER_POSITION");
+            }
+        }
+
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -102,6 +110,7 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
+                        getString(R.string.drawer_optitle_splashpage),
                         getString(R.string.drawer_optitle_start_quiz),
                         getString(R.string.drawer_optitle_my_results),
                         getString(R.string.drawer_optitle_my_data),
