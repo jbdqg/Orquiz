@@ -37,6 +37,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import com.daam.orquiz.business.Utils;
 import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
@@ -457,6 +469,13 @@ public class MainActivity extends ActionBarActivity
                             e.printStackTrace();
                         }
 
+                    }
+
+                    if(participation.getFieldStart() instanceof Long){
+                        SimpleDateFormat pdateformat = new SimpleDateFormat("dd-MM-yyyy");
+                        Date pdateresult = new Date(participation.getFieldStart());
+                        final TextView pdate_text = (TextView) header.findViewById(R.id.textViewDDate);
+                        pdate_text.setText(pdateformat.format(pdateresult));
                     }
 
                     final TextView points_text = (TextView) header.findViewById(R.id.textViewNPoints);
