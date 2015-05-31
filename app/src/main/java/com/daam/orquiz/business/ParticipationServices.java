@@ -18,9 +18,10 @@ public class ParticipationServices {
    public ParticipationServices(){
     }
 
-    //obtém a próxima pergunta a que o participante pode responder
+    /**obtém a próxima pergunta a que o participante pode responder
     // se não houver participação é criada uma
     // antes de a pergunta ser devolvida é colocado um registo em ParticipationQuestion a indicar que a pergunta saiu
+    **/
    public Map retrieveNextQuestion(DatabaseHandler db, int quiz_id){
 
        Map nextQuestion;
@@ -44,7 +45,7 @@ public class ParticipationServices {
                if (i != 0){
                    questionsAnswered_id += ", ";
                }
-               //TODO ver pq é que o pq.getFieldID devolve null
+
                questionsAnswered_id += pq.getFieldQuestionid();
                i++;
            }
@@ -56,6 +57,7 @@ public class ParticipationServices {
        nextQuestion = db.getNextQuestion(quiz_id, questionsAnswered_id, lastquestionAnswered);
 
        if (nextQuestion.size() != 0){
+
            //vamos inserir a pergunta como estando disponível para responder (inserção em ParticipationQuestion)
            ParticipationQuestion pq = new ParticipationQuestion();
            pq.setFieldParticipationid(activeParticipation.getFieldId());
@@ -77,9 +79,10 @@ public class ParticipationServices {
 
     }
 
-    //regista cada resposta dada em ParticipationQuestion
+    /**regista cada resposta dada em ParticipationQuestion
     // em atributo participationquestion_answersjson são guardados os dados da pergunta feita e os dados das respostas dadas
     // neste registo em ParticipationQuestion fica também registo a pontuação recebida
+    **/
     public int registerQuestionAnswers(DatabaseHandler db, Map<String, Object> questionAnswersData){
 
         int questionPoints = 0;
@@ -118,12 +121,9 @@ public class ParticipationServices {
                         }
                         answersJsonData += "{";
 
-                        //testar sem selecionar qq resposta
-
                         answersJsonData += "\"id\" : " + oneAnswer.getFieldId() + ", ";
                         answersJsonData += "\"text\" : \"" + oneAnswer.getFieldText() + "\",";
                         answersJsonData += "\"url\" : \"" + oneAnswer.getFieldUrl() + "\",";
-                        //resposta dada é certa
 
                         if ((int) answerInfo.get(0) == 1) {
                             answersJsonData += "\"correct\" : true,";
@@ -134,8 +134,10 @@ public class ParticipationServices {
                         answersJsonData += "\"points\" : " + answerInfo.get(1) + ",";
                         int questionAnswerTime = 0; //deveria ser participationquestion_serverend - participationquestion_serverstart tempo que se demorou a responder, mas ainda não está a ser considerado
                         answersJsonData += "\"time\" : \"not being calculated yet\",";
-                        //pontuação recebida por uma pergunta = answer_points * ( 1 / ( tempo resposta + 1 ) ) * 10
+
+                        /**pontuação recebida por uma pergunta = answer_points * ( 1 / ( tempo resposta + 1 ) ) * 10
                         //pontuação é sempre calculada, pois podem-se dar pontos negativos a respostas erradas
+                        **/
                         int answerTotalPoints = (int) answerInfo.get(1) * (1 / (questionAnswerTime + 1)) * 10;
                         answersJsonData += "\"totalpoints\" : " + answerTotalPoints;
                         questionPoints += answerTotalPoints;
@@ -178,6 +180,5 @@ public class ParticipationServices {
         return questionPoints;
 
     }
-
 
 }

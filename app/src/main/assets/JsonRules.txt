@@ -1,0 +1,47 @@
+A quiz is composed by:
+- Quiz attributes
+- Several Questions for each Quiz
+- Several Answers for each Question
+
+Each Quiz or Question can have a url to an image associated with it ("quiz_url" or "question_url"), that should point to an accessible url.
+
+When a quiz is uploaded each image is asynchronously downloaded and stored in the directory Environment.getExternalStorageDirectory() + "/orquiz/quizes/" of your device to make it usable even when the device is offline.
+It is advisable to have wifi internet connection when uploading a quiz.
+
+Bellow is a commented structure of the options available for you to use when defining a new quiz.
+
+{
+    "quiz_name": "<name of the quiz>",
+    "quiz_description": "<description that appears on the quiz start page>",
+    "quiz_url": "<url for a image to appear on the quiz start page>",
+    "quiz_questionsrandom": <boolean - true or false - indicates if the questions will appear randomly or not>,
+    "quiz_questionsnumber": <integer - the number of questions that will be considered on each participation. If "quiz_questionsrandom" : false, the questions could be different and in different order for each participation>,
+    "questions": [
+        {
+            "question_text": "<text of the question>",
+            "question_url": "<url to an image to appear with the question>",
+            "question_type": "<type of question - allows multiplechoice (several options and more than one can be selected) or uniquechoice (several options and just one can be selected)>",
+            "question_order": <integer - order of the question within the quiz. Ignored if "quiz_questionsrandom" : 1>,
+            "question_answerrandom": <boolean - true or false - indicates if the answers will appear randomly or not>,
+            "question_minpoints": <integer - indicates if there is a minimun points for the participation for this questions to appear. Should only be used if "quiz_questionsrandom": false. Not being considered.>,
+            "question_timelimit": <integer - number of seconds to answer to the question. Not being considered>,
+            "answers": [
+                {
+                    "answer_text": "<text of the answer>",
+                    "answer_url": <url to an image to appear with the question. Not being considered>,
+                    "answer_points": <integer - number of points that the participation will get if the answer is selected. Could be a positive or negative value>,
+                    "answer_order": <integer - order of the answer within the quiz. Ignored if "question_answerrandom" : 1>,
+                    "answer_correct": <boolean - true or false - indicates if the answers is the correct one or not>
+                },
+                {
+                    ...
+                },
+                ...
+            ]
+        },
+        {
+            ...
+        },
+        ...
+    ]
+}

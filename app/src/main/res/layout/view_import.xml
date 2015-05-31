@@ -14,10 +14,20 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginTop="20dp"
-            android:hint="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt velit ac dapibus pulvinar. Mauris pharetra, ipsum nec faucibus hendrerit, nisi nulla molestie odio, et porta velit enim efficitur arcu. Vestibulum at leo ac turpis dictum pellentesque. Maecenas eu urna ac diam vehicula faucibus. Aliquam vestibulum at justo id scelerisque. Phasellus a sodales mi. Pellentesque dapibus eu diam et euismod"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="Here you can import a quiz that you have created or that has been shared with you. The Json file with the quiz as to be placed in /orquiz/quizes \n\n After import the quiz gets available for you to answer. \n\n Select the option QUIZ from the action bar and explore your uploaded quiz."
             android:gravity="center"
+            />
 
         />
+
+        <!--<View
+            android:layout_width="fill_parent"
+            android:layout_height="0.2dp"
+            android:id="@+id/separator"
+            android:visibility="visible"
+            android:background="@android:color/darker_gray"/>-->
 
         <Button
             android:id="@+id/button"

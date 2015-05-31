@@ -1,0 +1,126 @@
+{
+    "quiz_name": "1984 Quiz",
+    "quiz_description": "Nineteen Eighty-Four is set in Oceania, one of three inter-continental superstates that divided the world after a global war. Most of the plot takes place in London, the \"chief city of Airstrip One\", the Oceanic province that \"had once been called England or Britain\". Posters of the Party leader, Big Brother, bearing the caption \"BIGBROTHERISWATCHINGYOU\", dominate the city, while the ubiquitous telescreen (transceiving television set) monitors the private and public lives of the populace.",
+    "quiz_url": "http://upload.wikimedia.org/wikipedia/pt/thumb/7/74/1984cover.jpg/200px-1984cover.jpg",
+    "quiz_questionsrandom": true,
+    "quiz_questionsnumber": 3,
+    "questions": [
+        {
+            "question_text": "What organization urges children to turn their parents over to the authorities?",
+            "question_url": "http://i18.photobucket.com/albums/b145/fpitas/Ingsoc.jpg",
+            "question_type": "multiplechoice",
+            "question_order": 1,
+            "question_answerrandom": true,
+            "question_minpoints": 0,
+            "question_timelimit": 10,
+            "answers": [
+                {
+                    "answer_text": "The Party Youth",
+                    "answer_url": null,
+                    "answer_points": -1,
+                    "answer_order": 1,
+                    "answer_correct": false
+                },
+                {
+                    "answer_text": "The Junior Spies",
+                    "answer_url": null,
+                    "answer_points": 2,
+                    "answer_order": 2,
+                    "answer_correct": true
+                },
+                {
+                    "answer_text": "The Outer Party",
+                    "answer_url": null,
+                    "answer_points": -1,
+                    "answer_order": 3,
+                    "answer_correct": false
+                },
+                {
+                    "answer_text": "The Committee of Oceanian Patriotism",
+                    "answer_url": null,
+                    "answer_points": -1,
+                    "answer_order": 4,
+                    "answer_correct": false
+                }
+            ]
+        },
+        {
+            "question_text": "The psychological principle that allows an individual to believe contradictory ideas at the same time is called what?",
+            "question_url": "http://intellectualconservative.com/wp-content/uploads/orwlndblthnk.jpg",
+            "question_type": "multiplechoice",
+            "question_order": 2,
+            "question_answerrandom": true,
+            "question_minpoints": 0,
+            "question_timelimit": 10,
+            "answers": [
+                {
+                    "answer_text": "Doublemind",
+                    "answer_url": null,
+                    "answer_points": -1,
+                    "answer_order": 1,
+                    "answer_correct": false
+                },
+                {
+                    "answer_text": "Thoughtcrime",
+                    "answer_url": null,
+                    "answer_points": -1,
+                    "answer_order": 2,
+                    "answer_correct": false
+                },
+                {
+                    "answer_text": "Doublethink",
+                    "answer_url": null,
+                    "answer_points": 2,
+                    "answer_order": 3,
+                    "answer_correct": true
+                },
+                {
+                    "answer_text": "Doublespeak",
+                    "answer_url": null,
+                    "answer_points": -1,
+                    "answer_order": 4,
+                    "answer_correct": false
+                }
+            ]
+        },
+        {
+            "question_text": "Who really wrote the manifesto that O’Brien gives to Winston?",
+            "question_url": "https://watsonwork.files.wordpress.com/2013/01/thought-police.jpg",
+            "question_type": "multiplechoice",
+            "question_order": 3,
+            "question_answerrandom": true,
+            "question_minpoints": 0,
+            "question_timelimit": 10,
+            "answers": [
+                {
+                    "answer_text": "Emmanuel Goldstein",
+                    "answer_url": null,
+                    "answer_points": -1,
+                    "answer_order": 1,
+                    "answer_correct": false
+                },
+                {
+                    "answer_text": "Big Brother",
+                    "answer_url": null,
+                    "answer_points": -1,
+                    "answer_order": 2,
+                    "answer_correct": false
+                },
+                {
+                    "answer_text": "Ayn Rand",
+                    "answer_url": null,
+                    "answer_points": -1,
+                    "answer_order": 3,
+                    "answer_correct": false
+                },
+                {
+                    "answer_text": "O’Brien",
+                    "answer_url": null,
+                    "answer_points": 2,
+                    "answer_order": 4,
+                    "answer_correct": true
+                }
+            ]
+        }
+    ]
+}

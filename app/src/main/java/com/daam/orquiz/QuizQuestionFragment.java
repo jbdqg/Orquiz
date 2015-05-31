@@ -33,7 +33,6 @@ import java.util.Map;
 /**
  * Created by johnny on 25-05-2015.
  */
-//retirado de https://github.com/codepath/android_guides/wiki/ViewPager-with-FragmentPagerAdapter
 public class QuizQuestionFragment extends Fragment {
     // Store instance variables
     private Question question = new Question();
@@ -179,7 +178,6 @@ public class QuizQuestionFragment extends Fragment {
             });
 
         }
-
 
         return view;
     }

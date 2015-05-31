@@ -63,7 +63,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String FIELD_PARTICIPATIONQUESTION_ANSWERTIME = "participationquestion_answertime";
     private static final String FIELD_PARTICIPATIONQUESTION_ORDER = "participationquestion_order";
 
-
     private static final String TABLE_QUIZ = "Quiz";
     private static final String KEY_QUIZ_ID = "quiz_id";
     private static final String FIELD_QUIZ_REFERENCE = "quiz_reference";
@@ -87,8 +86,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String TABLE_ANSWER = "Answer";
     private static final String KEY_ANSWER_ID = "answer_id";
-    //private static final String KEY_ANS
-    // VER_QUESTIONID = "question_id";
     private static final String FIELD_ANSWER_TEXT = "answer_text";
     private static final String FIELD_ANSWER_URL = "answer_url";
     private static final String FIELD_ANSWER_POINTS = "answer_points";
@@ -1321,7 +1318,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<Answer> getAllQuestionAnswers(int question_id, int randomAnswers) {
         List<Answer> questionAnswersList = new ArrayList<Answer>();
 
-        //TODO: colocar nomes das tabelas de que se obtêm dados
         String selectQuery = "SELECT " + KEY_ANSWER_ID + ","
                                        + KEY_QUESTION_ID  + ","
                                        + FIELD_ANSWER_TEXT  + ","
@@ -1429,7 +1425,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             participation.setFieldStart(System.currentTimeMillis());
             participation.setFieldStatus("started");
             Long insertedParticipationID = this.insertTableRecord("Participation", participation.getContentValues());
-            //TODO: todas as keys deviam ser Long por causa da inserção. Alterar se houver tempo
+            //todas as keys deviam ser Long por causa da inserção
             Integer i = (int) (long) insertedParticipationID;
             participation.setFieldId(i);
 
@@ -1507,7 +1503,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                //TODO: remove - faz o dump do cursor
+                //remove - faz o dump do cursor
                 DatabaseUtils dbu = new DatabaseUtils();
                 dbu.dumpCurrentRow(cursor);
 
@@ -1578,6 +1574,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Question nextQuestion = null;
 
             if (cursor.moveToFirst()) do {
+
                 //obtêm-se os dados da próxima pergunta e instanciam-se pela invoação da função getQuestion
                 nextQuestion = getQuestion(Integer.parseInt(cursor.getString(0)));
                 questionData.put("question", nextQuestion);
@@ -1637,26 +1634,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //fazer validações ao Json e se for invalido enviar msg para o interface a indicar
 
         Quiz quizRecord = new Quiz();
-        if (jsonQuiz.get("quiz_name") instanceof String){
+        if (jsonQuiz.has("quiz_name") && jsonQuiz.get("quiz_name") instanceof String){
             quizRecord.setFieldName(jsonQuiz.getString("quiz_name"));
         }
-        if (jsonQuiz.get("quiz_reference") instanceof String){
+        if (jsonQuiz.has("quiz_reference") && jsonQuiz.get("quiz_reference") instanceof String){
             quizRecord.setFieldReference(jsonQuiz.getString("quiz_reference"));
         }
-        if (jsonQuiz.get("quiz_description") instanceof String){
+        if (jsonQuiz.has("quiz_description") && jsonQuiz.get("quiz_description") instanceof String){
             quizRecord.setFieldDescription(jsonQuiz.getString("quiz_description"));
         }
-        if (jsonQuiz.getString("quiz_url") instanceof String){
+        if (jsonQuiz.has("quiz_url") && jsonQuiz.getString("quiz_url") instanceof String){
             quizRecord.setFieldUrl(jsonQuiz.getString("quiz_url"));}
-        if (jsonQuiz.getBoolean("quiz_questionsrandom")){
+        if (jsonQuiz.has("quiz_questionsrandom") && jsonQuiz.get("quiz_questionsrandom") instanceof Boolean && jsonQuiz.getBoolean("quiz_questionsrandom")){
             quizRecord.setFieldQuestionsrandom(1);
         }else{
             quizRecord.setFieldQuestionsrandom(0);
         }
-        if (jsonQuiz.get("quiz_questionsnumber") instanceof  Integer){
+        if (jsonQuiz.has("quiz_questionsnumber") && jsonQuiz.get("quiz_questionsnumber") instanceof  Integer){
             quizRecord.setFieldQuestionsnumber(jsonQuiz.getInt("quiz_questionsnumber"));
         }
-        if (jsonQuiz.getBoolean("quiz_considertime")){
+        if (jsonQuiz.has("quiz_considertime") && jsonQuiz.get("quiz_considertime") instanceof Boolean && jsonQuiz.getBoolean("quiz_considertime")){
             quizRecord.setFieldConsidertime(1);
         }else{
             quizRecord.setFieldConsidertime(0);
@@ -1686,32 +1683,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     Question oneQuestionRecord = new Question();
 
                     oneQuestionRecord.setFieldQuizid(insertedQuizId.intValue());
-                    if (oneJsonQuestion.get("question_text") instanceof String){
+                    if (oneJsonQuestion.has("question_text") && oneJsonQuestion.get("question_text") instanceof String){
                         oneQuestionRecord.setFieldText(oneJsonQuestion.getString("question_text"));
                     }
-                    if (oneJsonQuestion.get("question_url") instanceof String){
+                    if (oneJsonQuestion.has("question_url") && oneJsonQuestion.get("question_url") instanceof String){
                         oneQuestionRecord.setFieldUrl(oneJsonQuestion.getString("question_url"));
                     }
-                    if (oneJsonQuestion.get("question_type") instanceof String){
+                    if (oneJsonQuestion.has("question_type") && oneJsonQuestion.get("question_type") instanceof String){
                         oneQuestionRecord.setFieldType(oneJsonQuestion.getString("question_type"));
                     }
-                    if (oneJsonQuestion.get("question_order") instanceof  Integer){
+                    if (oneJsonQuestion.has("question_order") && oneJsonQuestion.get("question_order") instanceof  Integer){
                         oneQuestionRecord.setFieldOrder(oneJsonQuestion.getInt("question_order"));
                     }
-                    if (oneJsonQuestion.getBoolean("question_answerrandom")){
+                    if (oneJsonQuestion.has("question_answerrandom") && oneJsonQuestion.get("question_answerrandom") instanceof Boolean && oneJsonQuestion.getBoolean("question_answerrandom")){
                         oneQuestionRecord.setFieldAnswerrandom(1);
                     }else{
                         oneQuestionRecord.setFieldAnswerrandom(0);
                     }
-                    if (oneJsonQuestion.getBoolean("question_answercorrect")){
+                    if (oneJsonQuestion.has("question_answercorrect") && oneJsonQuestion.get("question_answercorrect") instanceof Boolean && oneJsonQuestion.getBoolean("question_answercorrect")){
                         oneQuestionRecord.setFieldAnswercorrect(1);
                     }else{
                         oneQuestionRecord.setFieldAnswercorrect(0);
                     }
-                    if (oneJsonQuestion.get("question_minpoints") instanceof  Integer){
+                    if (oneJsonQuestion.has("question_minpoints") && oneJsonQuestion.get("question_minpoints") instanceof  Integer){
                         oneQuestionRecord.setFieldMinpoints(oneJsonQuestion.getInt("question_minpoints"));
                     }
-                    if (oneJsonQuestion.get("question_timelimit") instanceof  Integer){
+                    if (oneJsonQuestion.has("question_timelimit") && oneJsonQuestion.get("question_timelimit") instanceof  Integer){
                         oneQuestionRecord.setFieldTimelimit(oneJsonQuestion.getInt("question_timelimit"));
                     }
 
@@ -1740,19 +1737,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                 Answer oneAnswerRecord = new Answer();
 
                                 oneAnswerRecord.setFieldQuestionid(insertedQuestionId.intValue());
-                                if (oneJsonAnswer.get("answer_text") instanceof String){
+                                if (oneJsonAnswer.has("answer_text") && oneJsonAnswer.get("answer_text") instanceof String){
                                     oneAnswerRecord.setFieldText(oneJsonAnswer.getString("answer_text"));
                                 }
-                                if (oneJsonAnswer.get("answer_url") instanceof String){
+                                if (oneJsonAnswer.has("answer_url") && oneJsonAnswer.get("answer_url") instanceof String){
                                     oneAnswerRecord.setFieldText(oneJsonAnswer.getString("answer_url"));
                                 }
-                                if (oneJsonAnswer.get("answer_points") instanceof  Integer){
+                                if (oneJsonAnswer.has("answer_points") && oneJsonAnswer.get("answer_points") instanceof  Integer){
                                     oneAnswerRecord.setFieldPoints(oneJsonAnswer.getInt("answer_points"));
                                 }
-                                if (oneJsonAnswer.get("answer_order") instanceof  Integer){
+                                if (oneJsonAnswer.has("answer_order") && oneJsonAnswer.get("answer_order") instanceof  Integer){
                                     oneAnswerRecord.setFieldOrder(oneJsonAnswer.getInt("answer_order"));
                                 }
-                                if (oneJsonAnswer.getBoolean("answer_correct")){
+                                if (oneJsonAnswer.has("answer_correct") && oneJsonAnswer.get("answer_correct") instanceof Boolean && oneJsonAnswer.getBoolean("answer_correct")){
                                     oneAnswerRecord.setFieldAnswercorrect(1);
                                 }else{
                                     oneAnswerRecord.setFieldAnswercorrect(0);
@@ -1779,6 +1776,5 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return uploaded;
 
     }
-
 
 }

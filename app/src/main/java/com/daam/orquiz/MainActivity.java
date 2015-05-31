@@ -10,10 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,19 +30,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +45,6 @@ import com.daam.orquiz.business.Utils;
 import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.ParticipationQuestion;
-import com.daam.orquiz.data.Question;
 import com.daam.orquiz.data.Quiz;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -67,23 +58,12 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
-
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String PREFS_NAME = "UserData";
     public static final int PARTICIPANT_ID = 1;
-    public static int QUIZ_ID = 1;
+    public static int QUIZ_ID = 2;
     private static SharedPreferences userData;
     private static CallbackManager callbackManager;
     private static ProfileTracker profileTracker;
@@ -92,8 +72,6 @@ public class MainActivity extends ActionBarActivity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    private Button buttonQuizSelection;
-
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -152,14 +130,6 @@ public class MainActivity extends ActionBarActivity
             }
         };
 
-        //armazenar os dados do utilizador
-        //SharedPreferences userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        //SharedPreferences.Editor editor = userData.edit();
-        //editor.putInt("participant_id", 1);
-        //editor.putString("password", password_txt.getText().toString());
-        //editor.putString("email", email_txt.getText().toString());
-        //editor.commit();
-
     }
 
     @Override
@@ -170,13 +140,12 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
 
-        //TODO:code here
     }
 
     public void onSectionAttached(int number) {
@@ -195,6 +164,9 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 5:
                 mTitle = getString(R.string.drawer_optitle_share);
+                break;
+            case 6:
+                mTitle = getString(R.string.drawer_optitle_help);
                 break;
         }
     }
@@ -288,7 +260,7 @@ public class MainActivity extends ActionBarActivity
                     }
                 });
 
-        AlertDialog alertDialog = chooseQuizDialog.show();
+        chooseQuizDialog.show();
     }
 
     @Override
@@ -330,7 +302,6 @@ public class MainActivity extends ActionBarActivity
         @Override
         public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                                  Bundle savedInstanceState) {
-            //View rootView = inflater.inflate(R.layout.view_startquiz, container, false);
 
             final Integer selected_option = getArguments().getInt(ARG_SECTION_NUMBER);
 
@@ -382,6 +353,7 @@ public class MainActivity extends ActionBarActivity
                     public void onClick(View v) {
 
                         Intent intent = new Intent(container.getContext(), QuizActivity.class);
+
                         //para passar o identificador do quiz que está ativo
                         intent.putExtra("QUIZ_ID", MainActivity.QUIZ_ID);
                         startActivity(intent);
@@ -406,14 +378,22 @@ public class MainActivity extends ActionBarActivity
                 Participation participation = null;
 
                 Bundle extras = getActivity().getIntent().getExtras();
+
+                TextView textTitle = (TextView) header.findViewById(R.id.title);
+
                 if (extras != null && extras.getBoolean("LAST_PARTICIPATION")) {
 
                     getActivity().getIntent().removeExtra("LAST_PARTICIPATION");
                     participation = db.getParticipation(MainActivity.QUIZ_ID, "last");
 
+
+                    textTitle.setText("Your Last Participation");
+
                 }else{
 
                     participation = db.getParticipation(MainActivity.QUIZ_ID, "best");
+
+                    textTitle.setText("Your Best Participation");
 
                 }
 
@@ -460,11 +440,11 @@ public class MainActivity extends ActionBarActivity
                         SimpleDateFormat pdateformat = new SimpleDateFormat("dd-MM-yyyy");
                         Date pdateresult = new Date(participation.getFieldStart());
                         final TextView pdate_text = (TextView) header.findViewById(R.id.textViewDDate);
-                        pdate_text.setText(pdateformat.format(pdateresult));
+                        pdate_text.setText("Date: " + pdateformat.format(pdateresult));
                     }
 
                     final TextView points_text = (TextView) header.findViewById(R.id.textViewNPoints);
-                    points_text.setText(((Integer) quiz_points).toString());
+                    points_text.setText("Score: " + ((Integer) quiz_points).toString() + " points");
 
                     final TextView rightquestions_text = (TextView) header.findViewById(R.id.textViewNRight);
                     rightquestions_text.setText(((Integer) questions_right).toString());
@@ -480,6 +460,7 @@ public class MainActivity extends ActionBarActivity
                         public void onClick(View v) {
 
                             Intent intent = new Intent(container.getContext(), QuizActivity.class);
+
                             //para passar o identificador do quiz que está ativo
                             intent.putExtra("QUIZ_ID", MainActivity.QUIZ_ID);
                             startActivity(intent);
@@ -528,8 +509,8 @@ public class MainActivity extends ActionBarActivity
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_import, container, false);
 
-                final Button start_quiz_bt = (Button) header.findViewById(R.id.button);
-                start_quiz_bt.setOnClickListener(new View.OnClickListener() {
+                final Button upload_quiz_bt = (Button) header.findViewById(R.id.button);
+                upload_quiz_bt.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
                         String[] jsonFilesInPath = Utils.getQuizUploadList(mPath);
@@ -583,20 +564,20 @@ public class MainActivity extends ActionBarActivity
 
                 // Bluetooth Local
                 BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-                if ( btAdapter == null ) { // Device without bluetooth?
+                if (btAdapter == null) { // Device without bluetooth?
                     new AlertDialog.Builder(container.getContext())
-                        .setTitle(R.string.title_error)
-                        .setMessage(R.string.no_bluetooth)
-                        .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        }).show();
+                            .setTitle(R.string.title_error)
+                            .setMessage(R.string.no_bluetooth)
+                            .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).show();
 
                     return null;
                 }
 
-                if ( !btAdapter.isEnabled() ) { // Isn't bluetooth on?
+                if (!btAdapter.isEnabled()) { // Isn't bluetooth on?
                     new AlertDialog.Builder(container.getContext())
                             .setTitle(R.string.title_warning)
                             .setMessage(R.string.no_bluetooth_active)
@@ -611,7 +592,7 @@ public class MainActivity extends ActionBarActivity
 
                 // Obter os Quiz
                 final List<Quiz> listOfQuiz = db.getAllQuiz();
-                if ( listOfQuiz == null || listOfQuiz.isEmpty() ) {
+                if (listOfQuiz == null || listOfQuiz.isEmpty()) {
                     new AlertDialog.Builder(container.getContext())
                             .setTitle(R.string.title_error)
                             .setMessage(R.string.no_quiz_found)
@@ -639,7 +620,7 @@ public class MainActivity extends ActionBarActivity
                         .setPositiveButton(R.string.button_share, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 int selectedOption = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                                if ( selectedOption == -1 ) {
+                                if (selectedOption == -1) {
                                     Toast.makeText(container.getContext(), R.string.no_quiz_selected, Toast.LENGTH_SHORT).show();
                                 } else {
                                     Quiz quiz = listOfQuiz.get(((AlertDialog) dialog).getListView().getCheckedItemPosition()); // Quiz to share
@@ -684,6 +665,27 @@ public class MainActivity extends ActionBarActivity
 
                 AlertDialog alertDialog = chooseQuizDialog.show();
 
+            } else if (selected_option == 6) {
+
+                header = (ViewGroup) inflater.inflate(R.layout.view_help, container, false);
+
+                final Button example_bt = (Button) header.findViewById(R.id.button1);
+                example_bt.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+
+                        Utils.copyPrivateResourceToPublicAccess("quiz1984.json");
+
+                    }
+                });
+
+                final Button help_bt = (Button) header.findViewById(R.id.button2);
+                help_bt.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+
+                        Utils.copyPrivateResourceToPublicAccess("JsonRules.txt");
+
+                    }
+                });
 
             } else {
                 header = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
@@ -700,72 +702,6 @@ public class MainActivity extends ActionBarActivity
                         getArguments().getInt(ARG_SECTION_NUMBER));
             }
         }
-    }
-
-    public static class old_MyListCheckboxAdapter extends ArrayAdapter<Answer> {
-
-        private ArrayList<Answer> answerList;
-
-        public old_MyListCheckboxAdapter(Context context, int textViewResourceId,
-                               List<Answer> answerList) {
-            super(context, textViewResourceId, answerList);
-            this.answerList = new ArrayList<Answer>();
-            this.answerList.addAll(answerList);
-        }
-
-        private class ViewHolder {
-            TextView code;
-            CheckBox name;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-            Log.v("ConvertView", String.valueOf(position));
-
-            if (convertView == null) {
-                /*LayoutInflater vi = (LayoutInflater)getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);*/
-                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
-                convertView = vi.inflate(R.layout.custom_checkboxlist_layout, null);
-
-                holder = new ViewHolder();
-                //holder.code = (TextView) convertView.findViewById(R.id.code);
-                //holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
-                convertView.setTag(holder);
-
-                holder.name.setOnClickListener( new View.OnClickListener() {
-                    public void onClick(View v) {
-                        CheckBox cb = (CheckBox) v ;
-                        Answer answer = (Answer) cb.getTag();
-                        /*Toast.makeText(getApplicationContext(),
-                                "Clicked on Checkbox: " + cb.getText() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();*/
-                        Toast.makeText(getContext(),
-                                "Clicked on Checkbox: " + cb.getText() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();
-                        answer.setSelected(cb.isChecked());
-                    }
-                });
-            }
-            else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            Answer answer = answerList.get(position);
-            holder.code.setText(" (" +  answer.getFieldText() + ")");
-            holder.name.setText(answer.getFieldText());
-            holder.name.setChecked(answer.isSelected());
-            holder.name.setTag(answer);
-
-            return convertView;
-
-        }
-
     }
 
 }
