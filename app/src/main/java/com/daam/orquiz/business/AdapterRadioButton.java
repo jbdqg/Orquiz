@@ -39,7 +39,7 @@ public class AdapterRadioButton extends ArrayAdapter<Answer> {
 
             final RadioGroup radioGroup = (RadioGroup) convertView.findViewById(R.id.radioGroup1);
 
-            boolean checked = false;
+            final boolean checked;
             radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

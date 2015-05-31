@@ -80,7 +80,7 @@ public class QuizQuestionFragment extends Fragment {
         ViewGroup view = null;
 
         if(this.hasQuestion == true){
-            if(this.question.getFieldType().equalsIgnoreCase("ultiplechoice")){
+            if(this.question.getFieldType().equalsIgnoreCase("multiplechoice")){
                 view = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
 
                 if (this.question.getFieldUrl() != null){
@@ -128,7 +128,7 @@ public class QuizQuestionFragment extends Fragment {
 
             }else
 
-            if(this.question.getFieldType().equalsIgnoreCase("multiplechoice")){ // uniquechoice
+            if(this.question.getFieldType().equalsIgnoreCase("uniquechoice")){
                 view = (ViewGroup) inflater.inflate(R.layout.view_uniquechoice, container, false);
 
                 ListView answersLv = (ListView) view.findViewById(R.id.answerslv);
