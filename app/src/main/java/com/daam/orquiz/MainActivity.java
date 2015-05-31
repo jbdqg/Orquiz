@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity
 
     public static final String PREFS_NAME = "UserData";
     public static final int PARTICIPANT_ID = 1;
-    public static int QUIZ_ID = 2;
+    public static int QUIZ_ID = 1;
     private static SharedPreferences userData;
     private static CallbackManager callbackManager;
     private static ProfileTracker profileTracker;
