@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.daam.orquiz.DatabaseHandler;
 import com.daam.orquiz.MyApplication;
@@ -53,7 +54,8 @@ public class DownloadOneImageTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        //enviar aviso de que o upload foi feito
+        Toast.makeText(MyApplication.getAppContext(), "The Image of the quiz was uploaded to " + result,
+                Toast.LENGTH_SHORT).show();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)

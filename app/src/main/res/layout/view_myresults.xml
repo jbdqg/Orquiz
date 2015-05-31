@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Your best participation"
+        android:textSize="@dimen/abc_text_size_title_material"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,7 +51,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayoutDate"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
@@ -60,7 +69,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayoutNPoints"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
@@ -68,20 +77,11 @@
         >
 
         <TextView
-            android:id="@+id/textViewPoints"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/user_default"
-            android:text="score"
-            />
-
-        <TextView
             android:id="@+id/textViewNPoints"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/user_default"
-            android:hint="n"
-            android:gravity="right"
+            android:hint="score"
             />
 
     </LinearLayout>
@@ -103,7 +103,7 @@
 
             <TextView
                 android:id="@+id/textViewTotal"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Questions"
                 />
@@ -112,8 +112,9 @@
                 android:id="@+id/textViewNTotal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Number of questions"
-                android:gravity="right"
+                android:hint="n questions"
+                android:layout_marginLeft="60dp"
+                android:gravity="left"
                 />
 
         </LinearLayout>
@@ -127,7 +128,7 @@
 
             <TextView
                 android:id="@+id/textViewUnanswered"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Unanswered"
                 />
@@ -136,8 +137,10 @@
                 android:id="@+id/textViewNUnanswered"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Number of not unanswered questions"
-                android:gravity="right" />
+                android:hint="n unanswered questions"
+                android:layout_marginLeft="60dp"
+                android:gravity="left"
+                />
 
         </LinearLayout>
 
@@ -150,7 +153,7 @@
 
             <TextView
                 android:id="@+id/textViewRight"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Right Answers"
                 />
@@ -159,8 +162,9 @@
                 android:id="@+id/textViewNRight"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Number of right answers"
-                android:gravity="right"
+                android:hint="n right answers"
+                android:layout_marginLeft="60dp"
+                android:gravity="left"
                 />
 
         </LinearLayout>
@@ -174,7 +178,7 @@
 
             <TextView
                 android:id="@+id/textViewWrong"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Wrong Answers"
                 />
@@ -183,8 +187,9 @@
                 android:id="@+id/textViewNWrong"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Number of wrong answers"
-                android:gravity="right"
+                android:hint="n wrong answers"
+                android:layout_marginLeft="60dp"
+                android:gravity="left"
                 />
 
         </LinearLayout>
@@ -198,7 +203,7 @@
 
             <TextView
                 android:id="@+id/textViewTotalTime"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Duration (sec)" />
 
@@ -206,8 +211,10 @@
                 android:id="@+id/textViewNTotalTime"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Quiz time (seconds)"
-                android:gravity="right" />
+                android:hint="quiz time (seconds)"
+                android:layout_marginLeft="60dp"
+                android:gravity="left"
+                />
 
         </LinearLayout>
 

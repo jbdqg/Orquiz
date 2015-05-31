@@ -64,7 +64,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //depois de submeter o quiz apanha-se a posição em que se quer iniciar
+        //depois de submeter o quiz obtem-se a posição em que se quer iniciar
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
             if (extras.getInt("NEXT_DRAWER_POSITION") != 0){
@@ -114,6 +114,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.drawer_optitle_my_data),
                         getString(R.string.drawer_optitle_import),
                         getString(R.string.drawer_optitle_share),
+                        getString(R.string.drawer_optitle_help)
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 

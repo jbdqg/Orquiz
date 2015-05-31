@@ -1,5 +1,6 @@
 package com.daam.orquiz.business;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Path;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -39,9 +41,12 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -121,6 +126,120 @@ public class Utils {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static void copyPrivateResourceToPublicAccess(String filename) {
+
+        String file_location = null;
+
+        InputStream inputStream;
+        try {
+            inputStream = MyApplication.getAppContext().getAssets().open(filename);
+
+            String state = Environment.getExternalStorageState();
+            if (Environment.MEDIA_MOUNTED.equals(state)) {
+                try {
+                    File storagePath = Environment.getExternalStorageDirectory();
+                    file_location = storagePath + "/orquiz/quizes/ " + filename;
+                    try (OutputStream output = new FileOutputStream(file_location)) {
+                        try {
+                            byte[] buffer = new byte[1024];
+                            int bytesRead = 0;
+                            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                output.write(buffer, 0, bytesRead);
+                            }
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        } finally {
+                            try {
+                                output.close();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                } finally {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+            Toast.makeText(MyApplication.getAppContext(), "The File was uploaded to " + file_location,
+                    Toast.LENGTH_LONG).show();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static class MyListRadiobuttonAdapter extends ArrayAdapter<Answer> {
+
+        private ArrayList<Answer> answerList;
+
+        public MyListRadiobuttonAdapter(Context context, int textViewResourceId,
+                                     List<Answer> answerList) {
+            super(context, textViewResourceId, answerList);
+            this.answerList = new ArrayList<Answer>();
+            this.answerList.addAll(answerList);
+        }
+
+        private class ViewHolder {
+            TextView code;
+            RadioButton name;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder holder = null;
+            Log.v("ConvertView", String.valueOf(position));
+
+            if (convertView == null) {
+                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE);
+                convertView = vi.inflate(R.layout.custom_radiobuttonlist_layout, null);
+
+                holder = new ViewHolder();
+                //holder.code = (TextView) convertView.findViewById(R.id.code);
+                //holder.name = (RadioButton) convertView.findViewById(R.id.radioButton1);
+                holder.code = (RadioButton) convertView.findViewById(R.id.radioButton1);
+                holder.name = (RadioButton) convertView.findViewById(R.id.radioButton1);
+                convertView.setTag(holder);
+
+                //RadioGroup rg = (RadioGroup) convertView.findViewById(R.id.radioGroup1);
+                //rg.clearCheck();
+
+                holder.name.setOnClickListener( new View.OnClickListener() {
+                    public void onClick(View v) {
+
+                        RadioButton rb = (RadioButton) v;
+
+                        Answer answer = (Answer) rb.getTag();
+
+                        answer.setSelected(rb.isChecked());
+
+                    }
+                });
+            }
+            else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            Answer answer = answerList.get(position);
+            holder.code.setText(answer.getFieldText());
+            //holder.name.setText(answer.getFieldText());
+            //holder.name.setChecked(answer.isSelected());
+            holder.name.setTag(answer);
+
+            return convertView;
+
+        }
+
+    }
+
     public static String[] getQuizUploadList (File mPath) {
 
         String[] mFileList;
@@ -185,7 +304,9 @@ public class Utils {
 
         Boolean quizUploaded = false;
 
-            db.uploadJsonQuizIntoTables(quizJsonObject);
+            new UploadQuizTask().execute(quizJsonObject);
+
+            //db.uploadJsonQuizIntoTables(quizJsonObject);
 
         return quizUploaded;
 

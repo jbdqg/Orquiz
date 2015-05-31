@@ -26,6 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Created by johnny on 25-05-2015.
+ */
+
 public class QuizQuestionFragment extends Fragment {
     // Store instance variables
     private Question question = new Question();
