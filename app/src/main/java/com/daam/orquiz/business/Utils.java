@@ -47,9 +47,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by johnny on 26-05-2015.
- */
 public class Utils {
 
     public Utils() {
@@ -116,71 +113,6 @@ public class Utils {
             holder.code.setText(answer.getFieldText());
             //holder.name.setText(answer.getFieldText());
             holder.name.setChecked(answer.isSelected());
-            holder.name.setTag(answer);
-
-            return convertView;
-
-        }
-
-    }
-
-    public static class MyListRadiobuttonAdapter extends ArrayAdapter<Answer> {
-
-        private ArrayList<Answer> answerList;
-
-        public MyListRadiobuttonAdapter(Context context, int textViewResourceId,
-                                     List<Answer> answerList) {
-            super(context, textViewResourceId, answerList);
-            this.answerList = new ArrayList<Answer>();
-            this.answerList.addAll(answerList);
-        }
-
-        private class ViewHolder {
-            TextView code;
-            RadioButton name;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-            Log.v("ConvertView", String.valueOf(position));
-
-            if (convertView == null) {
-                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
-                convertView = vi.inflate(R.layout.custom_radiobuttonlist_layout, null);
-
-                holder = new ViewHolder();
-                //holder.code = (TextView) convertView.findViewById(R.id.code);
-                //holder.name = (RadioButton) convertView.findViewById(R.id.radioButton1);
-                holder.code = (RadioButton) convertView.findViewById(R.id.radioButton1);
-                holder.name = (RadioButton) convertView.findViewById(R.id.radioButton1);
-                convertView.setTag(holder);
-
-                //RadioGroup rg = (RadioGroup) convertView.findViewById(R.id.radioGroup1);
-                //rg.clearCheck();
-
-                holder.name.setOnClickListener( new View.OnClickListener() {
-                    public void onClick(View v) {
-
-                        RadioButton rb = (RadioButton) v;
-
-                        Answer answer = (Answer) rb.getTag();
-
-                        answer.setSelected(rb.isChecked());
-
-                    }
-                });
-            }
-            else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            Answer answer = answerList.get(position);
-            holder.code.setText(answer.getFieldText());
-            //holder.name.setText(answer.getFieldText());
-            //holder.name.setChecked(answer.isSelected());
             holder.name.setTag(answer);
 
             return convertView;

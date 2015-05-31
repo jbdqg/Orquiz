@@ -63,6 +63,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -92,6 +93,14 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Integer quizId = userData.getInt("QuizId", 0);
+        if ( quizId != 0 ) {
+            QUIZ_ID = quizId;
+        } else {
+
+        }
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -219,7 +228,7 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_settings:
                 return true;
             case R.id.select_quiz:
-                selectQuiz(this);
+                selectQuiz(this, item);
                 return true;
             default:
 
@@ -228,7 +237,7 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void selectQuiz(final Context context) {
+    private void selectQuiz(final Context context, final MenuItem item) {
         // Get All Available Quizes
         DatabaseHandler connDatabase = new DatabaseHandler(context);
         final List<Quiz> listOfQuizes = connDatabase.getAllQuiz();
@@ -266,12 +275,18 @@ public class MainActivity extends ActionBarActivity
                         } else {
                             Quiz quiz = listOfQuizes.get(((AlertDialog) dialog).getListView().getCheckedItemPosition()); // Quiz to share
 
-                            //SharedPreferences userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                            //SharedPreferences.Editor editor = userData.edit();
-                            //editor.putInt("QUIZ_ID", quiz.getFieldId());
-                            //editor.commit();
+                            SharedPreferences.Editor editor = userData.edit();
+                            editor.putInt("QuizId", quiz.getFieldId());
+                            editor.putString("QuizName", quiz.getFieldName());
+                            editor.commit();
 
+                            mNavigationDrawerFragment.setTitle(quiz.getFieldName());
                             QUIZ_ID = quiz.getFieldId();
+
+
+
+                            getSupportFragmentManager().beginTransaction();
+                            //startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                     }
                 });
