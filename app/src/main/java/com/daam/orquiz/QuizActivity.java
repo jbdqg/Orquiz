@@ -39,8 +39,6 @@ public class QuizActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_home);
-        //setContentView(R.layout.view_startquiz);
         setContentView(R.layout.pager_quiz);
 
         Bundle extras = getIntent().getExtras();
@@ -140,7 +138,7 @@ public class QuizActivity extends FragmentActivity {
         Long participationTime = ((participationEnd - activeParticipation.getFieldStart()) / 1000);
         activeParticipation.setFieldEnd(participationEnd);
         activeParticipation.setFieldTotaltime(participationTime.intValue());
-        activeParticipation.setFieldPoints(participationPoints);
+        activeParticipation.setFieldTotaltime(participationTime.intValue());
         if (sumbmit_button_pressed == true) {
                 activeParticipation.setFieldStatus("completed");
         }
