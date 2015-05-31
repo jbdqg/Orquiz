@@ -72,6 +72,7 @@ public class MainActivity extends ActionBarActivity
     public static final String PREFS_NAME = "UserData";
     public static final int PARTICIPANT_ID = 1;
     public static int QUIZ_ID = 1;
+    private static SharedPreferences userData;
     private static CallbackManager callbackManager;
     private static ProfileTracker profileTracker;
 
@@ -107,7 +108,7 @@ public class MainActivity extends ActionBarActivity
         profileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                SharedPreferences userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = userData.edit();
 
                 ImageView profileImage = (ImageView) findViewById(R.id.profileImage);
@@ -383,7 +384,7 @@ public class MainActivity extends ActionBarActivity
                 // Preencher username
                 TextView textUsername = (TextView) header.findViewById(R.id.username);
 
-                SharedPreferences userData = container.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                userData = container.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                 String username = userData.getString("profileUsername", "");
                 if ( username == null || username.equals("") )
                     textUsername.setText(R.string.no_username);
@@ -475,7 +476,7 @@ public class MainActivity extends ActionBarActivity
                 // Preencher username
                 TextView textUsername = (TextView) header.findViewById(R.id.profileUsername);
 
-                SharedPreferences userData = container.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                userData = container.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                 String username = userData.getString("profileUsername", "");
                 if ( username == null || username.equals("") )
                     textUsername.setText(R.string.no_username);
