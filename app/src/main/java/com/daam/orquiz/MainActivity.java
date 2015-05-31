@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
@@ -105,12 +106,12 @@ public class MainActivity extends ActionBarActivity
 
         profileTracker = new ProfileTracker() {
             @Override
-            protected void onCurrentProfileChanged(
-                    Profile oldProfile,
-                    Profile currentProfile) {
+            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                SharedPreferences userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = userData.edit();
 
-                ImageView profileImage = (ImageView) findViewById(R.id.image);
-                TextView profileName = (TextView) findViewById((R.id.username));
+                ImageView profileImage = (ImageView) findViewById(R.id.profileImage);
+                TextView profileName = (TextView) findViewById((R.id.profileUsername));
 
                 if ( currentProfile != null ) {
                     if ( profileImage != null ) {
@@ -118,14 +119,22 @@ public class MainActivity extends ActionBarActivity
                         profileImage.setImageURI(uri);
                     }
 
-                    if ( profileName != null )
+                    if ( profileName != null ) {
                         profileName.setText(currentProfile.getName());
+
+                        editor.putString("profileUsername", currentProfile.getName());
+                        editor.commit();
+                    }
                 } else {
                     if ( profileImage != null )
                         profileImage.setImageResource(R.drawable.user_default);
 
-                    if ( profileName != null )
+                    if ( profileName != null ) {
                         profileName.setText(R.string.no_username);
+
+                        editor.putString("profileUsername", "");
+                        editor.commit();
+                    }
                 }
             }
         };
@@ -222,6 +231,7 @@ public class MainActivity extends ActionBarActivity
         // Get All Available Quizes
         DatabaseHandler connDatabase = new DatabaseHandler(context);
         final List<Quiz> listOfQuizes = connDatabase.getAllQuiz();
+        connDatabase.close();
         if ( listOfQuizes == null || listOfQuizes.isEmpty() ) {
             new AlertDialog.Builder(context)
                     .setTitle(R.string.title_error)
@@ -259,12 +269,19 @@ public class MainActivity extends ActionBarActivity
                             //SharedPreferences.Editor editor = userData.edit();
                             //editor.putInt("QUIZ_ID", quiz.getFieldId());
                             //editor.commit();
+
                             QUIZ_ID = quiz.getFieldId();
                         }
                     }
                 });
 
         AlertDialog alertDialog = chooseQuizDialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -363,6 +380,16 @@ public class MainActivity extends ActionBarActivity
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_myresults, container, false);
 
+                // Preencher username
+                TextView textUsername = (TextView) header.findViewById(R.id.username);
+
+                SharedPreferences userData = container.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                String username = userData.getString("profileUsername", "");
+                if ( username == null || username.equals("") )
+                    textUsername.setText(R.string.no_username);
+                else
+                    textUsername.setText(username);
+
                 Participation participation = null;
 
                 Bundle extras = getActivity().getIntent().getExtras();
@@ -441,6 +468,20 @@ public class MainActivity extends ActionBarActivity
                     });
                 }
 
+            } else if (selected_option == 3) {
+
+                header = (ViewGroup) inflater.inflate(R.layout.view_mydata, container, false);
+
+                // Preencher username
+                TextView textUsername = (TextView) header.findViewById(R.id.profileUsername);
+
+                SharedPreferences userData = container.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                String username = userData.getString("profileUsername", "");
+                if ( username == null || username.equals("") )
+                    textUsername.setText(R.string.no_username);
+                else
+                    textUsername.setText(username);
+
                 // Facebook
                 LoginButton loginFacebookButton = (LoginButton) header.findViewById(R.id.login_button);
                 loginFacebookButton.setReadPermissions("public_profile");
@@ -449,7 +490,7 @@ public class MainActivity extends ActionBarActivity
                 loginFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-
+                        Profile p = Profile.getCurrentProfile();
                     }
 
                     @Override
@@ -462,11 +503,8 @@ public class MainActivity extends ActionBarActivity
 
                     }
                 });
-            } else if (selected_option == 4){
 
-            } else if (selected_option == 3){
-
-            } else if (selected_option == 4){
+            } else if (selected_option == 4) {
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_import, container, false);
 
@@ -674,8 +712,8 @@ public class MainActivity extends ActionBarActivity
                 convertView = vi.inflate(R.layout.custom_checkboxlist_layout, null);
 
                 holder = new ViewHolder();
-                holder.code = (TextView) convertView.findViewById(R.id.code);
-                holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
+                //holder.code = (TextView) convertView.findViewById(R.id.code);
+                //holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
                 convertView.setTag(holder);
 
                 holder.name.setOnClickListener( new View.OnClickListener() {
