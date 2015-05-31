@@ -41,28 +41,48 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayoutNPoints"
+        android:id="@+id/linearLayoutDate"
         android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
         >
 
         <TextView
-            android:id="@+id/textViewNPoints"
+            android:id="@+id/textViewDDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/user_default"
-            android:hint="n"/>
+            android:hint="date"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutNPoints"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        >
 
         <TextView
             android:id="@+id/textViewPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/user_default"
+            android:text="score"
+            />
+
+        <TextView
+            android:id="@+id/textViewNPoints"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
             android:src="@drawable/user_default"
-            android:text="score"/>
+            android:hint="n"
+            android:gravity="right"
+            />
 
     </LinearLayout>
 
@@ -82,16 +102,41 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/textViewNTotal"
+                android:id="@+id/textViewTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Number of questions"/>
+                android:text="Questions"
+                />
 
             <TextView
-                android:id="@+id/textViewTotal"
+                android:id="@+id/textViewNTotal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Questions"
+                android:hint="Number of questions"
+                android:gravity="right"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutUnanswered"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:id="@+id/textViewUnanswered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unanswered"
+                />
+
+            <TextView
+                android:id="@+id/textViewNUnanswered"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Number of not unanswered questions"
                 android:gravity="right" />
 
         </LinearLayout>
@@ -104,17 +149,19 @@
             android:layout_marginTop="10dp" >
 
             <TextView
-                android:id="@+id/textViewNRight"
+                android:id="@+id/textViewRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Number of right answers"/>
+                android:text="Right Answers"
+                />
 
             <TextView
-                android:id="@+id/textViewRight"
+                android:id="@+id/textViewNRight"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Right Answers"
-                android:gravity="right" />
+                android:hint="Number of right answers"
+                android:gravity="right"
+                />
 
         </LinearLayout>
 
@@ -126,39 +173,19 @@
             android:layout_marginTop="10dp" >
 
             <TextView
-                android:id="@+id/textViewNWrong"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Number of wrong answers"/>
-
-            <TextView
                 android:id="@+id/textViewWrong"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Wrong Answers"
-                android:gravity="right" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutUnanswered"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp" >
+                />
 
             <TextView
-                android:id="@+id/textViewNUnanswered"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Number of not unanswered questions"/>
-
-            <TextView
-                android:id="@+id/textViewUnanswered"
+                android:id="@+id/textViewNWrong"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Unanswered"
-                android:gravity="right" />
+                android:hint="Number of wrong answers"
+                android:gravity="right"
+                />
 
         </LinearLayout>
 
@@ -170,16 +197,16 @@
             android:layout_marginTop="10dp" >
 
             <TextView
-                android:id="@+id/textViewNTotalTime"
+                android:id="@+id/textViewTotalTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Quiz time (seconds)"/>
+                android:text="Duration (sec)" />
 
             <TextView
-                android:id="@+id/textViewTotalTime"
+                android:id="@+id/textViewNTotalTime"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="seconds"
+                android:hint="Quiz time (seconds)"
                 android:gravity="right" />
 
         </LinearLayout>

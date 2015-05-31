@@ -3,7 +3,7 @@
     android:id="@+id/start_quiz"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="480dp"
@@ -12,25 +12,15 @@
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:hint="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt velit ac dapibus pulvinar. Mauris pharetra, ipsum nec faucibus hendrerit, nisi nulla molestie odio, et porta velit enim efficitur arcu. Vestibulum at leo ac turpis dictum pellentesque. Maecenas eu urna ac diam vehicula faucibus. Aliquam vestibulum at justo id scelerisque. Phasellus a sodales mi. Pellentesque dapibus eu diam et euismod"
+            android:layout_height="150dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+
+            android:text="You are about to submit your participation. \n Before you do that you can swipe back and change any of the answers you gave. \n\n Anytime you want you can answer again to this quiz, or if any other is available you can select it from the action bar with the option Quiz \n\n Press Submit Quiz to view your results!"
             android:gravity="center"
 
-        />
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_gravity="center_horizontal" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Go Back"/>
+            />
 
     </LinearLayout>
 

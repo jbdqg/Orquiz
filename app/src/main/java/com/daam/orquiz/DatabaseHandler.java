@@ -1444,7 +1444,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Participation participation = new Participation();
 
-        String selectQuery = "SELECT " + KEY_PARTICIPATION_ID + ", " + KEY_PARTICIPANT_ID + ", " + KEY_QUIZ_ID + ", " + FIELD_PARTICIPATION_TOTALTIME + ", " + FIELD_PARTICIPATION_POINTS + ", " + FIELD_PARTICIPATION_RANKING + " FROM " + TABLE_PARTICIPATION + " WHERE " + KEY_QUIZ_ID + " = " + quiz_id + " AND " + KEY_PARTICIPANT_ID + " = " + participant_id + " AND " + FIELD_PARTICIPATION_STATUS + " = \"completed\" ";
+        String selectQuery = "SELECT " + KEY_PARTICIPATION_ID + ", "
+                                       + KEY_PARTICIPANT_ID + ", "
+                                       + KEY_QUIZ_ID + ", "
+                                       + FIELD_PARTICIPATION_START + ", "
+                                       + FIELD_PARTICIPATION_END + ", "
+                                       + FIELD_PARTICIPATION_TOTALTIME + ", "
+                                       + FIELD_PARTICIPATION_POINTS + ", "
+                                       + FIELD_PARTICIPATION_RANKING
+                                + " FROM " + TABLE_PARTICIPATION
+                                + " WHERE " + KEY_QUIZ_ID + " = " + quiz_id
+                                + " AND " + KEY_PARTICIPANT_ID + " = " + participant_id
+                                + " AND " + FIELD_PARTICIPATION_STATUS + " = \"completed\" ";
 
         if (participation_type == "last"){
             selectQuery += " ORDER BY " + KEY_PARTICIPATION_ID + " DESC LIMIT 1";
@@ -1465,13 +1476,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     participation.setFieldQuizid(Integer.parseInt(cursor.getString(2)));
                 }
                 if(!cursor.isNull(3)){
-                    participation.setFieldTotaltime(Integer.parseInt(cursor.getString(3)));
+                    participation.setFieldStart(Long.parseLong(cursor.getString(3)));
                 }
                 if(!cursor.isNull(4)){
-                    participation.setFieldPoints(Integer.parseInt(cursor.getString(4)));
+                    participation.setFieldEnd(Long.parseLong(cursor.getString(4)));
                 }
                 if(!cursor.isNull(5)){
-                    participation.setFieldRanking(cursor.getString(5));
+                    participation.setFieldTotaltime(Integer.parseInt(cursor.getString(5)));
+                }
+                if(!cursor.isNull(6)){
+                    participation.setFieldPoints(Integer.parseInt(cursor.getString(6)));
+                }
+                if(!cursor.isNull(7)){
+                    participation.setFieldRanking(cursor.getString(7));
                 }
             } while (cursor.moveToNext());
         }
