@@ -16,15 +16,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daam.orquiz.DatabaseHandler;
 import com.daam.orquiz.MainActivity;
+import com.daam.orquiz.MyApplication;
 import com.daam.orquiz.R;
 import com.daam.orquiz.data.Answer;
 
@@ -88,7 +91,8 @@ public class Utils {
                 convertView = vi.inflate(R.layout.custom_checkboxlist_layout, null);
 
                 holder = new ViewHolder();
-                holder.code = (TextView) convertView.findViewById(R.id.code);
+                //holder.code = (TextView) convertView.findViewById(R.id.code);
+                holder.code = (CheckBox) convertView.findViewById(R.id.checkBox1);
                 holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
                 convertView.setTag(holder);
 
@@ -96,14 +100,10 @@ public class Utils {
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v ;
                         Answer answer = (Answer) cb.getTag();
-                        /*Toast.makeText(getApplicationContext(),
+                        /*Toast.makeText(getContext(),
                                 "Clicked on Checkbox: " + cb.getText() +
                                         " is " + cb.isChecked(),
                                 Toast.LENGTH_LONG).show();*/
-                        Toast.makeText(getContext(),
-                                "Clicked on Checkbox: " + cb.getText() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();
                         answer.setSelected(cb.isChecked());
                     }
                 });
@@ -113,8 +113,8 @@ public class Utils {
             }
 
             Answer answer = answerList.get(position);
-            holder.code.setText(" (" +  answer.getFieldText() + ")");
-            holder.name.setText(answer.getFieldText());
+            holder.code.setText(answer.getFieldText());
+            //holder.name.setText(answer.getFieldText());
             holder.name.setChecked(answer.isSelected());
             holder.name.setTag(answer);
 
@@ -147,42 +147,41 @@ public class Utils {
             Log.v("ConvertView", String.valueOf(position));
 
             if (convertView == null) {
-                /*LayoutInflater vi = (LayoutInflater)getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);*/
                 LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.custom_radiobuttonlist_layout, null);
 
                 holder = new ViewHolder();
-                holder.code = (TextView) convertView.findViewById(R.id.code);
+                //holder.code = (TextView) convertView.findViewById(R.id.code);
+                //holder.name = (RadioButton) convertView.findViewById(R.id.radioButton1);
+                holder.code = (RadioButton) convertView.findViewById(R.id.radioButton1);
                 holder.name = (RadioButton) convertView.findViewById(R.id.radioButton1);
                 convertView.setTag(holder);
 
-                //holder.name.setOnClickListener( new View.OnClickListener() {
-                //    public void onClick(View v) {
-                //        CheckBox cb = (CheckBox) v ;
-                //        Answer answer = (Answer) cb.getTag();
-                        /*Toast.makeText(getApplicationContext(),
-                                "Clicked on Checkbox: " + cb.getText() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();*/
-                //        Toast.makeText(getContext(),
-                //               "Clicked on Radiobutton: " + cb.getText() +
-                //                        " is " + cb.isChecked(),
-                //                Toast.LENGTH_LONG).show();
-                //        answer.setSelected(cb.isChecked());
-                //    }
-                //});
+                //RadioGroup rg = (RadioGroup) convertView.findViewById(R.id.radioGroup1);
+                //rg.clearCheck();
+
+                holder.name.setOnClickListener( new View.OnClickListener() {
+                    public void onClick(View v) {
+
+                        RadioButton rb = (RadioButton) v;
+
+                        Answer answer = (Answer) rb.getTag();
+
+                        answer.setSelected(rb.isChecked());
+
+                    }
+                });
             }
             else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             Answer answer = answerList.get(position);
-            holder.code.setText(" (" +  answer.getFieldText() + ")");
+            holder.code.setText(answer.getFieldText());
             //holder.name.setText(answer.getFieldText());
             //holder.name.setChecked(answer.isSelected());
-            //holder.name.setTag(answer);
+            holder.name.setTag(answer);
 
             return convertView;
 

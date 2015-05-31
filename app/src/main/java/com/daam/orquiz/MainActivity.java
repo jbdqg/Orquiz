@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -63,6 +64,7 @@ public class MainActivity extends ActionBarActivity
 
     public static final String PREFS_NAME = "UserData";
     public static final int PARTICIPANT_ID = 1;
+    public static int QUIZ_ID = 1;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -114,18 +116,15 @@ public class MainActivity extends ActionBarActivity
                 mTitle = getString(R.string.drawer_optitle_splashpage);
                 break;
             case 2:
-                mTitle = getString(R.string.drawer_optitle_start_quiz);
-                break;
-            case 3:
                 mTitle = getString(R.string.drawer_optitle_my_results);
                 break;
-            case 4:
+            case 3:
                 mTitle = getString(R.string.drawer_optitle_my_data);
                 break;
-            case 5:
+            case 4:
                 mTitle = getString(R.string.drawer_optitle_import);
                 break;
-            case 6:
+            case 5:
                 mTitle = getString(R.string.drawer_optitle_share);
                 break;
         }
@@ -137,7 +136,6 @@ public class MainActivity extends ActionBarActivity
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,9 +183,6 @@ public class MainActivity extends ActionBarActivity
 
         private File mPath = new File(Environment.getExternalStorageDirectory() + "/orquiz/quizes/");
 
-        //QUIZ QUE FOI SELECIONADO
-        private static int QUIZ_ID = 2;
-
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
 
@@ -215,7 +210,7 @@ public class MainActivity extends ActionBarActivity
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_splashpage, container, false);
 
-                Quiz quiz = db.getQuiz(QUIZ_ID);
+                Quiz quiz = db.getQuiz(MainActivity.QUIZ_ID);
 
                 if (quiz.getFieldId() != null){
 
@@ -229,14 +224,26 @@ public class MainActivity extends ActionBarActivity
                     if (quiz.getFieldUrl() instanceof String){
 
                         final ImageView image = (ImageView) header.findViewById(R.id.image);
-                        File imgFile = new  File(quiz.getFieldUrl());
-                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        image.setImageBitmap(myBitmap);
+
+                        if(QUIZ_ID != 1){
+                            File imgFile = new File(quiz.getFieldUrl());
+                            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                            image.setImageBitmap(myBitmap);
+                        }else{
+
+                            try {
+                                InputStream is = MyApplication.getAppContext().getAssets().open(quiz.getFieldUrl());
+                                Bitmap bmp = BitmapFactory.decodeStream(is);
+                                image.setImageBitmap(bmp);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
 
                     }
 
                 }
-
 
                 final Button start_quiz_bt = (Button) header.findViewById(R.id.button);
                 start_quiz_bt.setOnClickListener(new View.OnClickListener() {
@@ -244,99 +251,95 @@ public class MainActivity extends ActionBarActivity
 
                         Intent intent = new Intent(container.getContext(), QuizActivity.class);
                         //para passar o identificador do quiz que está ativo
-                        intent.putExtra("QUIZ_ID", QUIZ_ID);
+                        intent.putExtra("QUIZ_ID", MainActivity.QUIZ_ID);
                         startActivity(intent);
 
                     }
                 });
 
             } else if (selected_option == 2) {
-                header = (ViewGroup) inflater.inflate(R.layout.view_startquiz, container, false);
-
-                final ProgressBar progressBarWidget = (ProgressBar) header.findViewById(R.id.progressBar);
-
-                final Button but = (Button) header.findViewById(R.id.button);
-                //but.setOnClickListener();
-                progressBarWidget.getProgress();
-
-            } else if (selected_option == 3) {
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_myresults, container, false);
 
+                Participation participation = null;
+
                 Bundle extras = getActivity().getIntent().getExtras();
-                if (extras != null) {
-                    if (extras.getBoolean("LAST_PARTICIPATION") == true) {
+                if (extras != null && extras.getBoolean("LAST_PARTICIPATION")) {
 
-                        Participation participation = db.getLastParticipation();
+                    getActivity().getIntent().removeExtra("LAST_PARTICIPATION");
+                    participation = db.getParticipation(MainActivity.QUIZ_ID, "last");
 
-                        List<ParticipationQuestion> participationquestions_list = db.getActiveParticipationQuestions(participation);
+                }else{
 
-                        final TextView totalquestions_text = (TextView) header.findViewById(R.id.textViewNTotal);
-                        totalquestions_text.setText(((Integer) participationquestions_list.size()).toString());
+                    participation = db.getParticipation(MainActivity.QUIZ_ID, "best");
 
-                        final TextView totaltime_text = (TextView) header.findViewById(R.id.textViewNTotalTime);
-                        totaltime_text.setText(participation.getFieldTotaltime().toString());
-
-                        int questions_right = 0;
-                        int questions_wrong = 0;
-                        int questions_unanswered = 0;
-                        int total_time = 0;
-                        int quiz_points = 0;
-
-                        for (ParticipationQuestion pq : participationquestions_list) {
-
-                            try {
-                                JSONObject answersJson = new JSONObject(pq.getFieldAnswersjson());
-
-                                if (answersJson.getBoolean("answered") == false) {
-                                    questions_unanswered++;
-                                } else if (answersJson.getBoolean("answered") == true) {
-                                    if (answersJson.getBoolean("correct") == true) {
-                                        questions_right++;
-                                    } else if (answersJson.getBoolean("correct") == false) {
-                                        questions_wrong++;
-                                    }
-                                }
-
-
-                                quiz_points += answersJson.getInt("points");
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                        final TextView points_text = (TextView) header.findViewById(R.id.textViewNPoints);
-                        points_text.setText(((Integer) quiz_points).toString());
-
-                        final TextView rightquestions_text = (TextView) header.findViewById(R.id.textViewNRight);
-                        rightquestions_text.setText(((Integer) questions_right).toString());
-
-                        final TextView wrongquestions_text = (TextView) header.findViewById(R.id.textViewNWrong);
-                        wrongquestions_text.setText(((Integer) questions_wrong).toString());
-
-                        final TextView unansweredquestions_text = (TextView) header.findViewById(R.id.textViewNUnanswered);
-                        unansweredquestions_text.setText(((Integer) questions_unanswered).toString());
-
-                        final Button try_again_bt = (Button) header.findViewById(R.id.button);
-                        try_again_bt.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-
-                                Intent intent = new Intent(container.getContext(), QuizActivity.class);
-                                //para passar o identificador do quiz que está ativo
-                                intent.putExtra("QUIZ_ID", QUIZ_ID);
-                                startActivity(intent);
-
-                            }
-                        });
-
-
-                    }
                 }
 
+                if(participation.getFieldId() != null){
+                    List<ParticipationQuestion> participationquestions_list = db.getActiveParticipationQuestions(participation);
 
-            } else if (selected_option == 5){
+                    final TextView totalquestions_text = (TextView) header.findViewById(R.id.textViewNTotal);
+                    totalquestions_text.setText(((Integer) participationquestions_list.size()).toString());
+
+                    final TextView totaltime_text = (TextView) header.findViewById(R.id.textViewNTotalTime);
+                    totaltime_text.setText(participation.getFieldTotaltime().toString());
+
+                    int questions_right = 0;
+                    int questions_wrong = 0;
+                    int questions_unanswered = 0;
+                    int total_time = 0;
+                    int quiz_points = 0;
+
+                    for (ParticipationQuestion pq : participationquestions_list) {
+
+                        try {
+                            JSONObject answersJson = new JSONObject(pq.getFieldAnswersjson());
+
+                            if (answersJson.getBoolean("answered") == false) {
+                                questions_unanswered++;
+                            } else if (answersJson.getBoolean("answered") == true) {
+                                if (answersJson.getBoolean("correct") == true) {
+                                    questions_right++;
+                                } else if (answersJson.getBoolean("correct") == false) {
+                                    questions_wrong++;
+                                }
+                            }
+
+
+                            quiz_points += answersJson.getInt("points");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    final TextView points_text = (TextView) header.findViewById(R.id.textViewNPoints);
+                    points_text.setText(((Integer) quiz_points).toString());
+
+                    final TextView rightquestions_text = (TextView) header.findViewById(R.id.textViewNRight);
+                    rightquestions_text.setText(((Integer) questions_right).toString());
+
+                    final TextView wrongquestions_text = (TextView) header.findViewById(R.id.textViewNWrong);
+                    wrongquestions_text.setText(((Integer) questions_wrong).toString());
+
+                    final TextView unansweredquestions_text = (TextView) header.findViewById(R.id.textViewNUnanswered);
+                    unansweredquestions_text.setText(((Integer) questions_unanswered).toString());
+
+                    final Button try_again_bt = (Button) header.findViewById(R.id.button);
+                    try_again_bt.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+
+                            Intent intent = new Intent(container.getContext(), QuizActivity.class);
+                            //para passar o identificador do quiz que está ativo
+                            intent.putExtra("QUIZ_ID", MainActivity.QUIZ_ID);
+                            startActivity(intent);
+
+                        }
+                    });
+                }
+
+            } else if (selected_option == 4){
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_import, container, false);
 
@@ -391,7 +394,7 @@ public class MainActivity extends ActionBarActivity
                     }
                 });
 
-            } else if ( selected_option == 6) { // Share Option
+            } else if ( selected_option == 5) { // Share Option
 
                 // Bluetooth Local
                 BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -497,65 +500,7 @@ public class MainActivity extends ActionBarActivity
                 AlertDialog alertDialog = chooseQuizDialog.show();
 
 
-            } else if (selected_option == 10) {
-
-                header = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
-
-                    /*
-                    //progress bar for resource em drawable (progress_bar.xml -> http://www.learn-android-easily.com/2013/05/custom-progress-bar-in-android.html)
-                    ProgressDialog progressBar;
-                    progressBar = new ProgressDialog(container.getContext());
-                    progressBar.setCancelable(true);
-                    progressBar.setMessage("Downloading File...");
-                    progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    progressBar.setProgress(0);
-                    progressBar.setMax(100);
-                    // Get the Drawable custom_progressbar
-                    Drawable customDrawable= getResources().getDrawable(R.drawable.progress_bar);
-                    // set the drawable as progress drawavle
-                    progressBar.setProgressDrawable(customDrawable);
-                    */
-
-                    //progressbar enquanto elemento do layout
-                    final ProgressBar progressBar = (ProgressBar) header.findViewById(R.id.progressBar);
-                    int number_of_questions = 10;
-                    progressBar.setProgress((5*100)/number_of_questions);
-
-                    final TextView question_text = (TextView) header.findViewById(R.id.text);
-                    final ListView answersLv = (ListView) header.findViewById(R.id.answerslv);
-
-                    int question_id = 1;
-
-
-
-                    Question question = db.getQuestion(question_id);
-
-                    question_text.setText(question.getFieldText());
-
-                    int count = db.getAllQuestionAnswersCount(question_id);
-                    String[] values = new String[count];
-                    List<Answer> answers_list = db.getAllQuestionAnswers(question_id, 0);
-                    int i = 0;
-                    for (Answer qt : answers_list) {
-                        String log = "Id: " + qt.getFieldId() + " ,Text: " +
-                                qt.getFieldText() + " ,Url: " + qt.getFieldUrl();
-                        Log.d("Answer: ", log);
-                        //values[i] = qt.getFieldId().toString();
-                        values[i] = qt.getFieldText();
-                        i++;
-                    }
-
-                    //You can get the context by invoking getApplicationContext(), getContext(), getBaseContext() or this (when in the activity class).
-
-                old_MyListCheckboxAdapter listcheckboxadapter = new old_MyListCheckboxAdapter(getActivity().getBaseContext(), R.layout.custom_checkboxlist_layout, answers_list);
-
-                    ArrayAdapter<String> adapter = new
-                            ArrayAdapter<String>(getActivity().getBaseContext(),
-                            android.R.layout.simple_list_item_1, android.R.id.text1,
-                            values);
-
-                    answersLv.setAdapter(listcheckboxadapter);
-            }else {
+            } else {
                 header = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
             }
 
@@ -570,72 +515,6 @@ public class MainActivity extends ActionBarActivity
                         getArguments().getInt(ARG_SECTION_NUMBER));
             }
         }
-    }
-
-    public static class old_MyListCheckboxAdapter extends ArrayAdapter<Answer> {
-
-        private ArrayList<Answer> answerList;
-
-        public old_MyListCheckboxAdapter(Context context, int textViewResourceId,
-                               List<Answer> answerList) {
-            super(context, textViewResourceId, answerList);
-            this.answerList = new ArrayList<Answer>();
-            this.answerList.addAll(answerList);
-        }
-
-        private class ViewHolder {
-            TextView code;
-            CheckBox name;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-            Log.v("ConvertView", String.valueOf(position));
-
-            if (convertView == null) {
-                /*LayoutInflater vi = (LayoutInflater)getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);*/
-                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
-                convertView = vi.inflate(R.layout.custom_checkboxlist_layout, null);
-
-                holder = new ViewHolder();
-                holder.code = (TextView) convertView.findViewById(R.id.code);
-                holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
-                convertView.setTag(holder);
-
-                holder.name.setOnClickListener( new View.OnClickListener() {
-                    public void onClick(View v) {
-                        CheckBox cb = (CheckBox) v ;
-                        Answer answer = (Answer) cb.getTag();
-                        /*Toast.makeText(getApplicationContext(),
-                                "Clicked on Checkbox: " + cb.getText() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();*/
-                        Toast.makeText(getContext(),
-                                "Clicked on Checkbox: " + cb.getText() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();
-                        answer.setSelected(cb.isChecked());
-                    }
-                });
-            }
-            else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            Answer answer = answerList.get(position);
-            holder.code.setText(" (" +  answer.getFieldText() + ")");
-            holder.name.setText(answer.getFieldText());
-            holder.name.setChecked(answer.isSelected());
-            holder.name.setTag(answer);
-
-            return convertView;
-
-        }
-
     }
 
 }

@@ -5,16 +5,25 @@
     android:orientation="vertical"
     android:padding="6dp">
 
-    <RadioButton
-        android:id="@+id/radioButton1"
+    <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:text="CheckBox" />
+        android:id="@+id/radioGroup1">
 
-    <TextView
+        <RadioButton
+            android:id="@+id/radioButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="RadioButton" />
+
+    </RadioGroup>
+
+
+
+    <!--<TextView
         android:id="@+id/code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,5 +31,5 @@
         android:layout_alignBottom="@+id/radioButton1"
         android:layout_toRightOf="@+id/radioButton1"
         android:text="TextView" />
-
+-->
 </RelativeLayout>

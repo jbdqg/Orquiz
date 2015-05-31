@@ -85,9 +85,9 @@ public class ParticipationServices {
     //regista cada resposta dada em ParticipationQuestion
     // em atributo participationquestion_answersjson são guardados os dados da pergunta feita e os dados das respostas dadas
     // neste registo em ParticipationQuestion fica também registo a pontuação recebida
-    public boolean registerQuestionAnswers(DatabaseHandler db, Map<String, Object> questionAnswersData){
+    public int registerQuestionAnswers(DatabaseHandler db, Map<String, Object> questionAnswersData){
 
-        boolean questionRegistered = false;
+        int questionPoints = 0;
 
         if(questionAnswersData.containsKey("participation") && questionAnswersData.containsKey("question") && questionAnswersData.containsKey("answers")) {
 
@@ -105,7 +105,7 @@ public class ParticipationServices {
             questionJsonData += " \"text\" : \"" + question.getFieldText() + "\", ";
             questionJsonData += " \"url\" : \"" + question.getFieldUrl() + "\", ";
             answersJsonData += " \"answers\" : [ ";
-            int questionPoints = 0;
+
             boolean question_answered = false;
             boolean question_correct = false;
             for (Answer oneAnswer : answers) {
@@ -176,14 +176,11 @@ public class ParticipationServices {
             }
 
             //já se têm os dados da resposta, atualizam-se os dados da ParticipationQuestion
-            int nupdatedRows = db.updateTableRecord("ParticipationQuestion", oneParticipationQuestion.getContentValues(), "participationquestion_id = " + oneParticipationQuestion.getFieldId(), null);
+            db.updateTableRecord("ParticipationQuestion", oneParticipationQuestion.getContentValues(), "participationquestion_id = " + oneParticipationQuestion.getFieldId(), null);
 
-            if (nupdatedRows == 1){
-                questionRegistered = true;
-            }
         }
 
-        return questionRegistered;
+        return questionPoints;
 
     }
 
