@@ -19,15 +19,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,12 +34,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.daam.orquiz.business.Utils;
-import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.ParticipationQuestion;
 import com.daam.orquiz.data.Quiz;
@@ -82,6 +77,14 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Integer quizId = userData.getInt("QuizId", 0);
+        if ( quizId != 0 ) {
+            QUIZ_ID = quizId;
+        } else {
+
+        }
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -203,7 +206,7 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_settings:
                 return true;
             case R.id.select_quiz:
-                selectQuiz(this);
+                selectQuiz(this, item);
                 return true;
             default:
 
@@ -212,7 +215,7 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void selectQuiz(final Context context) {
+    private void selectQuiz(final Context context, final MenuItem item) {
         // Get All Available Quizes
         DatabaseHandler connDatabase = new DatabaseHandler(context);
         final List<Quiz> listOfQuizes = connDatabase.getAllQuiz();
@@ -250,12 +253,18 @@ public class MainActivity extends ActionBarActivity
                         } else {
                             Quiz quiz = listOfQuizes.get(((AlertDialog) dialog).getListView().getCheckedItemPosition()); // Quiz to share
 
-                            //SharedPreferences userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                            //SharedPreferences.Editor editor = userData.edit();
-                            //editor.putInt("QUIZ_ID", quiz.getFieldId());
-                            //editor.commit();
+                            SharedPreferences.Editor editor = userData.edit();
+                            editor.putInt("QuizId", quiz.getFieldId());
+                            editor.putString("QuizName", quiz.getFieldName());
+                            editor.commit();
 
+                            mNavigationDrawerFragment.setTitle(quiz.getFieldName());
                             QUIZ_ID = quiz.getFieldId();
+
+
+
+                            getSupportFragmentManager().beginTransaction();
+                            //startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                     }
                 });

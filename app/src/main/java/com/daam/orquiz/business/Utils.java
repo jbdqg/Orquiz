@@ -52,9 +52,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by johnny on 26-05-2015.
- */
 public class Utils {
 
     public Utils() {
