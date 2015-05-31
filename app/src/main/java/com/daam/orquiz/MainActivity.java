@@ -59,6 +59,7 @@ public class MainActivity extends ActionBarActivity
     public static final String PREFS_NAME = "UserData";
     public static final int PARTICIPANT_ID = 1;
     public static int QUIZ_ID = 1;
+    public static String TOP_TITLE = "Orquiz";
     private static SharedPreferences userData;
     private static CallbackManager callbackManager;
     private static ProfileTracker profileTracker;
@@ -66,7 +67,7 @@ public class MainActivity extends ActionBarActivity
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    public NavigationDrawerFragment mNavigationDrawerFragment;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -178,7 +179,8 @@ public class MainActivity extends ActionBarActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        //actionBar.setTitle(mTitle);
+        actionBar.setTitle(TOP_TITLE);
     }
 
     @Override
@@ -260,11 +262,12 @@ public class MainActivity extends ActionBarActivity
 
                             mNavigationDrawerFragment.setTitle(quiz.getFieldName());
                             QUIZ_ID = quiz.getFieldId();
-
-
+                            TOP_TITLE = quiz.getFieldName();
 
                             getSupportFragmentManager().beginTransaction();
-                            //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
+                            startActivity(getIntent());
+
                         }
                     }
                 });

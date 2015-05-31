@@ -68,6 +68,7 @@ public class QuizActivity extends FragmentActivity {
                 Long participationTime = ((participationEnd - activeParticipation.getFieldStart()) / 1000);
                 activeParticipation.setFieldEnd(participationEnd);
                 activeParticipation.setFieldTotaltime(participationTime.intValue());
+                activeParticipation.setFieldPoints(0);
                 if (sumbmit_button_pressed == true) {
                     activeParticipation.setFieldStatus("completed");
                 }
@@ -137,6 +138,7 @@ public class QuizActivity extends FragmentActivity {
         activeParticipation.setFieldEnd(participationEnd);
         activeParticipation.setFieldTotaltime(participationTime.intValue());
         activeParticipation.setFieldTotaltime(participationTime.intValue());
+        activeParticipation.setFieldPoints(participationPoints);
         if (sumbmit_button_pressed == true) {
                 activeParticipation.setFieldStatus("completed");
         }
