@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/start_quiz"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="480dp"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:id="@+id/text"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/start_quiz"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:text="Here you can import a quiz that you have created or that has been shared with you. The Json file with the quiz as to be placed in /orquiz/quizes \n\n After import the quiz gets available for you to answer. \n\n Select the option QUIZ from the action bar and explore your uploaded quiz."
-            android:gravity="center"
+            android:layout_height="480dp"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="Here you can import a quiz that you have created or that has been shared with you. The Json file with the quiz as to be placed in /orquiz/quizes \n\n After import the quiz gets available for you to answer. \n\n Select the option QUIZ from the action bar and explore your uploaded quiz."
+                android:gravity="center"
+                />
+
             />
 
-        />
+            <!--<View
+                android:layout_width="fill_parent"
+                android:layout_height="0.2dp"
+                android:id="@+id/separator"
+                android:visibility="visible"
+                android:background="@android:color/darker_gray"/>-->
 
-        <!--<View
-            android:layout_width="fill_parent"
-            android:layout_height="0.2dp"
-            android:id="@+id/separator"
-            android:visibility="visible"
-            android:background="@android:color/darker_gray"/>-->
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50dp"
+                android:text="Import"
+            />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:text="Import"
-        />
+        </LinearLayout>
+
+
+
 
     </LinearLayout>
-
-
-
-
-</LinearLayout>
+</ScrollView>

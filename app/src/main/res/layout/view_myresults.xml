@@ -1,239 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/my_results"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="1">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Your best participation"
-        android:textSize="@dimen/abc_text_size_title_material"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        >
-
-        <LinearLayout
-            android:id="@+id/linearLayoutUserData"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:gravity="left"
-                android:src="@drawable/user_default"
-                android:id="@+id/image" />
-
-            <TextView
-                android:id="@+id/username"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/no_username"
-                android:gravity="right"
-                android:layout_gravity="center"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutDate"
-        android:layout_width="150dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/my_results"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1">
 
         <TextView
-            android:id="@+id/textViewDDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/user_default"
-            android:hint="date"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutNPoints"
-        android:layout_width="150dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        >
-
-        <TextView
-            android:id="@+id/textViewNPoints"
+            android:id="@+id/title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/user_default"
-            android:hint="score"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        >
+            android:layout_marginTop="10dp"
+            android:hint="Your best participation"
+            android:textSize="@dimen/abc_text_size_title_material"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"/>
 
         <LinearLayout
-            android:id="@+id/linearLayoutTotalQuestions"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            >
 
-            <TextView
-                android:id="@+id/textViewTotal"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Questions"
-                />
-
-            <TextView
-                android:id="@+id/textViewNTotal"
+            <LinearLayout
+                android:id="@+id/linearLayoutUserData"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="n questions"
-                android:layout_marginLeft="60dp"
-                android:gravity="left"
-                />
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="left"
+                    android:src="@drawable/user_default"
+                    android:id="@+id/image" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/no_username"
+                    android:gravity="right"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayoutUnanswered"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp" >
-
-            <TextView
-                android:id="@+id/textViewUnanswered"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Unanswered"
-                />
-
-            <TextView
-                android:id="@+id/textViewNUnanswered"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="n unanswered questions"
-                android:layout_marginLeft="60dp"
-                android:gravity="left"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutRightAnswers"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp" >
-
-            <TextView
-                android:id="@+id/textViewRight"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Right Answers"
-                />
-
-            <TextView
-                android:id="@+id/textViewNRight"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="n right answers"
-                android:layout_marginLeft="60dp"
-                android:gravity="left"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutWrongAnswers"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp" >
-
-            <TextView
-                android:id="@+id/textViewWrong"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Wrong Answers"
-                />
-
-            <TextView
-                android:id="@+id/textViewNWrong"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="n wrong answers"
-                android:layout_marginLeft="60dp"
-                android:gravity="left"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutTotalTime"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp" >
-
-            <TextView
-                android:id="@+id/textViewTotalTime"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Duration (sec)" />
-
-            <TextView
-                android:id="@+id/textViewNTotalTime"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="quiz time (seconds)"
-                android:layout_marginLeft="60dp"
-                android:gravity="left"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        >
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/linearLayoutDate"
+            android:layout_width="150dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
-            android:text="Try Again"/>
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/textViewDDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/user_default"
+                android:hint="date"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutNPoints"
+            android:layout_width="150dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/textViewNPoints"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/user_default"
+                android:hint="score"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            >
+
+            <LinearLayout
+                android:id="@+id/linearLayoutTotalQuestions"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/textViewTotal"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Questions"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewNTotal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="n questions"
+                    android:layout_marginLeft="60dp"
+                    android:gravity="left"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutUnanswered"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:id="@+id/textViewUnanswered"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Unanswered"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewNUnanswered"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="n unanswered questions"
+                    android:layout_marginLeft="60dp"
+                    android:gravity="left"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutRightAnswers"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:id="@+id/textViewRight"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Right Answers"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewNRight"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="n right answers"
+                    android:layout_marginLeft="60dp"
+                    android:gravity="left"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutWrongAnswers"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:id="@+id/textViewWrong"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Wrong Answers"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewNWrong"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="n wrong answers"
+                    android:layout_marginLeft="60dp"
+                    android:gravity="left"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutTotalTime"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:id="@+id/textViewTotalTime"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Duration (sec)" />
+
+                <TextView
+                    android:id="@+id/textViewNTotalTime"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="quiz time (seconds)"
+                    android:layout_marginLeft="60dp"
+                    android:gravity="left"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            >
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Try Again"/>
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

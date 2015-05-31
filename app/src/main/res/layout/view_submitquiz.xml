@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/submit_quiz"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="480dp"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:id="@+id/text"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/submit_quiz"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="100dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_height="480dp"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
 
-            android:text="You are about to submit your participation. \n Before you do that you can swipe back and change any of the answers you gave. \n\n Anytime you want you can answer again to this quiz, or if any other is available you can select it from the action bar with the option Quiz \n\n Press Submit Quiz to view your results!"
-            android:gravity="center"
+                android:text="You are about to submit your participation. \n Before you do that you can swipe back and change any of the answers you gave. \n\n Anytime you want you can answer again to this quiz, or if any other is available you can select it from the action bar with the option Quiz \n\n Press Submit Quiz to view your results!"
+                android:gravity="center"
 
-        />
-
-       <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:text="Submit Quiz"
             />
 
+           <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50dp"
+                android:text="Submit Quiz"
+                />
+
+        </LinearLayout>
+
+
+
+
     </LinearLayout>
-
-
-
-
-</LinearLayout>
+</ScrollView>
