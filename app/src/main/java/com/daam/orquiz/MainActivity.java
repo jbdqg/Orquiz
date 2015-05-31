@@ -42,6 +42,14 @@ import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.ParticipationQuestion;
 import com.daam.orquiz.data.Question;
 import com.daam.orquiz.data.Quiz;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -456,7 +464,9 @@ public class MainActivity extends ActionBarActivity
                 });
             } else if (selected_option == 4){
 
-            } else if (selected_option == 5){
+            } else if (selected_option == 3){
+
+            } else if (selected_option == 4){
 
                 header = (ViewGroup) inflater.inflate(R.layout.view_import, container, false);
 
@@ -632,14 +642,6 @@ public class MainActivity extends ActionBarActivity
                         getArguments().getInt(ARG_SECTION_NUMBER));
             }
         }
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public static class old_MyListCheckboxAdapter extends ArrayAdapter<Answer> {
