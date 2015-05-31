@@ -1,16 +1,11 @@
 package com.daam.orquiz.business;
 
-import android.provider.ContactsContract;
-import android.util.Log;
-
 import com.daam.orquiz.DatabaseHandler;
 import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.ParticipationQuestion;
 import com.daam.orquiz.data.Question;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

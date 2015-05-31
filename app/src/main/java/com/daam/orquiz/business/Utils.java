@@ -1,14 +1,6 @@
 package com.daam.orquiz.business;
 
-import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
-
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Path;
-import android.os.Environment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daam.orquiz.DatabaseHandler;
-import com.daam.orquiz.MainActivity;
 import com.daam.orquiz.R;
 import com.daam.orquiz.data.Answer;
 

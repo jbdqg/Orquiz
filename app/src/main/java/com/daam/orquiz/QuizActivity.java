@@ -1,17 +1,14 @@
 package com.daam.orquiz;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.daam.orquiz.business.ParticipationServices;
 import com.daam.orquiz.business.Utils;
-import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
-import com.daam.orquiz.data.Question;
 
 import java.util.ArrayList;
 import java.util.HashMap;

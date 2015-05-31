@@ -1,12 +1,6 @@
 package com.daam.orquiz.data;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-
-import com.daam.orquiz.DatabaseHandler;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by johnny on 02-05-2015.

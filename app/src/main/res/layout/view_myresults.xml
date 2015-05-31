@@ -31,7 +31,7 @@
                 android:id="@+id/username"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Participant Name"
+                android:hint="@string/no_username"
                 android:gravity="right"
                 android:layout_gravity="center"/>
 
@@ -176,5 +176,13 @@
             android:text="Try Again"/>
 
     </LinearLayout>
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp" />
 
 </LinearLayout>

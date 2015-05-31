@@ -2,48 +2,36 @@ package com.daam.orquiz;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import com.daam.orquiz.business.Utils;
 import com.daam.orquiz.data.Answer;
@@ -51,20 +39,47 @@ import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.ParticipationQuestion;
 import com.daam.orquiz.data.Question;
 import com.daam.orquiz.data.Quiz;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String PREFS_NAME = "UserData";
     public static final int PARTICIPANT_ID = 1;
+    public static int QUIZ_ID = 0;
+    private static CallbackManager callbackManager;
+    private static ProfileTracker profileTracker;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private Button buttonQuizSelection;
+
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -84,6 +99,37 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        // Facebook Initialization
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
+        profileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(
+                    Profile oldProfile,
+                    Profile currentProfile) {
+
+                ImageView profileImage = (ImageView) findViewById(R.id.image);
+                TextView profileName = (TextView) findViewById((R.id.username));
+
+                if ( currentProfile != null ) {
+                    if ( profileImage != null ) {
+                        Uri uri = currentProfile.getProfilePictureUri(profileImage.getWidth(), profileImage.getHeight());
+                        profileImage.setImageURI(uri);
+                    }
+
+                    if ( profileName != null )
+                        profileName.setText(currentProfile.getName());
+                } else {
+                    if ( profileImage != null )
+                        profileImage.setImageResource(R.drawable.user_default);
+
+                    if ( profileName != null )
+                        profileName.setText(R.string.no_username);
+                }
+            }
+        };
+
         //armazenar os dados do utilizador
         //SharedPreferences userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         //SharedPreferences.Editor editor = userData.edit();
@@ -92,6 +138,12 @@ public class MainActivity extends ActionBarActivity
         //editor.putString("email", email_txt.getText().toString());
         //editor.commit();
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        profileTracker.stopTracking();
     }
 
     @Override
@@ -157,14 +209,69 @@ public class MainActivity extends ActionBarActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.select_quiz:
+                selectQuiz(this);
+                return true;
+            default:
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-     /**
+    private void selectQuiz(final Context context) {
+        // Get All Available Quizes
+        DatabaseHandler connDatabase = new DatabaseHandler(context);
+        final List<Quiz> listOfQuizes = connDatabase.getAllQuiz();
+        if ( listOfQuizes == null || listOfQuizes.isEmpty() ) {
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.title_error)
+                    .setMessage(R.string.no_quiz_found)
+                    .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    }).show();
+
+            return;
+        }
+
+        String[] arrayOfNames = new String[listOfQuizes.size()];
+        for (int i = 0; i < listOfQuizes.size(); i++) {
+            arrayOfNames[i] = listOfQuizes.get(i).getFieldName();
+        }
+
+        AlertDialog.Builder chooseQuizDialog = new AlertDialog.Builder(context)
+                .setTitle(R.string.title_choose_quiz)
+                .setSingleChoiceItems(arrayOfNames, -1 /*no selection*/, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Don't do nothing
+                    }
+                })
+                .setPositiveButton(R.string.button_select_quiz, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        int selectedOption = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        if ( selectedOption == -1 ) {
+                            Toast.makeText(context, R.string.no_quiz_selected, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Quiz quiz = listOfQuizes.get(((AlertDialog) dialog).getListView().getCheckedItemPosition()); // Quiz to share
+
+                            //SharedPreferences userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                            //SharedPreferences.Editor editor = userData.edit();
+                            //editor.putInt("QUIZ_ID", quiz.getFieldId());
+                            //editor.commit();
+                            QUIZ_ID = quiz.getFieldId();
+                        }
+                    }
+                });
+
+        AlertDialog alertDialog = chooseQuizDialog.show();
+    }
+
+    /**
      * A placeholder fragment containing a simple view.
      */
     //public static class PlaceholderFragment extends Fragment {
@@ -181,9 +288,6 @@ public class MainActivity extends ActionBarActivity
          */
 
         private File mPath = new File(Environment.getExternalStorageDirectory() + "/orquiz/quizes/");
-
-        //QUIZ QUE FOI SELECIONADO
-        private static int QUIZ_ID = 1;
 
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -305,6 +409,27 @@ public class MainActivity extends ActionBarActivity
                     }
                 }
 
+                // Facebook
+                LoginButton loginFacebookButton = (LoginButton) header.findViewById(R.id.login_button);
+                loginFacebookButton.setReadPermissions("public_profile");
+
+                // Callback registration
+                loginFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+
+                    }
+                });
 
             } else if (selected_option == 5){
 
@@ -540,6 +665,14 @@ public class MainActivity extends ActionBarActivity
                         getArguments().getInt(ARG_SECTION_NUMBER));
             }
         }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public static class old_MyListCheckboxAdapter extends ArrayAdapter<Answer> {
