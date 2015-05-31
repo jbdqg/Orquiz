@@ -110,7 +110,6 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.id.text1,
                 new String[]{
                         getString(R.string.drawer_optitle_splashpage),
-                        getString(R.string.drawer_optitle_start_quiz),
                         getString(R.string.drawer_optitle_my_results),
                         getString(R.string.drawer_optitle_my_data),
                         getString(R.string.drawer_optitle_import),
@@ -151,6 +150,7 @@ public class NavigationDrawerFragment extends Fragment {
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
+
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);

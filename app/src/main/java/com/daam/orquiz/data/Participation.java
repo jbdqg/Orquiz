@@ -9,6 +9,7 @@ public class Participation {
 
     private Integer participation_id = null;
     private Integer participant_id = null;
+    private Integer quiz_id = null;
     private Long participation_start = null;
     private Long participation_end = null;
     private Integer participation_totaltime = null;
@@ -22,9 +23,10 @@ public class Participation {
     public Participation(){
     }
 
-    public Participation(Integer participant_id, Long participation_start, Long participation_end, Integer participation_totaltime, Integer participation_points, String participation_ranking, String participation_status){
+    public Participation(Integer participant_id, Integer quiz_id, Long participation_start, Long participation_end, Integer participation_totaltime, Integer participation_points, String participation_ranking, String participation_status){
         this.setFieldId(participation_id);
         this.setFieldParticipantid(participant_id);
+        this.setFieldQuizid(quiz_id);
         this.setFieldStart(participation_start);
         this.setFieldEnd(participation_end);
         this.setFieldTotaltime(participation_totaltime);
@@ -40,6 +42,11 @@ public class Participation {
     public void setFieldParticipantid(Integer participant_id) {
         this.participant_id = participant_id;
         this.participationContentValues.put("participant_id", participant_id);
+    }
+
+    public void setFieldQuizid(Integer quiz_id) {
+        this.quiz_id = quiz_id;
+        this.participationContentValues.put("quiz_id", quiz_id);
     }
 
     public void setFieldStart(Long participation_start) {
@@ -78,6 +85,10 @@ public class Participation {
 
     public Integer getFieldParticipantid() {
         return participant_id;
+    }
+
+    public Integer getFieldQuizid() {
+        return quiz_id;
     }
 
     public Long getFieldStart() {

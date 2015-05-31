@@ -57,6 +57,34 @@ public class QuizActivity extends FragmentActivity {
                 i++;
             }while (i != quizQuestionsNumber);
 
+            //houve erro no uso do quiz, por isso tem que se terminar a participação que está aberta
+            //TODO: remover se possível
+            if (quizQuestionsNumber == questionsToAnswer.size() && questionsToAnswer.get(0).isEmpty()){
+
+                Participation activeParticipation = db.getLastActiveParticipation();
+
+                //fecha-se a participação
+                String whereClause = " participation_id = " + activeParticipation.getFieldId();
+                Long participationEnd = System.currentTimeMillis();
+                Long participationTime = ((participationEnd - activeParticipation.getFieldStart()) / 1000);
+                activeParticipation.setFieldEnd(participationEnd);
+                activeParticipation.setFieldTotaltime(participationTime.intValue());
+                if (sumbmit_button_pressed == true) {
+                    activeParticipation.setFieldStatus("completed");
+                }
+                db.updateTableRecord("Participation", activeParticipation.getContentValues(), whereClause, null);
+
+                i = 0;
+                questionsToAnswer = new ArrayList<Map>();
+                do {
+
+                    questionsToAnswer.add(i, oq.retrieveNextQuestion(db, quizIdentificator));
+
+                    i++;
+                }while (i != quizQuestionsNumber);
+
+            }
+
             ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
             adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), db, quizQuestionsNumber, quizIdentificator, questionsToAnswer);
             vpPager.setAdapter(adapterViewPager);
@@ -81,6 +109,7 @@ public class QuizActivity extends FragmentActivity {
         super.onPause();
 
         int i = 0;
+        int participationPoints = 0;
 
         //obtem-se a participação que está ativa
         Participation activeParticipation = db.getLastActiveParticipation();
@@ -96,8 +125,9 @@ public class QuizActivity extends FragmentActivity {
             questionAnswersData.put("question", oneFragment.getQuestion());
             questionAnswersData.put("answers", oneFragment.getAnswers());
 
-            oq.registerQuestionAnswers(db, questionAnswersData);
+            int questionPoints = oq.registerQuestionAnswers(db, questionAnswersData);
 
+            participationPoints += questionPoints;
 
             i++;
         }
@@ -107,6 +137,7 @@ public class QuizActivity extends FragmentActivity {
         Long participationTime = ((participationEnd - activeParticipation.getFieldStart()) / 1000);
         activeParticipation.setFieldEnd(participationEnd);
         activeParticipation.setFieldTotaltime(participationTime.intValue());
+        activeParticipation.setFieldPoints(participationPoints);
         if (sumbmit_button_pressed == true) {
                 activeParticipation.setFieldStatus("completed");
         }
@@ -189,7 +220,17 @@ public class QuizActivity extends FragmentActivity {
         // Returns the page title for the top indicator
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Question " + position;
+
+            CharSequence title_top = null;
+
+            if (position == (NUM_ITEMS - 1)){
+                title_top = "Submit Quiz";
+            }else{
+                title_top = "Question " + (position + 1) + " / " + (NUM_ITEMS - 1);
+            }
+
+            return title_top;
+
         }
 
     }

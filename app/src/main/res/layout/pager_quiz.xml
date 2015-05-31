@@ -9,9 +9,6 @@ android:orientation="vertical">
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!--
-    If you want an "indicator" that displays the pages available at the top as shown in the screenshot above, you need to include a nested indicator view called a PagerTabStrip:
-    -->
     <android.support.v4.view.PagerTabStrip
         android:id="@+id/pager_header"
         android:layout_width="match_parent"

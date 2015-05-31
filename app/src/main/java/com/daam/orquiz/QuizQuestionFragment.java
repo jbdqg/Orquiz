@@ -1,10 +1,13 @@
 package com.daam.orquiz;
 
 //import android.app.Fragment;
-
 import android.content.Intent;
-import android.os.Bundle;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +17,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.daam.orquiz.business.DownloadImagesTask;
 import com.daam.orquiz.business.Utils;
 import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Question;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,21 +85,32 @@ public class QuizQuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         //View view = inflater.inflate(R.layout.fragment_first, container, false);
 
-        View view = null;
+        ViewGroup view = null;
+
         if(this.hasQuestion == true){
             if(this.question.getFieldType().equalsIgnoreCase("multiplechoice")){
-                view = inflater.inflate(R.layout.view_multiplechoice, container, false);
+                view = (ViewGroup) inflater.inflate(R.layout.view_multiplechoice, container, false);
 
-                /*public static Drawable LoadImageFromWebOperations(String url) {
-                    try {
-                        InputStream is = (InputStream) new URL(url).getContent();
-                        Drawable d = Drawable.createFromStream(is, "src name");
-                        return d;
-                    } catch (Exception e) {
-                        return null;
+                if (this.question.getFieldUrl() != null){
+
+                    ImageView image = (ImageView) view.findViewById(R.id.image);
+
+                    if (MainActivity.QUIZ_ID != 1) {
+                        File imgFile = new  File(this.question.getFieldUrl());
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        image.setImageBitmap(myBitmap);
+                    }else{
+
+                        try {
+                            InputStream is = MyApplication.getAppContext().getAssets().open(this.question.getFieldUrl());
+                            Bitmap bmp = BitmapFactory.decodeStream(is);
+                            image.setImageBitmap(bmp);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }
-                */
 
                 ListView answersLv = (ListView) view.findViewById(R.id.answerslv);
 
@@ -112,20 +131,15 @@ public class QuizQuestionFragment extends Fragment {
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity().getBaseContext(), android.R.layout.simple_list_item_1, android.R.id.text1, values);
                 answersLv.setAdapter(oneCheckboxAdapter);
 
-                //TextView tvLabel = (TextView) view.findViewById(R.id.tvLabel);
-                //tvLabel.setText(page + " -- " + title);
-                TextView tvLabel = (TextView) view.findViewById(R.id.text);
-                tvLabel.setText(page + " -- " + title);
-
-                ImageView image = (ImageView) view.findViewById(R.id.image);
-                image.setImageResource(R.drawable.orange_small);
+                TextView question_text = (TextView) view.findViewById(R.id.text);
+                question_text.setText(title);
 
             }else if(this.question.getFieldType().equalsIgnoreCase("uniquechoice")){
-                view = inflater.inflate(R.layout.view_uniquechoice, container, false);
+                view = (ViewGroup) inflater.inflate(R.layout.view_uniquechoice, container, false);
 
                 ListView answersLv = (ListView) view.findViewById(R.id.answerslv);
 
-                oneRadiobuttonAdapter = new Utils.MyListRadiobuttonAdapter(this.getActivity().getBaseContext(), R.layout.custom_checkboxlist_layout, this.answers);
+                oneRadiobuttonAdapter = new Utils.MyListRadiobuttonAdapter(this.getActivity().getBaseContext(), R.layout.custom_radiobuttonlist_layout, this.answers);
 
                 int count = this.answers.size();
                 String[] values = new String[count];
@@ -141,13 +155,11 @@ public class QuizQuestionFragment extends Fragment {
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity().getBaseContext(), android.R.layout.simple_list_item_1, android.R.id.text1, values);
                 answersLv.setAdapter(oneRadiobuttonAdapter);
 
-                //TextView tvLabel = (TextView) view.findViewById(R.id.tvLabel);
-                //tvLabel.setText(page + " -- " + title);
-                TextView tvLabel = (TextView) view.findViewById(R.id.text);
-                tvLabel.setText(page + " -- " + title);
+                TextView question_text = (TextView) view.findViewById(R.id.text);
+                question_text.setText(title);
             }
         }else{
-            view = inflater.inflate(R.layout.view_submitquiz, container, false);
+            view = (ViewGroup) inflater.inflate(R.layout.view_submitquiz, container, false);
 
             final Button submit_quiz_bt = (Button) view.findViewById(R.id.button);
             submit_quiz_bt.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +170,7 @@ public class QuizQuestionFragment extends Fragment {
 
                 Intent intent = new Intent(container.getContext(), MainActivity.class);
                 //ir para a view de resultados. obter depois os resultados do último quiz submetido para mostrar no interface
-                intent.putExtra("NEXT_DRAWER_POSITION", 2);
+                intent.putExtra("NEXT_DRAWER_POSITION", 1);
                 intent.putExtra("LAST_PARTICIPATION", true);
 
                 startActivity(intent);
