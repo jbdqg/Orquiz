@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
@@ -30,6 +32,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -183,7 +186,7 @@ public class MainActivity extends ActionBarActivity
         private File mPath = new File(Environment.getExternalStorageDirectory() + "/orquiz/quizes/");
 
         //QUIZ QUE FOI SELECIONADO
-        private static int QUIZ_ID = 1;
+        private static int QUIZ_ID = 2;
 
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -209,7 +212,31 @@ public class MainActivity extends ActionBarActivity
             final DatabaseHandler db = new DatabaseHandler(container.getContext());
 
             if (selected_option == 1) {
+
                 header = (ViewGroup) inflater.inflate(R.layout.view_splashpage, container, false);
+
+                Quiz quiz = db.getQuiz(QUIZ_ID);
+
+                if (quiz.getFieldId() != null){
+
+                    if (quiz.getFieldDescription() instanceof String){
+
+                        final TextView text = (TextView) header.findViewById(R.id.text);
+                        text.setText(quiz.getFieldDescription());
+
+                    }
+
+                    if (quiz.getFieldUrl() instanceof String){
+
+                        final ImageView image = (ImageView) header.findViewById(R.id.image);
+                        File imgFile = new  File(quiz.getFieldUrl());
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        image.setImageBitmap(myBitmap);
+
+                    }
+
+                }
+
 
                 final Button start_quiz_bt = (Button) header.findViewById(R.id.button);
                 start_quiz_bt.setOnClickListener(new View.OnClickListener() {
@@ -279,6 +306,9 @@ public class MainActivity extends ActionBarActivity
                             }
 
                         }
+
+                        final TextView points_text = (TextView) header.findViewById(R.id.textViewNPoints);
+                        points_text.setText(((Integer) quiz_points).toString());
 
                         final TextView rightquestions_text = (TextView) header.findViewById(R.id.textViewNRight);
                         rightquestions_text.setText(((Integer) questions_right).toString());

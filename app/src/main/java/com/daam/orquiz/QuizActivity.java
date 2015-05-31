@@ -60,6 +60,34 @@ public class QuizActivity extends FragmentActivity {
                 i++;
             }while (i != quizQuestionsNumber);
 
+            //houve erro no uso do quiz, por isso tem que se terminar a participação que está aberta
+            //TODO: remover se possível
+            if (quizQuestionsNumber == questionsToAnswer.size() && questionsToAnswer.get(0).isEmpty()){
+
+                Participation activeParticipation = db.getLastActiveParticipation();
+
+                //fecha-se a participação
+                String whereClause = " participation_id = " + activeParticipation.getFieldId();
+                Long participationEnd = System.currentTimeMillis();
+                Long participationTime = ((participationEnd - activeParticipation.getFieldStart()) / 1000);
+                activeParticipation.setFieldEnd(participationEnd);
+                activeParticipation.setFieldTotaltime(participationTime.intValue());
+                if (sumbmit_button_pressed == true) {
+                    activeParticipation.setFieldStatus("completed");
+                }
+                db.updateTableRecord("Participation", activeParticipation.getContentValues(), whereClause, null);
+
+                i = 0;
+                questionsToAnswer = new ArrayList<Map>();
+                do {
+
+                    questionsToAnswer.add(i, oq.retrieveNextQuestion(db, quizIdentificator));
+
+                    i++;
+                }while (i != quizQuestionsNumber);
+
+            }
+
             ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
             adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), db, quizQuestionsNumber, quizIdentificator, questionsToAnswer);
             vpPager.setAdapter(adapterViewPager);

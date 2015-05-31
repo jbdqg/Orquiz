@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.daam.orquiz.business.DownloadImagesTask;
+import com.daam.orquiz.business.DownloadOneImageTask;
 import com.daam.orquiz.data.Answer;
 import com.daam.orquiz.data.Participation;
 import com.daam.orquiz.data.ParticipationQuestion;
@@ -806,8 +809,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             quizRecord.setFieldDescription(jsonQuiz.getString("quiz_description"));
         }
         if (jsonQuiz.getString("quiz_url") instanceof String){
-            quizRecord.setFieldUrl(jsonQuiz.getString("quiz_url"));
-        }
+            quizRecord.setFieldUrl(jsonQuiz.getString("quiz_url"));}
         if (jsonQuiz.getBoolean("quiz_questionsrandom")){
             quizRecord.setFieldQuestionsrandom(1);
         }else{
@@ -823,6 +825,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         Long insertedQuizId = this.insertTableRecord("Quiz", quizRecord.getContentValues());
+
+        if (insertedQuizId != -1 && jsonQuiz.getString("quiz_url") instanceof String){
+            String[] urlInfo = new String[5];
+            urlInfo[0] = "Quiz";
+            urlInfo[1] = "quiz_id";
+            urlInfo[2] = insertedQuizId.toString();
+            urlInfo[3] = "quiz_url";
+            urlInfo[4] = jsonQuiz.getString("quiz_url");
+
+            new DownloadOneImageTask().execute(urlInfo);
+        }
 
         if(insertedQuizId != -1){
 
@@ -866,13 +879,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                     Long insertedQuestionId = this.insertTableRecord("Question", oneQuestionRecord.getContentValues());
 
+                    if (insertedQuestionId != -1 && oneJsonQuestion.getString("question_url") instanceof String){
+                        String[] urlInfo = new String[5];
+                        urlInfo[0] = "Question";
+                        urlInfo[1] = "question_id";
+                        urlInfo[2] = insertedQuestionId.toString();
+                        urlInfo[3] = "question_url";
+                        urlInfo[4] = oneJsonQuestion.getString("question_url");
+
+                        new DownloadOneImageTask().execute(urlInfo);
+                    }
+
                     if(insertedQuestionId != -1){
 
                         if (oneJsonQuestion.get("answers") instanceof JSONArray) {
 
                             JSONArray answers = oneJsonQuestion.getJSONArray("answers");
 
-                            for (int j = 0; j < questions.length(); j++) {
+                            for (int j = 0; j < answers.length(); j++) {
 
                                 JSONObject oneJsonAnswer = answers.getJSONObject(j);
                                 Answer oneAnswerRecord = new Answer();

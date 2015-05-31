@@ -89,7 +89,7 @@ public class ParticipationServices {
 
         boolean questionRegistered = false;
 
-        if(questionAnswersData.containsKey("participation") && questionAnswersData.containsKey("question") && questionAnswersData.containsKey("answers")){
+        if(questionAnswersData.containsKey("participation") && questionAnswersData.containsKey("question") && questionAnswersData.containsKey("answers")) {
 
             Participation participation = (Participation) questionAnswersData.get("participation");
             Question question = (Question) questionAnswersData.get("question");
@@ -110,15 +110,15 @@ public class ParticipationServices {
             boolean question_correct = false;
             for (Answer oneAnswer : answers) {
 
-                if (oneAnswer.isSelected() == true){
+                if (oneAnswer.isSelected() == true) {
 
                     question_answered = true;
 
                     ArrayList answerInfo = db.validateGivenAnswer(oneAnswer.getFieldId());
 
-                    if (answerInfo.size() != 0){
+                    if (answerInfo.size() != 0) {
 
-                        if (i != 0){
+                        if (i != 0) {
                             answersJsonData += ", ";
                         }
                         answersJsonData += "{";
@@ -130,18 +130,18 @@ public class ParticipationServices {
                         answersJsonData += "\"url\" : \"" + oneAnswer.getFieldUrl() + "\",";
                         //resposta dada é certa
 
-                        if ((int)answerInfo.get(0) == 1){
+                        if ((int) answerInfo.get(0) == 1) {
                             answersJsonData += "\"correct\" : true,";
                             question_correct = true;
-                        }else if((int)answerInfo.get(0) == 0){
+                        } else if ((int) answerInfo.get(0) == 0) {
                             answersJsonData += "\"correct\" : false,";
                         }
-                        answersJsonData += "\"points\" : " + answerInfo.get(1) +  ",";
+                        answersJsonData += "\"points\" : " + answerInfo.get(1) + ",";
                         int questionAnswerTime = 0; //deveria ser participationquestion_serverend - participationquestion_serverstart tempo que se demorou a responder, mas ainda não está a ser considerado
                         answersJsonData += "\"time\" : \"not being calculated yet\",";
                         //pontuação recebida por uma pergunta = answer_points * ( 1 / ( tempo resposta + 1 ) ) * 10
                         //pontuação é sempre calculada, pois podem-se dar pontos negativos a respostas erradas
-                        int answerTotalPoints = (int) answerInfo.get(1) * (1 / (questionAnswerTime + 1))*10;
+                        int answerTotalPoints = (int) answerInfo.get(1) * (1 / (questionAnswerTime + 1)) * 10;
                         answersJsonData += "\"totalpoints\" : " + answerTotalPoints;
                         questionPoints += answerTotalPoints;
 
@@ -153,14 +153,14 @@ public class ParticipationServices {
             }
             answersJsonData += "]";
             questionJsonData += " \"points\" : " + questionPoints + ", ";
-            if (question_answered == true){
+            if (question_answered == true) {
                 questionJsonData += " \"answered\" : " + true + ", ";
-            }else if (question_answered == false){
+            } else if (question_answered == false) {
                 questionJsonData += " \"answered\" : " + false + ", ";
             }
-            if (question_correct == true){
+            if (question_correct == true) {
                 questionJsonData += " \"correct\" : " + true + ", ";
-            }else if (question_correct == false){
+            } else if (question_correct == false) {
                 questionJsonData += " \"correct\" : " + false + ", ";
             }
             questionJsonData += answersJsonData;
@@ -170,8 +170,10 @@ public class ParticipationServices {
             Long serverEnd = System.currentTimeMillis();
             oneParticipationQuestion.setFieldServerend(System.currentTimeMillis());
             oneParticipationQuestion.setFieldClientend(System.currentTimeMillis());
-            Long participationTime = ((serverEnd - oneParticipationQuestion.getFieldServerstart() / 1000));
-            oneParticipationQuestion.setFieldAnswertime(participationTime.intValue());
+            if (oneParticipationQuestion.getFieldServerstart() != null){
+                Long participationTime = ((serverEnd - oneParticipationQuestion.getFieldServerstart() / 1000));
+                oneParticipationQuestion.setFieldAnswertime(participationTime.intValue());
+            }
 
             //já se têm os dados da resposta, atualizam-se os dados da ParticipationQuestion
             int nupdatedRows = db.updateTableRecord("ParticipationQuestion", oneParticipationQuestion.getContentValues(), "participationquestion_id = " + oneParticipationQuestion.getFieldId(), null);

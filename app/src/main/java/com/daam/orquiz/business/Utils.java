@@ -6,7 +6,10 @@ import android.content.Context;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Path;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,11 +32,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -250,6 +258,17 @@ public class Utils {
 
         return quizUploaded;
 
+    }
+
+    public static Bitmap getBitmap(String url) {
+        try {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Bitmap d = BitmapFactory.decodeStream(is);
+            is.close();
+            return d;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }
