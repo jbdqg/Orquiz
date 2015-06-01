@@ -65,9 +65,10 @@ public class UploadQuizTask extends AsyncTask<JSONObject, Void, String> {
         if (jsonQuiz.has("quiz_name") && jsonQuiz.get("quiz_name") instanceof String){
             quizRecord.setFieldName(jsonQuiz.getString("quiz_name"));
             quiz_name = jsonQuiz.getString("quiz_name");
-        }
-        if (jsonQuiz.has("quiz_reference") && jsonQuiz.get("quiz_reference") instanceof String){
-            quizRecord.setFieldReference(jsonQuiz.getString("quiz_reference"));
+            quizRecord.setFieldReference(jsonQuiz.getString("quiz_name"));
+            if (jsonQuiz.has("file_absolutePath") && jsonQuiz.get("file_absolutePath") instanceof String){
+                quizRecord.setFieldReference(jsonQuiz.getString("file_absolutePath"));
+            }
         }
         if (jsonQuiz.has("quiz_description") && jsonQuiz.get("quiz_description") instanceof String){
             quizRecord.setFieldDescription(jsonQuiz.getString("quiz_description"));

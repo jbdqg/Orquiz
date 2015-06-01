@@ -548,8 +548,8 @@ public class MainActivity extends ActionBarActivity
                                         JSONObject quizJsonObject = Utils.getFileJsonContent(quizContent);
 
                                         if (quizJsonObject != null) {
-
                                             try {
+                                                quizJsonObject.put("file_absolutePath", (String) quizContent.getAbsolutePath());
                                                 Utils.uploadJsonQuiz(db, quizJsonObject);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();

@@ -304,6 +304,8 @@ public class Utils {
 
         Boolean quizUploaded = false;
 
+
+
             new UploadQuizTask().execute(quizJsonObject);
 
             //db.uploadJsonQuizIntoTables(quizJsonObject);
