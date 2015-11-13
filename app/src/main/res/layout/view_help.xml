@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginTop="20dp"
-                android:text="You can import a new quiz that you have created or that has been shared with you. \n\n A quiz has to be in Json (JavaScript Object Notation) format that is easy to read an write. \n\n Here you have to options to know what do you need to create you own quiz: \n\n Json Example - get one example quiz that will be placed on your upload directory (/orquiz/quizes). Then go to the option Import and upload it to see how it works \n\n Json Rules - get this file to read the rules about the format that your Json quiz file has to have to be able to be uploaded. The file will also be placed on you upload directory (/orquiz/quizes)"
+                android:text="You can import a new quiz that you have created or that has been shared with you. \n\n A quiz has to be in Json (JavaScript Object Notation) format that is easy to read an write. \n\n Here you have two options to know what do you need to create you own quiz: \n\n Json Example - get one example quiz that will be placed on your upload directory (/orquiz/quizes). Then go to the option Import and upload it to see how it works \n\n Json Rules - get this file to read the rules about the format that your Json quiz file has to have to be able to be uploaded. The file will also be placed on you upload directory (/orquiz/quizes)"
                 android:gravity="center"
 
             />

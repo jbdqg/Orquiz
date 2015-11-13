@@ -33,6 +33,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -53,11 +54,18 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String PREFS_NAME = "UserData";
     public static final int PARTICIPANT_ID = 1;
+    public static File MPATH = new File(Environment.getExternalStorageDirectory() + "/orquiz/quizes");
     public static int QUIZ_ID = 1;
     public static String TOP_TITLE = "Orquiz";
     private static SharedPreferences userData;
@@ -79,12 +87,24 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //CipherInputStream cis = new CipherInputStream(InputStream());
+
         userData = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Integer quizId = userData.getInt("QuizId", 0);
         if ( quizId != 0 ) {
             QUIZ_ID = quizId;
         } else {
 
+        }
+        String quizTitle = userData.getString("QuizName", "");
+        if ( quizTitle != "" ) {
+            TOP_TITLE = quizTitle;
+        } else {
+
+        }
+
+        if (!MPATH.exists()) {
+            Utils.checkOrCreateDir(MPATH);
         }
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -297,8 +317,6 @@ public class MainActivity extends ActionBarActivity
          * Returns a new instance of this fragment for the given section
          * number.
          */
-
-        private File mPath = new File(Environment.getExternalStorageDirectory() + "/orquiz/quizes/");
 
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -526,7 +544,7 @@ public class MainActivity extends ActionBarActivity
                 upload_quiz_bt.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
-                        String[] jsonFilesInPath = Utils.getQuizUploadList(mPath);
+                        String[] jsonFilesInPath = Utils.getQuizUploadList(MPATH);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(container.getContext())
                                 .setTitle("Choose your file")
@@ -543,7 +561,7 @@ public class MainActivity extends ActionBarActivity
                                         ListView lw = ((AlertDialog) dialog).getListView();
                                         Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
 
-                                        File quizContent = new File(mPath + "/" + checkedItem.toString());
+                                        File quizContent = new File(MPATH + "/" + checkedItem.toString());
 
                                         JSONObject quizJsonObject = Utils.getFileJsonContent(quizContent);
 
@@ -619,29 +637,58 @@ public class MainActivity extends ActionBarActivity
                 }
 
                 String[] arrayOfNames = new String[listOfQuiz.size()];
+                //obter apenas os que não começam com encrypted
+                String[] jsonFilesInPath = Utils.getQuizShareList(MPATH);
                 for (int i = 0; i < listOfQuiz.size(); i++) {
                     arrayOfNames[i] = listOfQuiz.get(i).getFieldName();
                 }
 
                 AlertDialog.Builder chooseQuizDialog = new AlertDialog.Builder(container.getContext())
                         .setTitle(R.string.title_choose_quiz)
-                        .setSingleChoiceItems(arrayOfNames, -1 /*no selection*/, new DialogInterface.OnClickListener() {
+                        //.setSingleChoiceItems(arrayOfNames, -1 /*no selection*/, new DialogInterface.OnClickListener() {
+                        //    public void onClick(DialogInterface dialog, int which) {
+                        //        // Don't do nothing
+                        //    }
+                        //})
+
+                        .setSingleChoiceItems(jsonFilesInPath, -1 /*no selection*/, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // Don't do nothing
                             }
                         })
+
                         .setPositiveButton(R.string.button_share, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 int selectedOption = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                                 if (selectedOption == -1) {
                                     Toast.makeText(container.getContext(), R.string.no_quiz_selected, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Quiz quiz = listOfQuiz.get(((AlertDialog) dialog).getListView().getCheckedItemPosition()); // Quiz to share
+                                    //Quiz quiz = listOfQuiz.get(((AlertDialog) dialog).getListView().getCheckedItemPosition()); // Quiz to share
 
                                     Intent intent = new Intent();
                                     intent.setAction(Intent.ACTION_SEND);
                                     intent.setType("text/plain"); // File type
-                                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(quiz.getFieldReference()))); // The file
+
+                                    //File quizJsonFile = new File((quiz.getFieldReference()));
+
+                                    ListView lw = ((AlertDialog) dialog).getListView();
+                                    Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+
+                                    File quizJsonFile = new File(MPATH + "/" + checkedItem.toString());
+
+                                    //File quizJsonFileEncrypted = new File("encrypted_" + (quiz.getFieldReference()));
+
+                                    File quizJsonFileEncrypted = new File(MPATH + "/" + "encrypted_" + (checkedItem.toString()));
+
+                                    try {
+                                        Utils.copyFileUsingStream(quizJsonFile, quizJsonFileEncrypted);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Utils.encryptFileContent(quizJsonFileEncrypted);
+
+                                    //intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(quiz.getFieldReference()))); // The file
+                                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(quizJsonFileEncrypted)); // The file
 
                                     // List of apps that can handle our intent
                                     PackageManager pm = container.getContext().getPackageManager();

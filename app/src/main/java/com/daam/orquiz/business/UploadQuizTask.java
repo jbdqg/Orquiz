@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.crypto.CipherOutputStream;
+
 /**
  * Created by johnny on 30-05-2015.
  */

@@ -47,10 +47,15 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Utils {
 
@@ -133,6 +138,7 @@ public class Utils {
 
         InputStream inputStream;
         try {
+
             inputStream = MyApplication.getAppContext().getAssets().open(filename);
 
             String state = Environment.getExternalStorageState();
@@ -255,7 +261,36 @@ public class Utils {
                 @Override
                 public boolean accept(File dir, String filename) {
                     File sel = new File(dir, filename);
+                    //return (filename.contains(".json") && filename.contains("encrypted_")) || sel.isDirectory();
                     return filename.contains(".json") || sel.isDirectory();
+                }
+
+            };
+            mFileList = mPath.list(filter);
+        } else {
+            mFileList = new String[0];
+        }
+
+        return mFileList;
+
+    }
+
+    public static String[] getQuizShareList (File mPath) {
+
+        String[] mFileList;
+
+        try {
+            mPath.mkdirs();
+        } catch (SecurityException e) {
+            Log.e("TAG", "unable to write on the sd card " + e.toString());
+        }
+        if (mPath.exists()) {
+            FilenameFilter filter = new FilenameFilter() {
+
+                @Override
+                public boolean accept(File dir, String filename) {
+                    File sel = new File(dir, filename);
+                    return (filename.contains(".json") && !filename.contains("encrypted_")) || sel.isDirectory();
                 }
 
             };
@@ -286,6 +321,9 @@ public class Utils {
                 in.close();
             }
 
+            //Utils.AES encryptInstance = new Utils.AES();
+            //quizJsonContent = encryptInstance.decrypt(buffer, encryptInstance.encryptionKey);
+
             quizJsonContent = new String(buffer, "UTF-8");
 
             quizJsonObject = new JSONObject(quizJsonContent);
@@ -293,6 +331,8 @@ public class Utils {
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -314,6 +354,19 @@ public class Utils {
 
     }
 
+    public static void  checkOrCreateDir(File mPath){
+
+        if (!mPath.exists()) {
+
+            try{
+                mPath.mkdirs();
+            }
+            catch(SecurityException se){
+                //handle it
+            }
+        }
+    }
+
     public static Bitmap getBitmap(String url) {
         try {
             InputStream is = (InputStream) new URL(url).getContent();
@@ -324,5 +377,95 @@ public class Utils {
             return null;
         }
     }
+
+    public static class AES {
+        public String IV = "AAAAAAAAAAAAAAAA";
+        public String encryptionKey = "0123456789abcdef";
+
+        public AES(){
+        }
+
+        public byte[] encrypt(String plainText, String encryptionKey) throws Exception {
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+
+            SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
+            //cipher.init(Cipher.ENCRYPT_MODE, key,new IvParameterSpec(IV.getBytes("UTF-8")));
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            return cipher.doFinal(plainText.getBytes("UTF-8"));
+        }
+
+        public String decrypt(byte[] cipherText, String encryptionKey) throws Exception{
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
+            //cipher.init(Cipher.DECRYPT_MODE, key,new IvParameterSpec(IV.getBytes("UTF-8")));
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            return new String(cipher.doFinal(cipherText),"UTF-8");
+        }
+    }
+
+    public static void encryptFileContent(File quizJsonFile) {
+
+        InputStream in = null;
+        try {
+            in = new BufferedInputStream(new FileInputStream(quizJsonFile));
+
+            int size = in.available();
+
+            byte[] buffer = new byte[size];
+
+            if (in != null) {
+                in.read(buffer);
+                in.close();
+            }
+
+            //String quizJsonContent = new String(buffer, "UTF-8");
+
+            Utils.AES encryptInstance = new Utils.AES();
+
+            //String quizJsonContent = encryptInstance.encrypt(new String(buffer, "UTF-8"), encryptInstance.encryptionKey);
+
+            FileOutputStream fooStream = new FileOutputStream(quizJsonFile, false); // true to append
+            // false to overwrite.
+            byte[] myBytes = encryptInstance.encrypt(new String(buffer, "UTF-8"), encryptInstance.encryptionKey);;
+            try {
+                fooStream.write(myBytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fooStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void copyFileUsingStream(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            is.close();
+            os.close();
+        }
+    }
+
+
 
 }
